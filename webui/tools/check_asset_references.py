@@ -1,16 +1,26 @@
-"""素材引用审计：检查 asset_index 中的素材是否真的被应用引用。
+"""素材引用审计：检查代码引用与素材索引是否一致。
 
-判定方式
+为什么需要这个检查
+------------------
+界面素材有两种引用方式：
+
+1. **完整 asset id**，例如
+   ``backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04``
+2. **safe_id 形式的 URL**，例如 CSS 里的
+   ``/api/assets/backgrounds_texturebg_momotalk_momotalk_04_Momotalk_04/file``
+
+只扫描第 1 种会漏判——导航栏背景、消息卡片、退出图标等界面素材
+**只以 safe_id 出现在样式表里**。曾经因为漏扫 CSS，导致 5 个界面素材
+被误判为未引用并删除。这个脚本因此同时扫描 ``.css``。
+
+检查内容
 --------
-对每条素材，取它的三个标识去全仓库文本里查找：
+- 代码（js/css/html/py）中出现的 ``/api/assets/<safe_id>//(file|thumbnail)``
+  是否都能在 ``asset_index.json`` 里找到
+- ``asset_names.json`` 是否引用了不存在的素材
+- 索引条目数与分类统计
 
-1. 完整 asset id（如 backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04）
-2. safe_id 形式（如 backgrounds_texturebg_momotalk_momotalk_04_Momotalk_04），
-   即 CSS / JS 里 /api/assets/<safe_id>/file 使用的形式
-3. 文件名去扩展名（如 Momotalk_04）
-
-只要任意一个出现，就认为被引用。**必须扫描 .css**——界面背景、
-卡片、图标等很多素材只用 safe_id 写在样式表里，只扫 JS 会漏判。
+不依赖本地的 ``assets_source/`` 目录，可在没有素材的检出中直接运行。
 
 用法
 ----
@@ -26,14 +36,17 @@ import sys
 from pathlib import Path
 
 WEBUI_DIR = Path(__file__).resolve().parents[1]
-WORKSPACE_DIR = WEBUI_DIR.parent
-
 INDEX_PATH = WEBUI_DIR / "data" / "asset_index.json"
 NAMES_PATH = WEBUI_DIR / "data" / "asset_names.json"
 
-TEXT_SUFFIXES = {".js", ".css", ".html", ".py", ".json", ".md", ".txt", ".csv"}
-SKIP_NAMES = {"asset_index.json", "asset_names.json", "ARCHIVE_MANIFEST.json"}
-SKIP_PARTS = {"data-backup", "旧项目快照", "__pycache__", ".git"}
+CODE_ROOTS = [
+    WEBUI_DIR / "frontend",
+    WEBUI_DIR / "backend",
+    WEBUI_DIR / "tools",
+]
+CODE_SUFFIXES = {".js", ".css", ".html", ".py"}
+URL_PATTERN = re.compile(r"/api/assets/([A-Za-z0-9_@]+)/(?:file|thumbnail)")
+SKIP_PARTS = {"__pycache__", ".git", "node_modules"}
 
 
 def safe_id(value: str) -> str:
@@ -41,54 +54,62 @@ def safe_id(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9_]+", "_", value)
 
 
-def iter_text_files(root: Path):
-    """遍历参与引用的文本文件。"""
-    if not root.exists():
-        return
-    for path in root.rglob("*"):
-        if not path.is_file():
+def collect_code_references() -> set[str]:
+    """收集代码中所有 /api/assets/<safe_id>/ 形式的引用。"""
+    found: set[str] = set()
+    for root in CODE_ROOTS:
+        if not root.exists():
             continue
-        if path.name in SKIP_NAMES:
-            continue
-        if any(part in SKIP_PARTS for part in path.parts):
-            continue
-        if path.suffix.lower() not in TEXT_SUFFIXES:
-            continue
-        try:
-            yield path, path.read_text(encoding="utf-8", errors="ignore")
-        except OSError:
-            continue
+        for path in root.rglob("*"):
+            if not path.is_file() or path.suffix.lower() not in CODE_SUFFIXES:
+                continue
+            if any(part in SKIP_PARTS for part in path.parts):
+                continue
+            try:
+                text = path.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            found.update(URL_PATTERN.findall(text))
+    return found
 
 
-def build_blob() -> str:
-    """把所有可能包含引用的文本拼成一个大字符串。"""
+REFERENCE_SUFFIXES = {".js", ".css", ".html", ".py", ".json", ".md", ".txt", ".csv"}
+REFERENCE_SKIP_NAMES = {"asset_index.json", "asset_names.json", "ARCHIVE_MANIFEST.json"}
+
+
+def collect_reference_text() -> str:
+    """收集除索引自身外的全部引用文本，用于统计未引用素材。"""
     roots = [
         WEBUI_DIR / "frontend",
         WEBUI_DIR / "backend",
-        WEBUI_DIR / "tools",
         WEBUI_DIR / "data",
-        WEBUI_DIR / "schema",
-        WORKSPACE_DIR / "docs",
-        WORKSPACE_DIR / "tools",
+        WEBUI_DIR.parent / "docs",
+        WEBUI_DIR.parent / "tools",
     ]
-    chunks = []
+    chunks: list[str] = []
     for root in roots:
-        for _, text in iter_text_files(root):
-            chunks.append(text)
+        if not root.exists():
+            continue
+        for path in root.rglob("*"):
+            if not path.is_file() or path.suffix.lower() not in REFERENCE_SUFFIXES:
+                continue
+            if path.name in REFERENCE_SKIP_NAMES:
+                continue
+            if any(part in SKIP_PARTS for part in path.parts):
+                continue
+            if "data-backup" in path.parts or "旧项目快照" in str(path):
+                continue
+            try:
+                chunks.append(path.read_text(encoding="utf-8", errors="ignore"))
+            except OSError:
+                continue
     return "\n".join(chunks)
 
 
-def main() -> int:
-    """执行审计并输出结果。"""
-    if not INDEX_PATH.is_file():
-        print(f"[FAIL] 找不到素材索引: {INDEX_PATH}")
-        return 1
-
-    index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
-    assets = index.get("assets", [])
-    blob = build_blob()
-
-    referenced, unreferenced = [], []
+def find_unreferenced(assets: list[dict]) -> list[dict]:
+    """找出在代码与数据中都没出现过的素材（仅用于提示，不判定失败）。"""
+    blob = collect_reference_text()
+    unreferenced = []
     for asset in assets:
         asset_id = asset["id"]
         sid = safe_id(asset_id)
@@ -96,41 +117,65 @@ def main() -> int:
         hit = sid in blob or asset_id in blob
         if not hit and stem:
             hit = re.search(rf"(?<![A-Za-z0-9_]){re.escape(stem)}(?![A-Za-z0-9_])", blob) is not None
-        (referenced if hit else unreferenced).append(asset)
+        if not hit:
+            unreferenced.append(asset)
+    return unreferenced
+
+
+def main() -> int:
+    """执行检查并输出结果。"""
+    if not INDEX_PATH.is_file():
+        print(f"[FAIL] 找不到素材索引: {INDEX_PATH}")
+        return 1
+
+    index = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+    assets = index.get("assets", [])
+    known = {safe_id(asset["id"]) for asset in assets}
 
     print(f"素材索引条目: {len(assets)}")
-    print(f"判定为被引用: {len(referenced)}")
-    print(f"判定为未引用: {len(unreferenced)}")
+    counts: dict[str, int] = {}
+    for asset in assets:
+        counts[asset["category"]] = counts.get(asset["category"], 0) + 1
+    for category in sorted(counts):
+        print(f"  {category:<22} {counts[category]}")
 
-    urls = set(re.findall(r"/api/assets/([A-Za-z0-9_@]+)/(?:file|thumbnail)", blob))
-    known = {safe_id(asset["id"]) for asset in assets}
-    unknown_urls = sorted(url for url in urls if url not in known)
-    print(f"代码中出现的素材 URL: {len(urls)}，无法解析: {len(unknown_urls)}")
+    references = collect_code_references()
+    unknown = sorted(ref for ref in references if ref not in known)
+    print(f"\n代码中的素材引用: {len(references)}")
+    print(f"无法在索引中解析: {len(unknown)}")
 
+
+    unreferenced = find_unreferenced(assets)
+    print(f"未在代码/数据中出现: {len(unreferenced)}")
     if unreferenced:
-        print("\n以下素材未被任何代码或数据引用：")
-        for asset in unreferenced[:50]:
+        print("  （仅供人工复核，删除前请确认不是通过 safe_id 被引用）")
+        for asset in unreferenced[:20]:
             print(f"  - {asset['id']}")
-        if len(unreferenced) > 50:
+        if len(unreferenced) > 20:
             print(f"  ... 共 {len(unreferenced)} 条")
-
-    if unknown_urls:
-        print("\n以下 URL 指向了不存在的素材（界面会加载失败）：")
-        for url in unknown_urls[:50]:
-            print(f"  - {url}")
+    problems = 0
+    if unknown:
+        problems += len(unknown)
+        print("\n以下引用指向不存在的素材（界面会加载失败）：")
+        for ref in unknown[:50]:
+            print(f"  - {ref}")
+        if len(unknown) > 50:
+            print(f"  ... 共 {len(unknown)} 条")
 
     if NAMES_PATH.is_file():
         names = json.loads(NAMES_PATH.read_text(encoding="utf-8")).get("assets", {})
-        only_in_names = sorted(set(names) - set(a["id"] for a in assets))
-        if only_in_names:
-            print(f"\nasset_names.json 中有 {len(only_in_names)} 条不在索引里：")
-            for item in only_in_names[:20]:
+        index_ids = {asset["id"] for asset in assets}
+        orphan_names = sorted(set(names) - index_ids)
+        if orphan_names:
+            problems += len(orphan_names)
+            print(f"\nasset_names.json 中有 {len(orphan_names)} 条不在索引里：")
+            for item in orphan_names[:20]:
                 print(f"  - {item}")
 
-    if unknown_urls:
-        print("\n[FAIL] 存在无法解析的素材 URL。")
+    if problems:
+        print(f"\n[FAIL] 共发现 {problems} 处不一致。")
         return 1
-    print("\n[OK] 所有代码引用的素材都能在索引中解析。")
+    print("\n[OK] 代码引用与素材索引一致。")
     return 0
 
 
