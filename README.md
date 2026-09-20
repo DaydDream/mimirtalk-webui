@@ -29,7 +29,14 @@
 
 ### 方式二：从源码运行（开发者）
 
-需要 Python 3.12+。
+需要 Python 3.12+。双击 `启动WebUI.cmd` 即可，脚本会自动检查依赖并打开浏览器：
+
+```text
+启动WebUI.cmd          # 默认 8765 端口
+启动WebUI.cmd 8766     # 指定端口
+```
+
+也可以手动运行：
 
 ```powershell
 pip install -r requirements.txt
@@ -37,6 +44,8 @@ python webui/backend/app.py --host 127.0.0.1 --port 8765
 ```
 
 然后访问 `http://127.0.0.1:8765/`。
+
+> 若在仓库根目录放置 `python-runtime/`（内置运行时），启动器会优先使用它，此时完全不依赖系统 Python。
 
 ## 目录结构
 
