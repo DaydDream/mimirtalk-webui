@@ -14,7 +14,7 @@
 
 一个**离线可用**的本地 WebUI：编辑角色对话、选择气泡与贴纸、预览游戏内效果，并导出为长图。
 
-![聊天预览](docs/screenshots/final/最终-聊天预览桌面.png)
+<img src="docs/screenshots/final/最终-聊天预览桌面.png" alt="聊天预览" width="720">
 
 ## 特性
 
