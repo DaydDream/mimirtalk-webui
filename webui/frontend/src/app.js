@@ -3014,6 +3014,58 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
+/**
+ * 计算长图需要切成哪几段。
+ * 每段高度不超过 maxHeight，最后一段为剩余高度。
+ */
+function chatExportSlices(totalHeight, maxHeight) {
+  if (totalHeight <= maxHeight) return [{ top: 0, height: totalHeight }];
+  const slices = [];
+  for (let top = 0; top < totalHeight; top += maxHeight) {
+    slices.push({ top, height: Math.min(maxHeight, totalHeight - top) });
+  }
+  return slices;
+}
+
+function chatExportStamp(date = new Date()) {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+    "_",
+    String(date.getHours()).padStart(2, "0"),
+    String(date.getMinutes()).padStart(2, "0"),
+    String(date.getSeconds()).padStart(2, "0"),
+  ].join("");
+}
+
+/**
+ * 生成长图，并在超出单图高度上限时按高度切分为多张。
+ *
+ * 返回值中 slices 为每张图的裁剪区域（源画布像素坐标），
+ * 当内容未超限时只有一张。
+ */
+async function renderChatExport(project, messages, images, layout, scale) {
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(layout.width * scale));
+  canvas.height = Math.max(1, Math.round(layout.height * scale));
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  drawChatExport(ctx, layout, images, project);
+  const blobs = [];
+  const slices = [];
+  for (const { top, height } of chatExportSlices(canvas.height, PNG_EXPORT_MAX_HEIGHT)) {
+    const part = document.createElement("canvas");
+    part.width = canvas.width;
+    part.height = height;
+    const partCtx = part.getContext("2d");
+    partCtx.drawImage(canvas, 0, top, canvas.width, height, 0, 0, canvas.width, height);
+    blobs.push(await canvasToPngBlob(part));
+    slices.push({ top, height });
+  }
+  return { blobs, slices, width: canvas.width };
+}
+
 async function downloadChatPng() {
   if (!state.project || state.exportingPng) return;
   state.exportingPng = true;
@@ -3034,31 +3086,22 @@ async function downloadChatPng() {
     const measureContext = measurementCanvas.getContext("2d");
     const layout = buildChatExportLayout(measureContext, project, messages);
     const scale = layout.height * PNG_EXPORT_SCALE <= PNG_EXPORT_MAX_HEIGHT ? PNG_EXPORT_SCALE : 1;
-    if (layout.height * scale > PNG_EXPORT_MAX_HEIGHT) {
-      throw new Error("聊天内容过长，暂时无法生成单张 PNG 长图");
+    const result = await renderChatExport(project, messages, images, layout, scale);
+    const total = result.blobs.length;
+    const baseName = safeFilename(`momotalk_${project.contact.name}_${project.title}`);
+    const stamp = chatExportStamp();
+    for (let index = 0; index < total; index += 1) {
+      const suffix = total > 1 ? `-${index + 1}` : "";
+      downloadBlob(result.blobs[index], `${baseName}_${stamp}${suffix}.png`);
+      if (index < total - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      }
     }
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.round(layout.width * scale);
-    canvas.height = Math.round(layout.height * scale);
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(scale, 0, 0, scale, 0, 0);
-    drawChatExport(ctx, layout, images, project);
-    const blob = await canvasToPngBlob(canvas);
-    const now = new Date();
-    const stamp = [
-      now.getFullYear(),
-      String(now.getMonth() + 1).padStart(2, "0"),
-      String(now.getDate()).padStart(2, "0"),
-      "_",
-      String(now.getHours()).padStart(2, "0"),
-      String(now.getMinutes()).padStart(2, "0"),
-      String(now.getSeconds()).padStart(2, "0"),
-    ].join("");
-    downloadBlob(
-      blob,
-      `${safeFilename(`momotalk_${project.contact.name}_${project.title}`)}_${stamp}.png`,
+    showToast(
+      total > 1
+        ? `聊天长图已生成，内容过长已自动拆分为 ${total} 张`
+        : "PNG 聊天长图已生成",
     );
-    showToast("PNG 聊天长图已生成");
   } catch (error) {
     showToast(error.message, "error");
   } finally {
@@ -3067,7 +3110,6 @@ async function downloadChatPng() {
     if (elements.saveChatImageButton) elements.saveChatImageButton.disabled = false;
   }
 }
-
 // 全局事件绑定。
 function bindEvents() {
   elements.projectManagementButton.addEventListener("click", () => {
