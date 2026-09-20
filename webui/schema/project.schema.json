@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.momotalk/project.schema.json",
+  "title": "MimirTalk WebUI Project",
+  "type": "object",
+  "required": [
+    "version",
+    "id",
+    "title",
+    "contact",
+    "appearance",
+    "messages"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "object",
+      "required": [
+        "name",
+        "avatar_asset_id",
+        "signature"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar_asset_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contact_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "hero",
+            "group"
+          ]
+        },
+        "member_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "signature": {
+          "type": "string"
+        }
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "required": [
+        "background_asset_id",
+        "admin_avatar_asset_id",
+        "read"
+      ],
+      "properties": {
+        "background_asset_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "admin_avatar_asset_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "read": {
+          "type": "boolean"
+        }
+      }
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/message"
+      }
+    },
+    "active_conversation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "conversations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/message"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "baseMessage": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "side"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "enum": [
+            "text",
+            "sticker",
+            "image",
+            "system",
+            "recall"
+          ]
+        },
+        "side": {
+          "enum": [
+            "left",
+            "right",
+            "center"
+          ]
+        },
+        "speaker_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "speaker_name": {
+          "type": "string"
+        },
+        "speaker_asset_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "message": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/textMessage"
+        },
+        {
+          "$ref": "#/$defs/stickerMessage"
+        },
+        {
+          "$ref": "#/$defs/imageMessage"
+        },
+        {
+          "$ref": "#/$defs/systemMessage"
+        },
+        {
+          "$ref": "#/$defs/recallMessage"
+        }
+      ]
+    },
+    "textMessage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseMessage"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "text"
+            },
+            "side": {
+              "enum": [
+                "left",
+                "right"
+              ]
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      ]
+    },
+    "stickerMessage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseMessage"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "sticker"
+            },
+            "side": {
+              "enum": [
+                "left",
+                "right"
+              ]
+            },
+            "asset_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "asset_id"
+          ]
+        }
+      ]
+    },
+    "imageMessage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseMessage"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "image"
+            },
+            "side": {
+              "enum": [
+                "left",
+                "right"
+              ]
+            },
+            "file_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{32}\\.(png|jpg|jpeg)$"
+            },
+            "name": {
+              "type": "string"
+            },
+            "width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "file_id",
+            "name",
+            "width",
+            "height"
+          ]
+        }
+      ]
+    },
+    "systemMessage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseMessage"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "system"
+            },
+            "side": {
+              "const": "center"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      ]
+    },
+    "recallMessage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/baseMessage"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "recall"
+            },
+            "side": {
+              "const": "center"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "text"
+          ]
+        }
+      ]
+    }
+  }
+}

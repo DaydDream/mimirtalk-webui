@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "title": "阶段4 UI 验证 1789737757035",
+  "contact": {
+    "name": "弥弥尔测试角色名称超长超长超长超长超长超长超长超长超长",
+    "avatar_asset_id": null,
+    "signature": "超长签名：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一"
+  },
+  "appearance": {
+    "read": true,
+    "background_asset_id": null
+  },
+  "messages": [],
+  "id": "project_406bfa9f8e04"
+}

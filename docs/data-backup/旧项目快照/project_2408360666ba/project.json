@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "漫画同好会",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_9010:9010",
+    "signature": "",
+    "contact_id": 9010,
+    "kind": "group",
+    "member_ids": []
+  },
+  "appearance": {
+    "read": true,
+    "background_asset_id": null
+  },
+  "messages": [],
+  "id": "project_2408360666ba"
+}

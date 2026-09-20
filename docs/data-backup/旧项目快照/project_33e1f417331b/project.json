@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "title": "阶段4 UI 验证 1789789671756",
+  "contact": {
+    "name": "112",
+    "avatar_asset_id": null,
+    "signature": "超长签名：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一",
+    "contact_id": 9200,
+    "kind": "group",
+    "member_ids": [
+      1029,
+      1013,
+      1059,
+      1021
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": "momotalk_images:textureconfig_momotalk_momotalk_head_04:Momotalk_head_04",
+    "bubble_theme_id": "9015"
+  },
+  "messages": [
+    {
+      "id": "msg_7pham74d0b4c",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "你好",
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    }
+  ],
+  "id": "project_33e1f417331b",
+  "conversations": {
+    "9001": [],
+    "9002": [],
+    "9004": [],
+    "9005": [],
+    "9006": [],
+    "9007": [],
+    "9009": [],
+    "9010": [
+      {
+        "id": "msg_71p5f9vqk5lm",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "管理员发言测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_2k85kbpwk5n2",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "群聊发言人测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文",
+        "speaker_id": 1021,
+        "speaker_name": "阿尔忒弥斯",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1021:1021"
+      },
+      {
+        "id": "msg_up14r84vk66s",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "长链接：\nhttps://example.com/aethergazer/momotalk/archive/2026/09/18/stage4-layout-regression-check?channel=mimir&mode=webui&payload=very-long-query-value\n后面继续输入中文。"
+      },
+      {
+        "id": "msg_6m2mzgh9k6dt",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。"
+      },
+      {
+        "id": "msg_nrnxduhdk6j9",
+        "type": "sticker",
+        "side": "left",
+        "delay_ms": 600,
+        "asset_id": "chat_stickers:textureconfig_chat_chatsticker_10000@zh_cn:10000@zh_cn"
+      },
+      {
+        "id": "msg_cvfbwiosk6zy",
+        "type": "choice",
+        "side": "center",
+        "delay_ms": 600,
+        "prompt": "选择一个回复方向：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消",
+        "options": [
+          "选项：我会先检查资源、尺寸与长文本换行，然后再继续验证。",
+          "第二个选项"
+        ]
+      },
+      {
+        "id": "msg_dm05cj29k75z",
+        "type": "system",
+        "side": "center",
+        "delay_ms": 600,
+        "text": "系统提示：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消"
+      },
+      {
+        "id": "msg_1mw1q379k7b3",
+        "type": "recall",
+        "side": "center",
+        "delay_ms": 600,
+        "text": "对方撤回了一条消息"
+      }
+    ],
+    "9011": [],
+    "9200": [
+      {
+        "id": "msg_7pham74d0b4c",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      }
+    ],
+    "9201": []
+  },
+  "active_conversation_id": "9200"
+}

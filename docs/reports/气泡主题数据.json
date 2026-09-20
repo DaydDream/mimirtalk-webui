@@ -1,0 +1,1358 @@
+{
+  "version": 1,
+  "note": "MomoTalk 气泡主体与装饰件清单。slice 改为 Unity Sprite.m_Border 官方九宫格边界，使用完整 Texture2D；运行时动态组件主题不纳入 WebUI。",
+  "source_root": "extract/aethergazer_momotalk/images/widgets/widget_system_chat",
+  "default": "widgets:widget_system_chat:9021_01",
+  "bubbles": [
+    {
+      "asset_id": "widgets:widget_system_chat:9021_01",
+      "name": "9021_01",
+      "width": 116,
+      "height": 84,
+      "slice": {
+        "top": 52,
+        "right": 84,
+        "bottom": 29,
+        "left": 36
+      },
+      "url": "/api/assets/widgets_widget_system_chat_9021_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_01",
+      "name": "9019_01",
+      "width": 116,
+      "height": 76,
+      "slice": {
+        "top": 45,
+        "right": 57,
+        "bottom": 31,
+        "left": 59
+      },
+      "url": "/api/assets/widgets_widget_system_chat_9019_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_01",
+      "name": "9022_01",
+      "width": 116,
+      "height": 76,
+      "slice": {
+        "top": 51,
+        "right": 68,
+        "bottom": 24,
+        "left": 48
+      },
+      "url": "/api/assets/widgets_widget_system_chat_9022_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9016_1",
+      "name": "9016_1",
+      "width": 94,
+      "height": 88,
+      "slice": {
+        "top": 56,
+        "right": 41,
+        "bottom": 29,
+        "left": 47
+      },
+      "url": "/api/assets/widgets_widget_system_chat_9016_1/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "texture2d"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9017_1",
+      "name": "9017_1",
+      "width": 94,
+      "height": 88,
+      "slice": {
+        "top": 46,
+        "right": 52,
+        "bottom": 32,
+        "left": 36
+      },
+      "url": "/api/assets/widgets_widget_system_chat_9017_1/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "texture2d"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:leader_01",
+      "name": "leader_01",
+      "width": 120,
+      "height": 68,
+      "slice": {
+        "top": 49,
+        "right": 76,
+        "bottom": 19,
+        "left": 44
+      },
+      "url": "/api/assets/widgets_widget_system_chat_leader_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:newyear_01",
+      "name": "newyear_01",
+      "width": 108,
+      "height": 88,
+      "slice": {
+        "top": 53,
+        "right": 59,
+        "bottom": 32,
+        "left": 43
+      },
+      "url": "/api/assets/widgets_widget_system_chat_newyear_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:rouge_03",
+      "name": "rouge_03",
+      "width": 142,
+      "height": 76,
+      "slice": {
+        "top": 43,
+        "right": 77,
+        "bottom": 32,
+        "left": 57
+      },
+      "url": "/api/assets/widgets_widget_system_chat_rouge_03/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:rouge_08",
+      "name": "rouge_08",
+      "width": 142,
+      "height": 76,
+      "slice": {
+        "top": 44,
+        "right": 53,
+        "bottom": 31,
+        "left": 83
+      },
+      "url": "/api/assets/widgets_widget_system_chat_rouge_08/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Activity_OsirisHorus_01",
+      "name": "Activity_OsirisHorus_01",
+      "width": 108,
+      "height": 77,
+      "slice": {
+        "top": 54,
+        "right": 45,
+        "bottom": 30,
+        "left": 42
+      },
+      "url": "/api/assets/widgets_widget_system_chat_Activity_OsirisHorus_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:EvilDragon_01",
+      "name": "EvilDragon_01",
+      "width": 94,
+      "height": 83,
+      "slice": {
+        "top": 54,
+        "right": 66,
+        "bottom": 24,
+        "left": 12
+      },
+      "url": "/api/assets/widgets_widget_system_chat_EvilDragon_01/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Sparks_012_tex_2",
+      "name": "Sparks_012_tex_2",
+      "width": 100,
+      "height": 100,
+      "slice": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "url": "/api/assets/widgets_widget_system_chat_Sparks_012_tex_2/file",
+      "slice_confirmed": true,
+      "slice_source": "Unity Sprite.m_Border",
+      "source_kind": "sprite"
+    }
+  ],
+  "decorations": [
+    {
+      "asset_id": "widgets:widget_system_chat:9019_01",
+      "name": "9019_01",
+      "width": 116,
+      "height": 76,
+      "url": "/api/assets/widgets_widget_system_chat_9019_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_02_01",
+      "name": "9019_02_01",
+      "width": 22,
+      "height": 20,
+      "url": "/api/assets/widgets_widget_system_chat_9019_02_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_02_02",
+      "name": "9019_02_02",
+      "width": 22,
+      "height": 20,
+      "url": "/api/assets/widgets_widget_system_chat_9019_02_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_02_03",
+      "name": "9019_02_03",
+      "width": 22,
+      "height": 24,
+      "url": "/api/assets/widgets_widget_system_chat_9019_02_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_03",
+      "name": "9019_03",
+      "width": 28,
+      "height": 40,
+      "url": "/api/assets/widgets_widget_system_chat_9019_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_04",
+      "name": "9019_04",
+      "width": 52,
+      "height": 84,
+      "url": "/api/assets/widgets_widget_system_chat_9019_04/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9019_05",
+      "name": "9019_05",
+      "width": 40,
+      "height": 84,
+      "url": "/api/assets/widgets_widget_system_chat_9019_05/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_01",
+      "name": "9021_01",
+      "width": 116,
+      "height": 84,
+      "url": "/api/assets/widgets_widget_system_chat_9021_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_02",
+      "name": "9021_02",
+      "width": 42,
+      "height": 74,
+      "url": "/api/assets/widgets_widget_system_chat_9021_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_03",
+      "name": "9021_03",
+      "width": 42,
+      "height": 67,
+      "url": "/api/assets/widgets_widget_system_chat_9021_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_04",
+      "name": "9021_04",
+      "width": 28,
+      "height": 50,
+      "url": "/api/assets/widgets_widget_system_chat_9021_04/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_05",
+      "name": "9021_05",
+      "width": 26,
+      "height": 44,
+      "url": "/api/assets/widgets_widget_system_chat_9021_05/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_06_01",
+      "name": "9021_06_01",
+      "width": 10,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_06_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_06_02",
+      "name": "9021_06_02",
+      "width": 12,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_06_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_06_03",
+      "name": "9021_06_03",
+      "width": 12,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_06_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_07_01",
+      "name": "9021_07_01",
+      "width": 10,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_07_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_07_02",
+      "name": "9021_07_02",
+      "width": 12,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_07_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_07_03",
+      "name": "9021_07_03",
+      "width": 12,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_07_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9021_07_04",
+      "name": "9021_07_04",
+      "width": 12,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_9021_07_04/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_01",
+      "name": "9022_01",
+      "width": 116,
+      "height": 76,
+      "url": "/api/assets/widgets_widget_system_chat_9022_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_02",
+      "name": "9022_02",
+      "width": 58,
+      "height": 22,
+      "url": "/api/assets/widgets_widget_system_chat_9022_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_03",
+      "name": "9022_03",
+      "width": 54,
+      "height": 50,
+      "url": "/api/assets/widgets_widget_system_chat_9022_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_04",
+      "name": "9022_04",
+      "width": 44,
+      "height": 46,
+      "url": "/api/assets/widgets_widget_system_chat_9022_04/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_05",
+      "name": "9022_05",
+      "width": 44,
+      "height": 48,
+      "url": "/api/assets/widgets_widget_system_chat_9022_05/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_06",
+      "name": "9022_06",
+      "width": 40,
+      "height": 26,
+      "url": "/api/assets/widgets_widget_system_chat_9022_06/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_08",
+      "name": "9022_08",
+      "width": 46,
+      "height": 30,
+      "url": "/api/assets/widgets_widget_system_chat_9022_08/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:9022_09",
+      "name": "9022_09",
+      "width": 66,
+      "height": 26,
+      "url": "/api/assets/widgets_widget_system_chat_9022_09/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Namei_01",
+      "name": "Namei_01",
+      "width": 28,
+      "height": 68,
+      "url": "/api/assets/widgets_widget_system_chat_Namei_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Namei_02",
+      "name": "Namei_02",
+      "width": 24,
+      "height": 20,
+      "url": "/api/assets/widgets_widget_system_chat_Namei_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Namei_03",
+      "name": "Namei_03",
+      "width": 24,
+      "height": 28,
+      "url": "/api/assets/widgets_widget_system_chat_Namei_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Namei_04",
+      "name": "Namei_04",
+      "width": 24,
+      "height": 24,
+      "url": "/api/assets/widgets_widget_system_chat_Namei_04/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:UI_9021_huaban",
+      "name": "UI_9021_huaban",
+      "width": 64,
+      "height": 64,
+      "url": "/api/assets/widgets_widget_system_chat_UI_9021_huaban/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:UI_9022_01",
+      "name": "UI_9022_01",
+      "width": 24,
+      "height": 12,
+      "url": "/api/assets/widgets_widget_system_chat_UI_9022_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:UI_sg_02",
+      "name": "UI_sg_02",
+      "width": 56,
+      "height": 24,
+      "url": "/api/assets/widgets_widget_system_chat_UI_sg_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:UI_sg_03",
+      "name": "UI_sg_03",
+      "width": 28,
+      "height": 30,
+      "url": "/api/assets/widgets_widget_system_chat_UI_sg_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:UI_sg_04",
+      "name": "UI_sg_04",
+      "width": 52,
+      "height": 50,
+      "url": "/api/assets/widgets_widget_system_chat_UI_sg_04/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Wer_01",
+      "name": "Wer_01",
+      "width": 44,
+      "height": 40,
+      "url": "/api/assets/widgets_widget_system_chat_Wer_01/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Wer_02",
+      "name": "Wer_02",
+      "width": 20,
+      "height": 16,
+      "url": "/api/assets/widgets_widget_system_chat_Wer_02/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Wer_03",
+      "name": "Wer_03",
+      "width": 28,
+      "height": 28,
+      "url": "/api/assets/widgets_widget_system_chat_Wer_03/file"
+    },
+    {
+      "asset_id": "widgets:widget_system_chat:Wer_04",
+      "name": "Wer_04",
+      "width": 56,
+      "height": 32,
+      "url": "/api/assets/widgets_widget_system_chat_Wer_04/file"
+    }
+  ],
+  "game_config": {
+    "source": "extract/aethergazer_momotalk/scripts/lua32_all/ChatBubbleCfg.lua",
+    "note": "游戏内聊天气泡配置表。字段：image1 = 气泡主体编号（对应 TextureConfig/ChatBubble/{image1}），image2 = 缩略图，color1/color2 = 名称与消息文本配色，type = 样式分类。配置表本身无名称字段，名称由道具表 ItemCfg 提供（见 MomoTalkSettingItem.lua 的 GetI18NText 流程）。",
+    "entries": [
+      {
+        "image1": "9022",
+        "color1": "#161616",
+        "type": 2,
+        "color2": "#424249",
+        "image2": "9022_1"
+      },
+      {
+        "image1": "9021",
+        "color1": "#6B6B6B",
+        "type": 2,
+        "color2": "#353535",
+        "image2": "9021_1"
+      },
+      {
+        "image1": "9020",
+        "color1": "#734D42",
+        "type": 1,
+        "color2": "#9B7253",
+        "image2": "9020_1"
+      },
+      {
+        "image1": "9019",
+        "color1": "#474D67",
+        "type": 2,
+        "color2": "#242A3E",
+        "image2": "9019_1"
+      },
+      {
+        "image1": "9018",
+        "color1": "#3E4B6B",
+        "type": 1,
+        "color2": "#556981",
+        "image2": "9018_1"
+      },
+      {
+        "image1": "9017",
+        "color1": "#5C2139",
+        "type": 2,
+        "color2": "#5C2139",
+        "image2": "9017_1"
+      },
+      {
+        "image1": "9016",
+        "color1": "#1A1637",
+        "type": 2,
+        "color2": "#1A1637",
+        "image2": "9016_1"
+      },
+      {
+        "image1": "9015",
+        "color1": "#BBC0F8",
+        "type": 1,
+        "color2": "#BBC0F8",
+        "image2": "9015_1"
+      },
+      {
+        "image1": "9014",
+        "color1": "#B9D0E8",
+        "type": 1,
+        "color2": "#F8E07D",
+        "image2": "9014_1"
+      },
+      {
+        "image1": "9013",
+        "color1": "#E7DFC8",
+        "type": 1,
+        "color2": "#E7DFC8",
+        "image2": "9013_1"
+      },
+      {
+        "image1": "9012",
+        "color1": "#FFFEFE",
+        "type": 2,
+        "color2": "#FFFEFE",
+        "image2": "9012_1"
+      },
+      {
+        "image1": "9011",
+        "color1": "#E7DFC8",
+        "type": 2,
+        "color2": "#E7DFC8",
+        "image2": "9011_1"
+      },
+      {
+        "image1": "9010",
+        "color1": "#6E3D29",
+        "type": 1,
+        "color2": "#904206",
+        "image2": "9010_1"
+      },
+      {
+        "image1": "9009",
+        "color1": "#E3E0EB",
+        "type": 2,
+        "color2": "#C6B7EB",
+        "image2": "9009_1"
+      },
+      {
+        "image1": "9101",
+        "color1": "#404045",
+        "type": 2,
+        "color2": "#404045",
+        "image2": "9101_1"
+      },
+      {
+        "image1": "9008",
+        "color1": "#1B1D26",
+        "type": 1,
+        "color2": "#1C2736",
+        "image2": "9008_1"
+      },
+      {
+        "image1": "9007",
+        "color1": "#6B6B6B",
+        "type": 1,
+        "color2": "#6B6B6B",
+        "image2": "9007_1"
+      },
+      {
+        "image1": "9006",
+        "color1": "#FCF5EB",
+        "type": 2,
+        "color2": "#FFD599",
+        "image2": "9006_1"
+      },
+      {
+        "image1": "9004",
+        "color1": "#6B6B6B",
+        "type": 1,
+        "color2": "#6B6B6B",
+        "image2": "9004_1"
+      },
+      {
+        "image1": "9003",
+        "color1": "#6B6B6B",
+        "type": 1,
+        "color2": "#6B6B6B",
+        "image2": "9003_1"
+      },
+      {
+        "image1": "9002",
+        "color1": "#6B6B6B",
+        "type": 1,
+        "color2": "#6B6B6B",
+        "image2": "9002_1"
+      },
+      {
+        "image1": "9001",
+        "color1": "#6B6B6B",
+        "type": 1,
+        "color2": "#C7C7C7",
+        "image2": "9001_1"
+      }
+    ],
+    "known_names": [
+      {
+        "name": "默认气泡",
+        "source": "ItemCfg.lua"
+      },
+      {
+        "name": "初始气泡",
+        "source": "ItemCfg.lua"
+      }
+    ]
+  },
+  "available_themes": {
+    "source": "extract/aethergazer_momotalk/images/misc/textureconfig_chatbubble_*",
+    "note": "可选气泡主题。9019、9021、9022 使用运行时动态 UI 组件，无法用静态内容正确还原，因此不纳入 WebUI。",
+    "count": 17,
+    "themes": [
+      {
+        "id": "9000",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9000:9000",
+            "name": "9000",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9000_9000/file",
+            "slice": {
+              "top": 57,
+              "right": 63,
+              "bottom": 30,
+              "left": 63
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9000_1:9000_1",
+            "name": "9000_1",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file",
+            "slice": {
+              "top": 57,
+              "right": 63,
+              "bottom": 30,
+              "left": 63
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "默认白"
+      },
+      {
+        "id": "9001",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9001:9001",
+            "name": "9001",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9001_9001/file",
+            "slice": {
+              "top": 57,
+              "right": 63,
+              "bottom": 30,
+              "left": 63
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9001_1:9001_1",
+            "name": "9001_1",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9001_1_9001_1/file",
+            "slice": {
+              "top": 59,
+              "right": 31,
+              "bottom": 28,
+              "left": 96
+            },
+            "text_color": "#C7C7C7",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "默认黑"
+      },
+      {
+        "id": "9002",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9002:9002",
+            "name": "9002",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9002_9002/file",
+            "slice": {
+              "top": 56,
+              "right": 62,
+              "bottom": 31,
+              "left": 64
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9002_1:9002_1",
+            "name": "9002_1",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9002_1_9002_1/file",
+            "slice": {
+              "top": 56,
+              "right": 62,
+              "bottom": 31,
+              "left": 64
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "岁序更新"
+      },
+      {
+        "id": "9003",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9003:9003",
+            "name": "9003",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9003_9003/file",
+            "slice": {
+              "top": 54,
+              "right": 61,
+              "bottom": 33,
+              "left": 61
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9003_1:9003_1",
+            "name": "9003_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9003_1_9003_1/file",
+            "slice": {
+              "top": 54,
+              "right": 61,
+              "bottom": 33,
+              "left": 61
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "愿祈佳语"
+      },
+      {
+        "id": "9004",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9004:9004",
+            "name": "9004",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9004_9004/file",
+            "slice": {
+              "top": 56,
+              "right": 46,
+              "bottom": 29,
+              "left": 76
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9004_1:9004_1",
+            "name": "9004_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9004_1_9004_1/file",
+            "slice": {
+              "top": 57,
+              "right": 77,
+              "bottom": 30,
+              "left": 44
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "稳定与唯一"
+      },
+      {
+        "id": "9005",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9005:9005",
+            "name": "9005",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9005_9005/file",
+            "slice": {
+              "top": 56,
+              "right": 46,
+              "bottom": 29,
+              "left": 76
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9005_1:9005_1",
+            "name": "9005_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9005_1_9005_1/file",
+            "slice": {
+              "top": 56,
+              "right": 46,
+              "bottom": 29,
+              "left": 76
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": null
+      },
+      {
+        "id": "9007",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9007:9007",
+            "name": "9007",
+            "width": 124,
+            "height": 92,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9007_9007/file",
+            "slice": {
+              "top": 56,
+              "right": 71,
+              "bottom": 35,
+              "left": 52
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9007_1:9007_1",
+            "name": "9007_1",
+            "width": 124,
+            "height": 92,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9007_1_9007_1/file",
+            "slice": {
+              "top": 56,
+              "right": 51,
+              "bottom": 35,
+              "left": 72
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": null
+      },
+      {
+        "id": "9008",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9008:9008",
+            "name": "9008",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9008_9008/file",
+            "slice": {
+              "top": 57,
+              "right": 65,
+              "bottom": 31,
+              "left": 58
+            },
+            "text_color": "#1B1D26",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9008_1:9008_1",
+            "name": "9008_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9008_1_9008_1/file",
+            "slice": {
+              "top": 57,
+              "right": 62,
+              "bottom": 31,
+              "left": 61
+            },
+            "text_color": "#1B1D26",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "海滨邹鲁"
+      },
+      {
+        "id": "9010",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9010:9010",
+            "name": "9010",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9010_9010/file",
+            "slice": {
+              "top": 67,
+              "right": 64,
+              "bottom": 21,
+              "left": 60
+            },
+            "text_color": "#6E3D29",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9010_1:9010_1",
+            "name": "9010_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9010_1_9010_1/file",
+            "slice": {
+              "top": 67,
+              "right": 60,
+              "bottom": 21,
+              "left": 64
+            },
+            "text_color": "#6E3D29",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "喷香美味吐司"
+      },
+      {
+        "id": "9011",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9011:9011",
+            "name": "9011",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9011_9011/file",
+            "slice": {
+              "top": 53,
+              "right": 52,
+              "bottom": 34,
+              "left": 71
+            },
+            "text_color": "#E7DFC8",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9011_1:9011_1",
+            "name": "9011_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9011_1_9011_1/file",
+            "slice": {
+              "top": 53,
+              "right": 71,
+              "bottom": 34,
+              "left": 52
+            },
+            "text_color": "#E7DFC8",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "雾中语"
+      },
+      {
+        "id": "9013",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9013:9013",
+            "name": "9013",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9013_9013/file",
+            "slice": {
+              "top": 54,
+              "right": 53,
+              "bottom": 33,
+              "left": 62
+            },
+            "text_color": "#E7DFC8",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9013_1:9013_1",
+            "name": "9013_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9013_1_9013_1/file",
+            "slice": {
+              "top": 54,
+              "right": 66,
+              "bottom": 33,
+              "left": 50
+            },
+            "text_color": "#E7DFC8",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "真心洞察"
+      },
+      {
+        "id": "9014",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9014:9014",
+            "name": "9014",
+            "width": 128,
+            "height": 92,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9014_9014/file",
+            "slice": {
+              "top": 61,
+              "right": 55,
+              "bottom": 30,
+              "left": 72
+            },
+            "text_color": "#F8E07D",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9014_1:9014_1",
+            "name": "9014_1",
+            "width": 128,
+            "height": 92,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9014_1_9014_1/file",
+            "slice": {
+              "top": 61,
+              "right": 72,
+              "bottom": 30,
+              "left": 55
+            },
+            "text_color": "#F8E07D",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "掌上星"
+      },
+      {
+        "id": "9015",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9015:9015",
+            "name": "9015",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9015_9015/file",
+            "slice": {
+              "top": 55,
+              "right": 63,
+              "bottom": 30,
+              "left": 56
+            },
+            "text_color": "#BBC0F8",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9015_1:9015_1",
+            "name": "9015_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9015_1_9015_1/file",
+            "slice": {
+              "top": 56,
+              "right": 63,
+              "bottom": 30,
+              "left": 55
+            },
+            "text_color": "#BBC0F8",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "紊中有序"
+      },
+      {
+        "id": "9016",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9000:9000",
+            "name": "9000",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9000_9000/file",
+            "slice": {
+              "top": 57,
+              "right": 63,
+              "bottom": 30,
+              "left": 63
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "widgets:widget_system_chat:9016_1",
+            "name": "9016_1",
+            "width": 94,
+            "height": 88,
+            "url": "/api/assets/widgets_widget_system_chat_9016_1/file",
+            "slice": {
+              "top": 56,
+              "right": 41,
+              "bottom": 29,
+              "left": 47
+            },
+            "text_color": "#1A1637",
+            "source": "widget_system_chat",
+            "legacy": true,
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "source": "widget_system_chat",
+        "legacy": true,
+        "composition_complete": false,
+        "component_count": 17,
+        "ui_tree_note": "bg 为 sliced 单图主体；另有 3 个 Animation、10 个 Image 与 1 个 ParticleSystem 子节点，当前 WebUI 只接主体，不还原动态羽饰/粒子。",
+        "name": "她与我的花季"
+      },
+      {
+        "id": "9017",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9000:9000",
+            "name": "9000",
+            "width": 128,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9000_9000/file",
+            "slice": {
+              "top": 57,
+              "right": 63,
+              "bottom": 30,
+              "left": 63
+            },
+            "text_color": "#6B6B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "widgets:widget_system_chat:9017_1",
+            "name": "9017_1",
+            "width": 94,
+            "height": 88,
+            "url": "/api/assets/widgets_widget_system_chat_9017_1/file",
+            "slice": {
+              "top": 46,
+              "right": 52,
+              "bottom": 32,
+              "left": 36
+            },
+            "text_color": "#5C2139",
+            "source": "widget_system_chat",
+            "legacy": true,
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "source": "widget_system_chat",
+        "legacy": true,
+        "composition_complete": false,
+        "component_count": 10,
+        "ui_tree_note": "bg 为 sliced 单图主体；另有 3 个 Animation 与 5 个 Image 子节点，当前 WebUI 只接主体，不还原动态羽饰。",
+        "name": "解心语"
+      },
+      {
+        "id": "9018",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9018:9018",
+            "name": "9018",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9018_9018/file",
+            "slice": {
+              "top": 52,
+              "right": 62,
+              "bottom": 30,
+              "left": 61
+            },
+            "text_color": "#3E4B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9018_1:9018_1",
+            "name": "9018_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9018_1_9018_1/file",
+            "slice": {
+              "top": 52,
+              "right": 61,
+              "bottom": 30,
+              "left": 62
+            },
+            "text_color": "#3E4B6B",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "拼凑的字符"
+      },
+      {
+        "id": "9020",
+        "variants": {
+          "left": {
+            "asset_id": "misc:textureconfig_chatbubble_9020:9020",
+            "name": "9020",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9020_9020/file",
+            "slice": {
+              "top": 54,
+              "right": 55,
+              "bottom": 34,
+              "left": 69
+            },
+            "text_color": "#734D42",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          },
+          "right": {
+            "asset_id": "misc:textureconfig_chatbubble_9020_1:9020_1",
+            "name": "9020_1",
+            "width": 124,
+            "height": 88,
+            "url": "/api/assets/misc_textureconfig_chatbubble_9020_1_9020_1/file",
+            "slice": {
+              "top": 54,
+              "right": 69,
+              "bottom": 34,
+              "left": 55
+            },
+            "text_color": "#734D42",
+            "slice_confirmed": true,
+            "slice_source": "Unity Sprite.m_Border",
+            "source_kind": "texture2d"
+          }
+        },
+        "name": "亲亲时刻"
+      }
+    ],
+    "slice_rule": "直接使用 Unity Sprite.m_Border：左、下、右、上，单位为源图像素；四角保持原尺寸，仅中间连接区拉伸。",
+    "render_rule": "完整 Texture2D 按各侧 Sprite.m_Border 做 9-slice；左右变体分别使用自己的 slice。",
+    "default_theme": "9000",
+    "text_color_rule": "文字颜色按气泡底色亮度自动选择：深底用 ChatBubbleCfg.color2，浅底用 color1。注意 9001 的左右变体底色不同（左浅右深），故分别取色。",
+    "theme_count": 17
+  }
+}

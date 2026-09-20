@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "单人小队一家亲",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_9007:9007",
+    "signature": "",
+    "contact_id": 9007,
+    "kind": "group",
+    "member_ids": []
+  },
+  "appearance": {
+    "read": true,
+    "background_asset_id": null
+  },
+  "messages": [],
+  "id": "project_28e325bad3b3"
+}

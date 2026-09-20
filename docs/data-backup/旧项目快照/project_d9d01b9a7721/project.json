@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "title": "阶段4 UI 验证 1789845977576",
+  "contact": {
+    "name": "弥弥尔测试角色名称超长超长超长超长超长超长超长超长超长",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_9010:9010",
+    "signature": "",
+    "contact_id": 9010,
+    "kind": "group",
+    "member_ids": [
+      10066,
+      1084,
+      1027,
+      1048
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": "momotalk_images:textureconfig_momotalk_momotalk_head_02:Momotalk_head_02"
+  },
+  "messages": [
+    {
+      "id": "msg_e2gzs1cn2zhx",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "管理员发言测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于",
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_zo9jeus42zk5",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "群聊发言人测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文",
+      "speaker_id": 1084,
+      "speaker_name": "薇儿丹蒂",
+      "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1084:1084"
+    }
+  ],
+  "id": "project_d9d01b9a7721",
+  "conversations": {
+    "9010": [
+      {
+        "id": "msg_e2gzs1cn2zhx",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "管理员发言测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_zo9jeus42zk5",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "群聊发言人测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文",
+        "speaker_id": 1084,
+        "speaker_name": "薇儿丹蒂",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1084:1084"
+      }
+    ],
+    "9200": []
+  },
+  "active_conversation_id": "9010"
+}

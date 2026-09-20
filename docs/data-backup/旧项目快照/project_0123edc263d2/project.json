@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "title": "未命名项目",
+  "contact": {
+    "name": "尼娅",
+    "avatar_asset_id": "character_itemshead:story_comsingle:10144",
+    "signature": "",
+    "contact_id": 10144,
+    "kind": "hero",
+    "member_ids": []
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": null,
+    "bubble_theme_id": "9015"
+  },
+  "messages": [],
+  "id": "project_0123edc263d2",
+  "conversations": {
+    "1024": [],
+    "1029": [],
+    "1043": [],
+    "1053": [],
+    "1072": [],
+    "1099": [],
+    "9001": [],
+    "9005": [],
+    "9006": [],
+    "9007": [],
+    "9010": [],
+    "9011": [],
+    "9200": [
+      {
+        "id": "msg_2qewrdvm0q6j",
+        "type": "recall",
+        "side": "center",
+        "created_at": "2026-09-20T14:32:21.599Z",
+        "text": "系统提示"
+      }
+    ],
+    "9201": [],
+    "9202": [],
+    "9203": [
+      {
+        "id": "msg_auwv5b3d5uea",
+        "type": "text",
+        "side": "left",
+        "created_at": "2026-09-20T14:36:15.778Z",
+        "text": "你好",
+        "speaker_id": 1042,
+        "speaker_name": "哈迪斯",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1042:1042"
+      },
+      {
+        "id": "msg_ikznoy4f61z1",
+        "type": "text",
+        "side": "left",
+        "created_at": "2026-09-20T14:36:25.597Z",
+        "text": "大会发发发卡发发二八分化v阿飞把我撒谎的话北伐军回复哈方吉奥白胡椒粉哈",
+        "speaker_id": 1097,
+        "speaker_name": "俄尼里伊",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1097:1097"
+      },
+      {
+        "id": "msg_jrep9put6agk",
+        "type": "text",
+        "side": "left",
+        "created_at": "2026-09-20T14:36:36.596Z",
+        "text": "发布会就无法符合本办法哈哈非把发放办法发哈发放把加快步伐开发",
+        "speaker_id": 1055,
+        "speaker_name": "暗御津羽",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1055:1055"
+      },
+      {
+        "id": "msg_yfy7m7ui6eid",
+        "type": "sticker",
+        "side": "right",
+        "created_at": "2026-09-20T14:36:41.845Z",
+        "asset_id": "chat_stickers:textureconfig_chat_chatsticker_10180:10180",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_dbpttqwa6hrm",
+        "type": "sticker",
+        "side": "left",
+        "created_at": "2026-09-20T14:36:46.066Z",
+        "asset_id": "chat_stickers_i18n:i18nimg_chat_chatsticker_10165@zh_cn:10165@zh_cn",
+        "speaker_id": 1068,
+        "speaker_name": "恩利尔",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1068:1068"
+      },
+      {
+        "id": "msg_7hg40t5f6mgg",
+        "type": "image",
+        "side": "left",
+        "created_at": "2026-09-20T14:36:52.144Z",
+        "file_id": "ea090186b8f344289d7986468694025d.jpg",
+        "name": "7A817F8CB25714D20B0C5EF7B4B3089D.jpg",
+        "width": 1350,
+        "height": 1350,
+        "speaker_id": 1068,
+        "speaker_name": "恩利尔",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1068:1068"
+      },
+      {
+        "id": "msg_vsireejc6tvn",
+        "type": "image",
+        "side": "left",
+        "created_at": "2026-09-20T14:37:01.763Z",
+        "file_id": "f15de3d86c664083b45e8e6b54173476.png",
+        "name": "109503.png",
+        "width": 1920,
+        "height": 1080,
+        "speaker_id": 1013,
+        "speaker_name": "阿修罗",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1013:1013"
+      },
+      {
+        "id": "msg_uatjcjtj6vxw",
+        "type": "recall",
+        "side": "center",
+        "created_at": "2026-09-20T14:37:06.778Z",
+        "text": "阿修罗撤回了一条消息"
+      },
+      {
+        "id": "msg_we2xnxtn7kaj",
+        "type": "text",
+        "side": "left",
+        "created_at": "2026-09-20T14:37:35.995Z",
+        "text": "阿修罗撤回了什么？",
+        "speaker_id": 1011,
+        "speaker_name": "奥西里斯",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1011:1011"
+      },
+      {
+        "id": "msg_uzy32ky07tsm",
+        "type": "text",
+        "side": "right",
+        "created_at": "2026-09-20T14:37:48.310Z",
+        "text": "不知道，你问问他",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      }
+    ],
+    "10111": [],
+    "10144": [],
+    "10169": [],
+    "10170": [],
+    "10175": []
+  },
+  "active_conversation_id": "10144"
+}

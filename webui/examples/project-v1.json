@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "project_demo",
+  "title": "示例项目",
+  "contact": {
+    "name": "弥弥尔",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_momotalk_head_01:Momotalk_head_01",
+    "signature": ""
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true
+  },
+  "messages": [
+    {
+      "id": "msg_text",
+      "type": "text",
+      "side": "left",
+      "text": "你好。"
+    },
+    {
+      "id": "msg_sticker",
+      "type": "sticker",
+      "side": "right",
+      "asset_id": "chat_stickers:textureconfig_chat_chatsticker_10001:10001"
+    },
+    {
+      "id": "msg_image_example",
+      "type": "image",
+      "side": "left",
+      "file_id": "0123456789abcdef0123456789abcdef.png",
+      "name": "example.png",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "msg_system",
+      "type": "system",
+      "text": "对方正在输入",
+      "side": "center"
+    },
+    {
+      "id": "msg_recall",
+      "type": "recall",
+      "text": "对方撤回了一条消息",
+      "side": "center"
+    }
+  ]
+}

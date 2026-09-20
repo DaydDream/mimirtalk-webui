@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "game_version": "v5.3.0",
+  "game_build": 313,
+  "audit_out_dir": "extract/aethergazer_momotalk_bubbles_audit",
+  "indexed_full_bubble_variants": 30,
+  "indexed_full_themes": 15,
+  "chat_bubble_cfg_entries": 22,
+  "legacy_widget_recovered_themes": [
+    "9016",
+    "9017",
+    "9019",
+    "9021",
+    "9022"
+  ],
+  "unavailable_config_theme_ids": [
+    "9006",
+    "9009",
+    "9012",
+    "9101"
+  ],
+  "note": "9016 and 9017 use a sliced single-image bg plus animated feather/particle child nodes; the static base is available in WebUI, while dynamic children are not recreated. 9019, 9021 and 9022 use runtime dynamic UI components and are intentionally excluded from the WebUI.",
+  "legacy_theme_completeness": {
+    "9016": {
+      "complete": false,
+      "components": [
+        "9016_1"
+      ],
+      "ui_tree_node_count": 17,
+      "dynamic_children": [
+        "bg",
+        "feather",
+        "feather01",
+        "feather02",
+        "lizi"
+      ],
+      "render_mode": "sliced_static_base_only",
+      "integration": "base_bg_included_dynamic_children_excluded"
+    },
+    "9017": {
+      "complete": false,
+      "components": [
+        "9017_1"
+      ],
+      "ui_tree_node_count": 10,
+      "dynamic_children": [
+        "bg",
+        "feather",
+        "feather01",
+        "feather02"
+      ],
+      "render_mode": "sliced_static_base_only",
+      "integration": "base_bg_included_dynamic_children_excluded"
+    },
+    "9019": {
+      "complete": false,
+      "components": [
+        "9019_01",
+        "9019_02_01",
+        "9019_02_02",
+        "9019_02_03",
+        "9019_03",
+        "9019_04",
+        "9019_05",
+        "9019_mask01",
+        "9019_mask02"
+      ],
+      "render_mode": "runtime_dynamic_excluded",
+      "integration": "excluded_dynamic_components"
+    },
+    "9021": {
+      "complete": false,
+      "components": [
+        "9021_01",
+        "9021_02",
+        "9021_03",
+        "9021_04",
+        "9021_05",
+        "9021_06_01",
+        "9021_06_02",
+        "9021_06_03",
+        "9021_07_01",
+        "9021_07_02",
+        "9021_07_03",
+        "9021_07_04",
+        "UI_9021_huaban"
+      ],
+      "render_mode": "runtime_dynamic_excluded",
+      "integration": "excluded_dynamic_components"
+    },
+    "9022": {
+      "complete": false,
+      "components": [
+        "9022_01",
+        "9022_02",
+        "9022_03",
+        "9022_04",
+        "9022_05",
+        "9022_06",
+        "9022_08",
+        "9022_09",
+        "UI_9022_01"
+      ],
+      "render_mode": "runtime_dynamic_excluded",
+      "integration": "excluded_dynamic_components"
+    }
+  },
+  "excluded_dynamic_themes": [
+    "9019",
+    "9021",
+    "9022"
+  ],
+  "slice_source": "Unity Sprite.m_Border"
+}

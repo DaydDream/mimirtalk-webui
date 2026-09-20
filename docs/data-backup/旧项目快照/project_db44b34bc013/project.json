@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "漫画同好会",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_9010:9010",
+    "signature": "",
+    "contact_id": 9010,
+    "kind": "group",
+    "member_ids": []
+  },
+  "appearance": {
+    "read": true,
+    "background_asset_id": null
+  },
+  "messages": [
+    {
+      "id": "msg_diac953szn3i",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "这句是阿波罗说的",
+      "speaker_id": 1059,
+      "speaker_name": "阿波罗",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1059:1059"
+    },
+    {
+      "id": "msg_3y3olnk2zn7q",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "这句换一个人，是阿尔忒弥斯说的",
+      "speaker_id": 1021,
+      "speaker_name": "阿尔忒弥斯",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1021:1021"
+    },
+    {
+      "id": "msg_3fh0f1jazncv",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "群聊里每条消息都要能看出是谁在说话",
+      "speaker_id": 1024,
+      "speaker_name": "阿努比斯",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1024:1024"
+    }
+  ],
+  "id": "project_db44b34bc013"
+}

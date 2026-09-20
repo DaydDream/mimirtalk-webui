@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "漫画同好会",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_9010:9010",
+    "signature": "",
+    "contact_id": 9010,
+    "kind": "group",
+    "member_ids": []
+  },
+  "appearance": {
+    "read": true,
+    "background_asset_id": null
+  },
+  "messages": [
+    {
+      "id": "msg_jvz3ez6dbyjx",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "我是管理员，这条应该显示在右侧。",
+      "speaker_id": null,
+      "speaker_name": "我"
+    },
+    {
+      "id": "msg_597vf8smbyst",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "我是阿波罗，这条应该显示在左侧。",
+      "speaker_id": 1059,
+      "speaker_name": "阿波罗",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1059:1059"
+    },
+    {
+      "id": "msg_cm8oq241bz1c",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "我是阿尔忒弥斯，群聊里也要能看出是谁在说话。",
+      "speaker_id": 1021,
+      "speaker_name": "阿尔忒弥斯",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1021:1021"
+    },
+    {
+      "id": "msg_itv9ryuzbz97",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "管理员继续在右侧回复。",
+      "speaker_id": null,
+      "speaker_name": "我"
+    }
+  ],
+  "id": "project_980aa9dcd02e"
+}

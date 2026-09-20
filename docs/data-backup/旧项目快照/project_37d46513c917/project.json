@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "112",
+    "avatar_asset_id": null,
+    "signature": "",
+    "contact_id": 9200,
+    "kind": "group",
+    "member_ids": [
+      1029,
+      1013,
+      1059,
+      1021
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": null
+  },
+  "messages": [
+    {
+      "id": "msg_jskxmpijphmo",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "新消息"
+    }
+  ],
+  "id": "project_37d46513c917",
+  "conversations": {
+    "9200": [
+      {
+        "id": "msg_jskxmpijphmo",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "新消息"
+      }
+    ]
+  },
+  "active_conversation_id": "9200"
+}

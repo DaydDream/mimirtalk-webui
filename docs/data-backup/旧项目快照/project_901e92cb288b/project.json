@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "112",
+    "avatar_asset_id": null,
+    "signature": "",
+    "contact_id": 9200,
+    "kind": "group",
+    "member_ids": [
+      1029,
+      1013,
+      1059,
+      1021
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": null
+  },
+  "messages": [
+    {
+      "id": "msg_tf9deqgdwdjm",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "你好",
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_21nxgktxwdm0",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "有时候对话会被撤回，撤回的消息可是有内容的，点太快的话会错过。",
+      "speaker_id": 1029,
+      "speaker_name": "奥丁",
+      "speaker_asset_id": "character_itemshead:story_comsingle:1029"
+    }
+  ],
+  "id": "project_901e92cb288b",
+  "conversations": {
+    "9200": [
+      {
+        "id": "msg_tf9deqgdwdjm",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_21nxgktxwdm0",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "有时候对话会被撤回，撤回的消息可是有内容的，点太快的话会错过。",
+        "speaker_id": 1029,
+        "speaker_name": "奥丁",
+        "speaker_asset_id": "character_itemshead:story_comsingle:1029"
+      }
+    ]
+  },
+  "active_conversation_id": "9200"
+}

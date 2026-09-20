@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "112",
+    "avatar_asset_id": null,
+    "signature": "",
+    "contact_id": 9200,
+    "kind": "group",
+    "member_ids": [
+      1029,
+      1013,
+      1059,
+      1021
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": null,
+    "bubble_theme_id": "9000"
+  },
+  "messages": [],
+  "id": "project_08cb3dc0edac",
+  "conversations": {
+    "9200": []
+  },
+  "active_conversation_id": "9200"
+}

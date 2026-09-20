@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "漫画同好会",
+    "avatar_asset_id": "momotalk_images:textureconfig_momotalk_9010:9010",
+    "signature": "",
+    "contact_id": 9010,
+    "kind": "group",
+    "member_ids": []
+  },
+  "appearance": {
+    "read": true,
+    "background_asset_id": null
+  },
+  "messages": [
+    {
+      "id": "msg_fvpzmztjzcwq",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "第一条测试消息",
+      "speaker_id": 1059,
+      "speaker_name": "阿波罗",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1059:1059"
+    },
+    {
+      "id": "msg_4zpl3d2izd14",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "第二条测试消息",
+      "speaker_id": 1021,
+      "speaker_name": "阿尔忒弥斯",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1021:1021"
+    },
+    {
+      "id": "msg_r91uogrkzd5g",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "第三条测试消息",
+      "speaker_id": 1024,
+      "speaker_name": "阿努比斯",
+      "speaker_asset_id": "character_icon:textureconfig_character_icon_1024:1024"
+    }
+  ],
+  "id": "project_3334b2aeb10e"
+}

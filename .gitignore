@@ -1,0 +1,58 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log
+
+# ---- 运行期生成物 ----
+webui/data/projects/
+webui/data/uploads/
+webui/data/thumbnails/
+webui/output/
+!webui/data/projects/.gitkeep
+!webui/data/uploads/.gitkeep
+!webui/data/thumbnails/.gitkeep
+!webui/output/.gitkeep
+webui/data/debug.log
+webui/*.log
+
+# ---- 解包产物与二进制工具（体积过大，不入库）----
+/extract/
+/tools/bin/
+/tools/*report.json
+*.ys
+*.usm
+*.cpk
+*.zip
+*.7z
+*.rar
+
+# ---- 发布产物 ----
+/webui项目封包/
+/dist/
+/release/
+*.zip.sha256
+
+# ---- 编辑器与系统 ----
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+Thumbs.db
+desktop.ini
+.DS_Store

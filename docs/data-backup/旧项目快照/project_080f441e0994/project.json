@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "title": "未命名会话",
+  "contact": {
+    "name": "122345",
+    "avatar_asset_id": null,
+    "signature": "",
+    "contact_id": 9203,
+    "kind": "group",
+    "member_ids": [
+      1059,
+      1021,
+      1024,
+      1013,
+      1083,
+      1055,
+      1029,
+      1011,
+      1017,
+      1012,
+      1039,
+      1066,
+      1097,
+      1068,
+      1020,
+      1050,
+      1093,
+      1042,
+      1094,
+      1033,
+      1044,
+      1096,
+      1038,
+      1037
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": null
+  },
+  "messages": [],
+  "id": "project_080f441e0994",
+  "conversations": {
+    "9001": [],
+    "9002": [],
+    "9006": [],
+    "9007": [],
+    "9009": [],
+    "9011": [],
+    "9200": [],
+    "9201": [],
+    "9202": [],
+    "9203": [],
+    "10066": [
+      {
+        "id": "msg_16hiu3vpqp3v",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "新消息",
+        "created_at": "2026-09-20T13:17:35.943Z"
+      }
+    ],
+    "10170": [
+      {
+        "id": "msg_xvsgnks3qoxs",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "角色独立消息 1789800054775",
+        "created_at": "2026-09-20T13:17:36.943Z"
+      }
+    ]
+  },
+  "active_conversation_id": "9203"
+}

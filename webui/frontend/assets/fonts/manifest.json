@@ -1,0 +1,16 @@
+[
+  {
+    "asset": "fonts/sourcehansans.ys",
+    "font_name": "SourceHanSans",
+    "output": "mimirtalk_webui/frontend/assets/fonts/source-han-sans.ttf",
+    "bytes": 1847644,
+    "role": "正文与界面"
+  },
+  {
+    "asset": "C:\\Windows\\Fonts\\NotoSerifSC-VF.ttf",
+    "font_name": "Noto Serif SC",
+    "output": "mimirtalk_webui/frontend/assets/fonts/noto-serif-sc-vf.ttf",
+    "bytes": 25129160,
+    "role": "名字字体；替代缺字的游戏 serif 子集"
+  }
+]

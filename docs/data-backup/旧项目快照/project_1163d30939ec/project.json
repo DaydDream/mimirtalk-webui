@@ -1,0 +1,364 @@
+{
+  "version": 1,
+  "title": "阶段4 UI 验证 1789838901119",
+  "contact": {
+    "name": "6666",
+    "avatar_asset_id": null,
+    "signature": "超长签名：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一",
+    "contact_id": 9202,
+    "kind": "group",
+    "member_ids": [
+      1059,
+      1021,
+      1024,
+      1013,
+      1083,
+      1055
+    ]
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": "momotalk_images:textureconfig_momotalk_momotalk_head_06:Momotalk_head_06",
+    "bubble_theme_id": "9015"
+  },
+  "messages": [
+    {
+      "id": "msg_6uy7249ekrs5",
+      "type": "image",
+      "side": "right",
+      "delay_ms": 600,
+      "file_id": "0d41c0061001454fb89c7bf9bf7f886e.jpg",
+      "name": "2vZbE8.jpg",
+      "width": 1624,
+      "height": 3071,
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_zad7gftel0y4",
+      "type": "image",
+      "side": "right",
+      "delay_ms": 600,
+      "file_id": "b98dd1bb7f284740b0e10e3f97b9d975.jpg",
+      "name": "7A817F8CB25714D20B0C5EF7B4B3089D.jpg",
+      "width": 1350,
+      "height": 1350,
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_76u3xbcul8j5",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "你好",
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_u0yh5b96pl7q",
+      "type": "text",
+      "side": "right",
+      "delay_ms": 600,
+      "text": "你好",
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_gg46d503w708",
+      "type": "image",
+      "side": "right",
+      "delay_ms": 600,
+      "file_id": "b5f0b5d8b8c3475c82d91660c5db73ab.jpg",
+      "name": "G8YM3C4asAA_E0u.jpg",
+      "width": 1605,
+      "height": 1135,
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_g39o0kzqwa6t",
+      "type": "image",
+      "side": "right",
+      "delay_ms": 600,
+      "file_id": "13251a8782d54dc28f7139172256179e.jpg",
+      "name": "R-C.jpg",
+      "width": 580,
+      "height": 834,
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_qbxk7fb0wgdx",
+      "type": "image",
+      "side": "right",
+      "delay_ms": 600,
+      "file_id": "e9401d72502640aeb30524a4ffeefaf3.png",
+      "name": "130366100_p0.png",
+      "width": 2472,
+      "height": 2472,
+      "speaker_id": null,
+      "speaker_name": "管理员"
+    },
+    {
+      "id": "msg_g7e97eqbwl9q",
+      "type": "text",
+      "side": "left",
+      "delay_ms": 600,
+      "text": "你好",
+      "speaker_id": 1059,
+      "speaker_name": "阿波罗",
+      "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1059:1059"
+    }
+  ],
+  "id": "project_1163d30939ec",
+  "conversations": {
+    "1011": [],
+    "1020": [],
+    "1021": [],
+    "1024": [],
+    "1029": [],
+    "1048": [],
+    "1055": [],
+    "1059": [],
+    "1061": [],
+    "1067": [],
+    "1074": [],
+    "1080": [
+      {
+        "id": "msg_7inof0cjjqbr",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      }
+    ],
+    "1089": [],
+    "1099": [],
+    "9001": [],
+    "9002": [],
+    "9003": [],
+    "9004": [],
+    "9005": [],
+    "9006": [],
+    "9007": [],
+    "9009": [],
+    "9010": [
+      {
+        "id": "msg_ujvdl8nkvba0",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "管理员发言测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_g9vtmjjpvbc2",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "群聊发言人测试：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文",
+        "speaker_id": 1084,
+        "speaker_name": "薇儿丹蒂",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1084:1084"
+      },
+      {
+        "id": "msg_yy8ng52gvc1f",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "长链接：\nhttps://example.com/aethergazer/momotalk/archive/2026/09/18/stage4-layout-regression-check?channel=mimir&mode=webui&payload=very-long-query-value\n后面继续输入中文。"
+      },
+      {
+        "id": "msg_iwpohqgpvcd2",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。"
+      },
+      {
+        "id": "msg_6c9hlb4ovclc",
+        "type": "sticker",
+        "side": "left",
+        "delay_ms": 600,
+        "asset_id": "chat_stickers:textureconfig_chat_chatsticker_10000@zh_cn:10000@zh_cn"
+      },
+      {
+        "id": "msg_x2e59eq0vd4c",
+        "type": "choice",
+        "side": "center",
+        "delay_ms": 600,
+        "prompt": "选择一个回复方向：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消",
+        "options": [
+          "选项：我会先检查资源、尺寸与长文本换行，然后再继续验证。",
+          "第二个选项"
+        ]
+      },
+      {
+        "id": "msg_e1w5qs52vdfy",
+        "type": "system",
+        "side": "center",
+        "delay_ms": 600,
+        "text": "系统提示：这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消息。这是一条用于验证超长中文换行和布局稳定性的消"
+      },
+      {
+        "id": "msg_2l81g1avvdnu",
+        "type": "recall",
+        "side": "center",
+        "delay_ms": 600,
+        "text": "对方撤回了一条消息"
+      }
+    ],
+    "9011": [],
+    "9200": [
+      {
+        "id": "msg_0wxyzaxt2igt",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_1xxbwp8k2pmg",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_5cm4926x40td",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "新消息"
+      },
+      {
+        "id": "msg_dm0mbjlc47cy",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "新消息"
+      },
+      {
+        "id": "msg_fnft5ahkolof",
+        "type": "sticker",
+        "side": "right",
+        "delay_ms": 600,
+        "asset_id": "chat_stickers:textureconfig_chat_chatsticker_10283:10283",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_i08v0omhp2zi",
+        "type": "sticker",
+        "side": "left",
+        "delay_ms": 600,
+        "asset_id": "chat_stickers:textureconfig_chat_chatsticker_10339:10339",
+        "speaker_id": 1059,
+        "speaker_name": "阿波罗",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1059:1059"
+      }
+    ],
+    "9201": [],
+    "9202": [
+      {
+        "id": "msg_6uy7249ekrs5",
+        "type": "image",
+        "side": "right",
+        "delay_ms": 600,
+        "file_id": "0d41c0061001454fb89c7bf9bf7f886e.jpg",
+        "name": "2vZbE8.jpg",
+        "width": 1624,
+        "height": 3071,
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_zad7gftel0y4",
+        "type": "image",
+        "side": "right",
+        "delay_ms": 600,
+        "file_id": "b98dd1bb7f284740b0e10e3f97b9d975.jpg",
+        "name": "7A817F8CB25714D20B0C5EF7B4B3089D.jpg",
+        "width": 1350,
+        "height": 1350,
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_76u3xbcul8j5",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_u0yh5b96pl7q",
+        "type": "text",
+        "side": "right",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_gg46d503w708",
+        "type": "image",
+        "side": "right",
+        "delay_ms": 600,
+        "file_id": "b5f0b5d8b8c3475c82d91660c5db73ab.jpg",
+        "name": "G8YM3C4asAA_E0u.jpg",
+        "width": 1605,
+        "height": 1135,
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_g39o0kzqwa6t",
+        "type": "image",
+        "side": "right",
+        "delay_ms": 600,
+        "file_id": "13251a8782d54dc28f7139172256179e.jpg",
+        "name": "R-C.jpg",
+        "width": 580,
+        "height": 834,
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_qbxk7fb0wgdx",
+        "type": "image",
+        "side": "right",
+        "delay_ms": 600,
+        "file_id": "e9401d72502640aeb30524a4ffeefaf3.png",
+        "name": "130366100_p0.png",
+        "width": 2472,
+        "height": 2472,
+        "speaker_id": null,
+        "speaker_name": "管理员"
+      },
+      {
+        "id": "msg_g7e97eqbwl9q",
+        "type": "text",
+        "side": "left",
+        "delay_ms": 600,
+        "text": "你好",
+        "speaker_id": 1059,
+        "speaker_name": "阿波罗",
+        "speaker_asset_id": "character_itemshead:textureconfig_character_itemshead_1059:1059"
+      }
+    ],
+    "10066": []
+  },
+  "active_conversation_id": "9202"
+}

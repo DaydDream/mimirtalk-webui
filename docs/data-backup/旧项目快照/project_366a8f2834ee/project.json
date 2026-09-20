@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "title": "未命名项目",
+  "contact": {
+    "name": "望舒",
+    "avatar_asset_id": "character_itemshead:story_comsingle:10170",
+    "signature": "",
+    "contact_id": 10170,
+    "kind": "hero",
+    "member_ids": []
+  },
+  "appearance": {
+    "background_asset_id": "backgrounds:texturebg_momotalk_momotalk_04:Momotalk_04",
+    "read": true,
+    "admin_avatar_asset_id": null
+  },
+  "messages": [
+    {
+      "id": "msg_dzz6ucydp8in",
+      "type": "system",
+      "side": "center",
+      "created_at": "2026-09-20T14:23:20.928Z",
+      "text": "角色独立消息 1789914200733"
+    }
+  ],
+  "id": "project_366a8f2834ee",
+  "conversations": {
+    "9200": [],
+    "10066": [
+      {
+        "id": "msg_o89gptj9p8r2",
+        "type": "system",
+        "side": "center",
+        "created_at": "2026-09-20T14:23:21.230Z",
+        "text": "系统提示"
+      }
+    ],
+    "10170": [
+      {
+        "id": "msg_dzz6ucydp8in",
+        "type": "system",
+        "side": "center",
+        "created_at": "2026-09-20T14:23:20.928Z",
+        "text": "角色独立消息 1789914200733"
+      }
+    ]
+  },
+  "active_conversation_id": "10170"
+}

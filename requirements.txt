@@ -1,0 +1,4 @@
+# MimirTalk WebUI 运行依赖
+# 发布包已内置 Python 3.12.10 + Pillow 12.3.0，普通用户无需安装。
+# 仅从源码运行时需要：
+pillow>=10.0

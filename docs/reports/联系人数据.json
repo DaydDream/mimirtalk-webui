@@ -1,0 +1,718 @@
+{
+  "version": 1,
+  "source": "ChatHeroCfg.lua + 用户补充角色",
+  "note": "可会话角色名单。用户补充角色使用项目内 story_comsingle 头像；头像 PNG 不需要预先裁切，WebUI 和 PNG 导出会统一按 MomoTalk 头像内孔裁切。",
+  "contacts": [
+    {
+      "id": 10170,
+      "name": "望舒",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10170",
+      "asset_id": "character_itemshead:story_comsingle:10170",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10066,
+      "name": "宁希达",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10066",
+      "asset_id": "character_itemshead:story_comsingle:10066",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10183,
+      "name": "克图格娅",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10183",
+      "asset_id": "character_itemshead:story_comsingle:10183",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10169,
+      "name": "长琴",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10169",
+      "asset_id": "character_itemshead:story_comsingle:10169",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10175,
+      "name": "泰逢",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10175",
+      "asset_id": "character_itemshead:story_comsingle:10175",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10176,
+      "name": "后土",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10176",
+      "asset_id": "character_itemshead:story_comsingle:10176",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10144,
+      "name": "尼娅",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10144",
+      "asset_id": "character_itemshead:story_comsingle:10144",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10111,
+      "name": "苍术",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10111",
+      "asset_id": "character_itemshead:story_comsingle:10111",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 9010,
+      "name": "漫画同好会",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9010",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9010:9010",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9011,
+      "name": "星虹议会",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9011",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9011:9011",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9009,
+      "name": "隐科组",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9009",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9009:9009",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9007,
+      "name": "单人小队一家亲",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9007",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9007:9007",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9006,
+      "name": "冬小队",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9006",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9006:9006",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9005,
+      "name": "雷小队",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9005",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9005:9005",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9004,
+      "name": "雉小队",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9004",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9004:9004",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9003,
+      "name": "综合科",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9003",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9003:9003",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9002,
+      "name": "第九部门",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9002",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9002:9002",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 9001,
+      "name": "序小队",
+      "kind": "group",
+      "game_icon_path": "TextureConfig/Momotalk/9001",
+      "asset_id": "momotalk_images:textureconfig_momotalk_9001:9001",
+      "asset_category": "momotalk_images",
+      "enabled": true
+    },
+    {
+      "id": 1099,
+      "name": "月读",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1099",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1099:1099",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1097,
+      "name": "俄尼里伊",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1097",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1097:1097",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1096,
+      "name": "赫尔墨斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1096",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1096:1096",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1095,
+      "name": "托特",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1095",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1095:1095",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1094,
+      "name": "海拉",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1094",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1094:1094",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1093,
+      "name": "国常立",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1093",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1093:1093",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1089,
+      "name": "帕尔瓦蒂",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1089",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1089:1089",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1085,
+      "name": "诗蔻蒂",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1085",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1085:1085",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1084,
+      "name": "薇儿丹蒂",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1084",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1084:1084",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1083,
+      "name": "埃克什瓦",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1083",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1083:1083",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1081,
+      "name": "丝卡蒂",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1081",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1081:1081",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1080,
+      "name": "维达尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1080",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1080:1080",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1077,
+      "name": "武罗",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1077",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1077:1077",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1075,
+      "name": "陵光",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1075",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1075:1075",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1074,
+      "name": "英招",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1074",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1074:1074",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1073,
+      "name": "麟钰",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1073",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1073:1073",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1072,
+      "name": "禄良",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1072",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1072:1072",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1071,
+      "name": "孟章",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1071",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1071:1071",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1070,
+      "name": "金乌",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1070",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1070:1070",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1068,
+      "name": "恩利尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1068",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1068:1068",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1067,
+      "name": "欧申纳斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1067",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1067:1067",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1066,
+      "name": "大国主",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1066",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1066:1066",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1061,
+      "name": "执明",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1061",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1061:1061",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1060,
+      "name": "陆吾",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1060",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1060:1060",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1059,
+      "name": "阿波罗",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1059",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1059:1059",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1058,
+      "name": "迦具土",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1058",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1058:1058",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1056,
+      "name": "伽梨",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1056",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1056:1056",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1055,
+      "name": "暗御津羽",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1055",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1055:1055",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1054,
+      "name": "无常（必安主理中）",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1054",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1054:1054",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1053,
+      "name": "羲和",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1053",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1053:1053",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1052,
+      "name": "马尔杜克",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1052",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1052:1052",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1050,
+      "name": "丰前坊天狗",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1050",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1050:1050",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1049,
+      "name": "伊邪那美",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1049",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1049:1049",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1048,
+      "name": "前鬼坊天狗",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1048",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1048:1048",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1047,
+      "name": "塞尔凯特",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1047",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1047:1047",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1044,
+      "name": "荷鲁斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1044",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1044:1044",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1043,
+      "name": "伊里伽尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1043",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1043:1043",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1042,
+      "name": "哈迪斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1042",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1042:1042",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1041,
+      "name": "雅典娜",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1041",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1041:1041",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1039,
+      "name": "波塞冬",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1039",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1039:1039",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1038,
+      "name": "赫拉",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1038",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1038:1038",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1037,
+      "name": "霍德尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1037",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1037:1037",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1035,
+      "name": "索贝克",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1035",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1035:1035",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1034,
+      "name": "瓦吉特",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1034",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1034:1034",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1033,
+      "name": "海姆达尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1033",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1033:1033",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1032,
+      "name": "提尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1032",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1032:1032",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1029,
+      "name": "奥丁",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1029",
+      "asset_id": "character_itemshead:story_comsingle:1029",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1028,
+      "name": "托尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1028",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1028:1028",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1027,
+      "name": "利维坦",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1027",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1027:1027",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1026,
+      "name": "家电维修努阿达",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1026",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1026:1026",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1024,
+      "name": "阿努比斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1024",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1024:1024",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1022,
+      "name": "塞勒涅",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1022",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1022:1022",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1021,
+      "name": "阿尔忒弥斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1021",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1021:1021",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1020,
+      "name": "梵天",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1020",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1020:1020",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1019,
+      "name": "休",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1019",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1019:1019",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1017,
+      "name": "芭丝特",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1017",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1017:1017",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1016,
+      "name": "金固",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1016",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1016:1016",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1015,
+      "name": "塞赫麦特",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1015",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1015:1015",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1013,
+      "name": "阿修罗",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1013",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1013:1013",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1012,
+      "name": "白泽",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1012",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1012:1012",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1011,
+      "name": "奥西里斯",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1011",
+      "asset_id": "character_itemshead:textureconfig_character_itemshead_1011:1011",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    }
+  ]
+}
