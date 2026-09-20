@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+
+jobs:
+  syntax:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pillow
+      - name: Compile Python sources
+        run: python -m compileall -q webui/backend tools
+      - name: Validate JSON files
+        shell: pwsh
+        run: |
+          $failed = 0
+          Get-ChildItem -Recurse -File -Include *.json webui,tools,docs |
+            Where-Object { $_.FullName -notmatch '\\node_modules\\' } |
+            ForEach-Object {
+              try { Get-Content -Raw -LiteralPath $_.FullName | ConvertFrom-Json | Out-Null }
+              catch { Write-Host "INVALID JSON: $($_.FullName)"; $script:failed = 1 }
+            }
+          if ($failed -ne 0) { exit 1 }
+      - name: Check JavaScript syntax
+        run: node --check webui/frontend/src/app.js

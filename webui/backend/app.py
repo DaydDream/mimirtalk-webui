@@ -59,7 +59,7 @@ class Application:
         self.workspace_dir = Path(workspace_dir)
         self.frontend_dir = Path(frontend_dir)
         self.index = AssetIndex(
-            index_path=index_path or self.workspace_dir / "mimirtalk_webui" / "data" / "asset_index.json",
+            index_path=index_path or WEBUI_DIR / "data" / "asset_index.json",
             workspace_dir=self.workspace_dir,
         )
         self.store = ProjectStore(projects_dir)
@@ -70,7 +70,7 @@ class Application:
         self.uploads_dir = Path(uploads_dir)
         self.bubble_themes_path = Path(
             bubble_themes_path
-            or self.workspace_dir / "mimirtalk_webui" / "data" / "bubble_themes.json"
+            or WEBUI_DIR / "data" / "bubble_themes.json"
         )
         self.index.load()
         self._load_sticker_categories()
