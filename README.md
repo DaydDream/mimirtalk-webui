@@ -57,6 +57,27 @@ python webui/backend/app.py --host 127.0.0.1 --port 8765
 
 > 若在仓库根目录放置 `python-runtime/`（内置运行时），启动器会优先使用它，此时完全不依赖系统 Python。
 
+### 素材目录
+
+仓库出于体积考虑**不包含**解包素材（约 24 MB 的 PNG）。要让界面完整显示，把发布包解压后得到的
+`assets_source/` 目录复制到仓库根目录即可，索引中的路径（`assets_source/aethergazer_momotalk/...`）
+会自动对应上：
+
+```text
+mimirtalk-webui/
+├── assets_source/     ← 从 Release 解压得到
+├── webui/
+└── ...
+```
+
+少量手工补充的头像与界面图集（5 个文件）已随仓库提供，位于 `webui/assets/`。
+
+可用下面的命令检查素材引用是否完整：
+
+```powershell
+python webui/tools/check_asset_references.py
+```
+
 ## 目录结构
 
 ```text
@@ -64,10 +85,11 @@ python webui/backend/app.py --host 127.0.0.1 --port 8765
 ├── webui/                      应用本体
 │   ├── backend/                HTTP 服务、素材索引、项目存储
 │   ├── frontend/               页面、样式与脚本（含内置字体）
-│   ├── assets/avatars/         手工补充的角色头像
+│   ├── assets/                 手工补充头像、图集、界面背景
 │   ├── data/                   联系人、气泡主题、贴纸分类、素材索引
 │   ├── schema/                 项目 JSON schema
 │   └── docs/                   开发说明、需求、交接与审计文档
+├── assets_source/              解包素材（从 Release 解压获得，不入库）
 ├── tools/                      解包与素材处理脚本（不含二进制工具）
 ├── docs/                       项目文档
 │   ├── unpack/                 解包流程
@@ -101,9 +123,7 @@ python webui/backend/app.py --host 127.0.0.1 --port 8765
 
 发布包内含嵌入式 Python 3.12.10 与 Pillow 12.3.0，但**仓库不包含**：
 
-- 解包得到的原始素材目录（体积过大）
-- 解包所需的二进制工具（ffmpeg、vgmstream、hazuki 等）
-- 构建好的发布包
+
 
 如需重新生成素材索引，请先按 `docs/unpack/` 完成解包，并把结果放到仓库同级的 `extract/` 目录。
 

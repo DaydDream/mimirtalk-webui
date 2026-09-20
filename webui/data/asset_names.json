@@ -33,7 +33,7 @@
     "character_itemshead:textureconfig_character_itemshead_1011:1011": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1011",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1011/sprite/1011.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1011/sprite/1011.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1011_1011/file",
       "name": "奥西里斯",
       "base_id": 1011,
@@ -42,7 +42,7 @@
     "character_itemshead:textureconfig_character_itemshead_1012:1012": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1012",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1012/sprite/1012.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1012/sprite/1012.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1012_1012/file",
       "name": "白泽",
       "base_id": 1012,
@@ -51,7 +51,7 @@
     "character_itemshead:textureconfig_character_itemshead_1013:1013": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1013",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1013/sprite/1013.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1013/sprite/1013.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1013_1013/file",
       "name": "阿修罗",
       "base_id": 1013,
@@ -60,7 +60,7 @@
     "character_itemshead:textureconfig_character_itemshead_1015:1015": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1015",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1015/sprite/1015.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1015/sprite/1015.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1015_1015/file",
       "name": "塞赫麦特",
       "base_id": 1015,
@@ -69,7 +69,7 @@
     "character_itemshead:textureconfig_character_itemshead_1016:1016": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1016",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1016/sprite/1016.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1016/sprite/1016.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1016_1016/file",
       "name": "金固",
       "base_id": 1016,
@@ -78,7 +78,7 @@
     "character_itemshead:textureconfig_character_itemshead_1017:1017": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1017",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1017/sprite/1017.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1017/sprite/1017.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1017_1017/file",
       "name": "芭丝特",
       "base_id": 1017,
@@ -87,7 +87,7 @@
     "character_itemshead:textureconfig_character_itemshead_1019:1019": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1019",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1019/sprite/1019.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1019/sprite/1019.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1019_1019/file",
       "name": "休",
       "base_id": 1019,
@@ -96,7 +96,7 @@
     "character_itemshead:textureconfig_character_itemshead_1020:1020": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1020",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1020/sprite/1020.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1020/sprite/1020.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1020_1020/file",
       "name": "梵天",
       "base_id": 1020,
@@ -105,7 +105,7 @@
     "character_itemshead:textureconfig_character_itemshead_1021:1021": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1021",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1021/sprite/1021.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1021/sprite/1021.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1021_1021/file",
       "name": "阿尔忒弥斯",
       "base_id": 1021,
@@ -114,7 +114,7 @@
     "character_itemshead:textureconfig_character_itemshead_1022:1022": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1022",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1022/sprite/1022.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1022/sprite/1022.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1022_1022/file",
       "name": "塞勒涅",
       "base_id": 1022,
@@ -123,7 +123,7 @@
     "character_itemshead:textureconfig_character_itemshead_1024:1024": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1024",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1024/sprite/1024.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1024/sprite/1024.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1024_1024/file",
       "name": "阿努比斯",
       "base_id": 1024,
@@ -132,7 +132,7 @@
     "character_itemshead:textureconfig_character_itemshead_1026:1026": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1026",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1026/sprite/1026.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1026/sprite/1026.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1026_1026/file",
       "name": "家电维修努阿达",
       "base_id": 1026,
@@ -141,7 +141,7 @@
     "character_itemshead:textureconfig_character_itemshead_1027:1027": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1027",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1027/sprite/1027.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1027/sprite/1027.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1027_1027/file",
       "name": "利维坦",
       "base_id": 1027,
@@ -150,7 +150,7 @@
     "character_itemshead:textureconfig_character_itemshead_1028:1028": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1028",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1028/sprite/1028.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1028/sprite/1028.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1028_1028/file",
       "name": "托尔",
       "base_id": 1028,
@@ -159,7 +159,7 @@
     "character_itemshead:textureconfig_character_itemshead_1032:1032": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1032",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1032/sprite/1032.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1032/sprite/1032.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1032_1032/file",
       "name": "提尔",
       "base_id": 1032,
@@ -168,7 +168,7 @@
     "character_itemshead:textureconfig_character_itemshead_1033:1033": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1033",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1033/sprite/1033.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1033/sprite/1033.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1033_1033/file",
       "name": "海姆达尔",
       "base_id": 1033,
@@ -177,7 +177,7 @@
     "character_itemshead:textureconfig_character_itemshead_1034:1034": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1034",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1034/sprite/1034.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1034/sprite/1034.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1034_1034/file",
       "name": "瓦吉特",
       "base_id": 1034,
@@ -186,7 +186,7 @@
     "character_itemshead:textureconfig_character_itemshead_1035:1035": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1035",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1035/sprite/1035.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1035/sprite/1035.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1035_1035/file",
       "name": "索贝克",
       "base_id": 1035,
@@ -195,7 +195,7 @@
     "character_itemshead:textureconfig_character_itemshead_1037:1037": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1037",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1037/sprite/1037.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1037/sprite/1037.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1037_1037/file",
       "name": "霍德尔",
       "base_id": 1037,
@@ -204,7 +204,7 @@
     "character_itemshead:textureconfig_character_itemshead_1038:1038": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1038",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1038/sprite/1038.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1038/sprite/1038.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1038_1038/file",
       "name": "赫拉",
       "base_id": 1038,
@@ -213,7 +213,7 @@
     "character_itemshead:textureconfig_character_itemshead_1039:1039": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1039",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1039/sprite/1039.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1039/sprite/1039.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1039_1039/file",
       "name": "波塞冬",
       "base_id": 1039,
@@ -222,7 +222,7 @@
     "character_itemshead:textureconfig_character_itemshead_1041:1041": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1041",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1041/sprite/1041.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1041/sprite/1041.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1041_1041/file",
       "name": "雅典娜",
       "base_id": 1041,
@@ -231,7 +231,7 @@
     "character_itemshead:textureconfig_character_itemshead_1042:1042": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1042",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1042/sprite/1042.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1042/sprite/1042.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1042_1042/file",
       "name": "哈迪斯",
       "base_id": 1042,
@@ -240,7 +240,7 @@
     "character_itemshead:textureconfig_character_itemshead_1043:1043": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1043",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1043/sprite/1043.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1043/sprite/1043.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1043_1043/file",
       "name": "伊里伽尔",
       "base_id": 1043,
@@ -249,7 +249,7 @@
     "character_itemshead:textureconfig_character_itemshead_1044:1044": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1044",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1044/sprite/1044.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1044/sprite/1044.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1044_1044/file",
       "name": "荷鲁斯",
       "base_id": 1044,
@@ -258,7 +258,7 @@
     "character_itemshead:textureconfig_character_itemshead_1047:1047": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1047",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1047/sprite/1047.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1047/sprite/1047.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1047_1047/file",
       "name": "塞尔凯特",
       "base_id": 1047,
@@ -267,7 +267,7 @@
     "character_itemshead:textureconfig_character_itemshead_1048:1048": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1048",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1048/sprite/1048.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1048/sprite/1048.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1048_1048/file",
       "name": "前鬼坊天狗",
       "base_id": 1048,
@@ -276,7 +276,7 @@
     "character_itemshead:textureconfig_character_itemshead_1049:1049": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1049",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1049/sprite/1049.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1049/sprite/1049.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1049_1049/file",
       "name": "伊邪那美",
       "base_id": 1049,
@@ -285,7 +285,7 @@
     "character_itemshead:textureconfig_character_itemshead_1050:1050": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1050",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1050/sprite/1050.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1050/sprite/1050.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1050_1050/file",
       "name": "丰前坊天狗",
       "base_id": 1050,
@@ -294,7 +294,7 @@
     "character_itemshead:textureconfig_character_itemshead_1052:1052": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1052",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1052/sprite/1052.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1052/sprite/1052.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1052_1052/file",
       "name": "马尔杜克",
       "base_id": 1052,
@@ -303,7 +303,7 @@
     "character_itemshead:textureconfig_character_itemshead_1053:1053": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1053",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1053/sprite/1053.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1053/sprite/1053.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1053_1053/file",
       "name": "羲和",
       "base_id": 1053,
@@ -312,7 +312,7 @@
     "character_itemshead:textureconfig_character_itemshead_1054:1054": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1054",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1054/sprite/1054.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1054/sprite/1054.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1054_1054/file",
       "name": "无常（必安主理中）",
       "base_id": 1054,
@@ -321,7 +321,7 @@
     "character_itemshead:textureconfig_character_itemshead_1055:1055": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1055",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1055/sprite/1055.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1055/sprite/1055.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1055_1055/file",
       "name": "暗御津羽",
       "base_id": 1055,
@@ -330,7 +330,7 @@
     "character_itemshead:textureconfig_character_itemshead_1056:1056": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1056",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1056/sprite/1056.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1056/sprite/1056.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1056_1056/file",
       "name": "伽梨",
       "base_id": 1056,
@@ -339,7 +339,7 @@
     "character_itemshead:textureconfig_character_itemshead_1058:1058": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1058",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1058/sprite/1058.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1058/sprite/1058.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1058_1058/file",
       "name": "迦具土",
       "base_id": 1058,
@@ -348,7 +348,7 @@
     "character_itemshead:textureconfig_character_itemshead_1059:1059": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1059",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1059/sprite/1059.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1059/sprite/1059.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1059_1059/file",
       "name": "阿波罗",
       "base_id": 1059,
@@ -357,7 +357,7 @@
     "character_itemshead:textureconfig_character_itemshead_1060:1060": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1060",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1060/sprite/1060.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1060/sprite/1060.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1060_1060/file",
       "name": "陆吾",
       "base_id": 1060,
@@ -366,7 +366,7 @@
     "character_itemshead:textureconfig_character_itemshead_1061:1061": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1061",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1061/sprite/1061.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1061/sprite/1061.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1061_1061/file",
       "name": "执明",
       "base_id": 1061,
@@ -375,7 +375,7 @@
     "character_itemshead:textureconfig_character_itemshead_1066:1066": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1066",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1066/sprite/1066.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1066/sprite/1066.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1066_1066/file",
       "name": "大国主",
       "base_id": 1066,
@@ -384,7 +384,7 @@
     "character_itemshead:textureconfig_character_itemshead_1067:1067": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1067",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1067/sprite/1067.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1067/sprite/1067.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1067_1067/file",
       "name": "欧申纳斯",
       "base_id": 1067,
@@ -393,7 +393,7 @@
     "character_itemshead:textureconfig_character_itemshead_1068:1068": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1068",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1068/sprite/1068.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1068/sprite/1068.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1068_1068/file",
       "name": "恩利尔",
       "base_id": 1068,
@@ -402,7 +402,7 @@
     "character_itemshead:textureconfig_character_itemshead_1070:1070": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1070",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1070/sprite/1070.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1070/sprite/1070.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1070_1070/file",
       "name": "金乌",
       "base_id": 1070,
@@ -411,7 +411,7 @@
     "character_itemshead:textureconfig_character_itemshead_1071:1071": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1071",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1071/sprite/1071.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1071/sprite/1071.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1071_1071/file",
       "name": "孟章",
       "base_id": 1071,
@@ -420,7 +420,7 @@
     "character_itemshead:textureconfig_character_itemshead_1072:1072": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1072",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1072/sprite/1072.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1072/sprite/1072.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1072_1072/file",
       "name": "禄良",
       "base_id": 1072,
@@ -429,7 +429,7 @@
     "character_itemshead:textureconfig_character_itemshead_1073:1073": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1073",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1073/sprite/1073.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1073/sprite/1073.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1073_1073/file",
       "name": "麟钰",
       "base_id": 1073,
@@ -438,7 +438,7 @@
     "character_itemshead:textureconfig_character_itemshead_1074:1074": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1074",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1074/sprite/1074.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1074/sprite/1074.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1074_1074/file",
       "name": "英招",
       "base_id": 1074,
@@ -447,7 +447,7 @@
     "character_itemshead:textureconfig_character_itemshead_1075:1075": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1075",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1075/sprite/1075.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1075/sprite/1075.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1075_1075/file",
       "name": "陵光",
       "base_id": 1075,
@@ -456,7 +456,7 @@
     "character_itemshead:textureconfig_character_itemshead_1077:1077": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1077",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1077/sprite/1077.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1077/sprite/1077.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1077_1077/file",
       "name": "武罗",
       "base_id": 1077,
@@ -465,7 +465,7 @@
     "character_itemshead:textureconfig_character_itemshead_1080:1080": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1080",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1080/sprite/1080.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1080/sprite/1080.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1080_1080/file",
       "name": "维达尔",
       "base_id": 1080,
@@ -474,7 +474,7 @@
     "character_itemshead:textureconfig_character_itemshead_1081:1081": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1081",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1081/sprite/1081.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1081/sprite/1081.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1081_1081/file",
       "name": "丝卡蒂",
       "base_id": 1081,
@@ -483,7 +483,7 @@
     "character_itemshead:textureconfig_character_itemshead_1083:1083": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1083",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1083/sprite/1083.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1083/sprite/1083.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1083_1083/file",
       "name": "埃克什瓦",
       "base_id": 1083,
@@ -492,7 +492,7 @@
     "character_itemshead:textureconfig_character_itemshead_1084:1084": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1084",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1084/sprite/1084.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1084/sprite/1084.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1084_1084/file",
       "name": "薇儿丹蒂",
       "base_id": 1084,
@@ -501,7 +501,7 @@
     "character_itemshead:textureconfig_character_itemshead_1085:1085": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1085",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1085/sprite/1085.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1085/sprite/1085.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1085_1085/file",
       "name": "诗蔻蒂",
       "base_id": 1085,
@@ -510,7 +510,7 @@
     "character_itemshead:textureconfig_character_itemshead_1089:1089": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1089",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1089/sprite/1089.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1089/sprite/1089.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1089_1089/file",
       "name": "帕尔瓦蒂",
       "base_id": 1089,
@@ -519,7 +519,7 @@
     "character_itemshead:textureconfig_character_itemshead_1093:1093": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1093",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1093/sprite/1093.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1093/sprite/1093.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1093_1093/file",
       "name": "国常立",
       "base_id": 1093,
@@ -528,7 +528,7 @@
     "character_itemshead:textureconfig_character_itemshead_1094:1094": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1094",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1094/sprite/1094.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1094/sprite/1094.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1094_1094/file",
       "name": "海拉",
       "base_id": 1094,
@@ -537,7 +537,7 @@
     "character_itemshead:textureconfig_character_itemshead_1095:1095": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1095",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1095/sprite/1095.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1095/sprite/1095.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1095_1095/file",
       "name": "托特",
       "base_id": 1095,
@@ -546,7 +546,7 @@
     "character_itemshead:textureconfig_character_itemshead_1096:1096": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1096",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1096/sprite/1096.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1096/sprite/1096.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1096_1096/file",
       "name": "赫尔墨斯",
       "base_id": 1096,
@@ -555,7 +555,7 @@
     "character_itemshead:textureconfig_character_itemshead_1097:1097": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1097",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1097/sprite/1097.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1097/sprite/1097.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1097_1097/file",
       "name": "俄尼里伊",
       "base_id": 1097,
@@ -564,7 +564,7 @@
     "character_itemshead:textureconfig_character_itemshead_1099:1099": {
       "category": "character_itemshead",
       "asset_key": "textureconfig_character_itemshead_1099",
-      "path": "extract/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1099/sprite/1099.png",
+      "path": "assets_source/aethergazer_momotalk_shared_heads/images/character_itemshead/textureconfig_character_itemshead_1099/sprite/1099.png",
       "url": "/api/assets/character_itemshead_textureconfig_character_itemshead_1099_1099/file",
       "name": "月读",
       "base_id": 1099,
@@ -622,6 +622,51 @@
       "url": "/api/assets/character_itemshead_story_comsingle_10111/file",
       "name": "苍术",
       "base_id": 10111,
+      "variant": null
+    },
+    "atlas:atlas_monotalkatlas:Momotalk_09": {
+      "category": "atlas",
+      "asset_key": "atlas_monotalkatlas",
+      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_09.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_09/file",
+      "name": null,
+      "base_id": null,
+      "variant": null
+    },
+    "atlas:atlas_monotalkatlas:Momotalk_10": {
+      "category": "atlas",
+      "asset_key": "atlas_monotalkatlas",
+      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_10.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_10/file",
+      "name": null,
+      "base_id": null,
+      "variant": null
+    },
+    "atlas:atlas_monotalkatlas:Momotalk_11": {
+      "category": "atlas",
+      "asset_key": "atlas_monotalkatlas",
+      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_11.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_11/file",
+      "name": null,
+      "base_id": null,
+      "variant": null
+    },
+    "atlas:atlas_monotalkatlas:Momotalk_12": {
+      "category": "atlas",
+      "asset_key": "atlas_monotalkatlas",
+      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_12.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_12/file",
+      "name": null,
+      "base_id": null,
+      "variant": null
+    },
+    "backgrounds:texturebg_momotalk_momotalk_06:Momotalk_06": {
+      "category": "backgrounds",
+      "asset_key": "texturebg_momotalk_momotalk_06",
+      "path": "mimirtalk_webui/assets/backgrounds/texturebg_momotalk_momotalk_06/sprite/Momotalk_06.png",
+      "url": "/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file",
+      "name": null,
+      "base_id": null,
       "variant": null
     }
   }

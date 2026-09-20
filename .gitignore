@@ -29,6 +29,7 @@ webui/*.log
 
 # ---- 解包产物与二进制工具（体积过大，不入库）----
 /extract/
+/assets_source/
 /tools/bin/
 /tools/*report.json
 *.ys

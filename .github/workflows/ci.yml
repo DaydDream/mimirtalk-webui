@@ -28,5 +28,7 @@ jobs:
               catch { Write-Host "INVALID JSON: $($_.FullName)"; $script:failed = 1 }
             }
           if ($failed -ne 0) { exit 1 }
+      - name: Check asset references
+        run: python webui/tools/check_asset_references.py
       - name: Check JavaScript syntax
         run: node --check webui/frontend/src/app.js
