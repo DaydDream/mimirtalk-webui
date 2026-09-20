@@ -1,5 +1,15 @@
 # MimirTalk WebUI
 
+<div align="center">
+
+[![CI](https://github.com/DaydDream/mimirtalk-webui/actions/workflows/ci.yml/badge.svg)](https://github.com/DaydDream/mimirtalk-webui/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/DaydDream/mimirtalk-webui?label=release)](https://github.com/DaydDream/mimirtalk-webui/releases/latest)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-Windows%2010%20%2F%2011%20x64-lightgrey)
+![Python](https://img.shields.io/badge/python-3.12-blue)
+
+</div>
+
 > 深空之眼（AetherGazer）弥弥尔通讯 / MomoTalk 风格聊天编辑器与长图导出工具
 
 一个**离线可用**的本地 WebUI：编辑角色对话、选择气泡与贴纸、预览游戏内效果，并导出为长图。
