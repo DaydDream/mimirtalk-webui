@@ -19,20 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
---------------------------------------------------------------------------------
-
-第三方资源说明
-
-1. 字体
-   - Source Han Sans / Noto Sans CJK：SIL Open Font License 1.1
-   - Noto Serif SC：SIL Open Font License 1.1
-   随本项目分发的字体副本保留其原始许可，使用范围以 SIL OFL 1.1 为准。
-
-2. 游戏素材
-   《深空之眼》（AetherGazer）相关的角色名、图像、图标、配置数据等，
-   版权归其各自权利人所有。本项目为粉丝向学习交流用途，不主张任何权利。
-   如权利人提出异议，将移除相关素材。
-
-3. 代码
-   除第三方资源外，本项目源码以 MIT 许可证发布。
