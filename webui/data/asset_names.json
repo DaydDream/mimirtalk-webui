@@ -6,7 +6,7 @@
     "character_itemshead:story_comsingle:10066": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10066.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10066.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10066/file",
       "name": "宁希达",
       "base_id": 10066,
@@ -15,7 +15,7 @@
     "character_itemshead:story_comsingle:10170": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10170.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10170.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10170/file",
       "name": "望舒",
       "base_id": 10170,
@@ -24,7 +24,7 @@
     "character_itemshead:story_comsingle:1029": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/1029.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/1029.png",
       "url": "/api/assets/character_itemshead_story_comsingle_1029/file",
       "name": "奥丁",
       "base_id": 1029,
@@ -573,7 +573,7 @@
     "character_itemshead:story_comsingle:10183": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10183.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10183.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10183/file",
       "name": "克图格娅",
       "base_id": 10183,
@@ -582,7 +582,7 @@
     "character_itemshead:story_comsingle:10169": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10169.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10169.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10169/file",
       "name": "长琴",
       "base_id": 10169,
@@ -591,7 +591,7 @@
     "character_itemshead:story_comsingle:10175": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10175.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10175.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10175/file",
       "name": "泰逢",
       "base_id": 10175,
@@ -600,7 +600,7 @@
     "character_itemshead:story_comsingle:10176": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10176.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10176.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10176/file",
       "name": "后土",
       "base_id": 10176,
@@ -609,7 +609,7 @@
     "character_itemshead:story_comsingle:10144": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10144.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10144.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10144/file",
       "name": "尼娅",
       "base_id": 10144,
@@ -618,7 +618,7 @@
     "character_itemshead:story_comsingle:10111": {
       "category": "character_itemshead",
       "asset_key": "story_comsingle",
-      "path": "mimirtalk_webui/assets/avatars/character_itemshead/story_comsingle/sprite/10111.png",
+      "path": "webui/assets/avatars/character_itemshead/story_comsingle/sprite/10111.png",
       "url": "/api/assets/character_itemshead_story_comsingle_10111/file",
       "name": "苍术",
       "base_id": 10111,
@@ -627,7 +627,7 @@
     "atlas:atlas_monotalkatlas:Momotalk_09": {
       "category": "atlas",
       "asset_key": "atlas_monotalkatlas",
-      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_09.png",
+      "path": "webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_09.png",
       "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_09/file",
       "name": null,
       "base_id": null,
@@ -636,7 +636,7 @@
     "atlas:atlas_monotalkatlas:Momotalk_10": {
       "category": "atlas",
       "asset_key": "atlas_monotalkatlas",
-      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_10.png",
+      "path": "webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_10.png",
       "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_10/file",
       "name": null,
       "base_id": null,
@@ -645,7 +645,7 @@
     "atlas:atlas_monotalkatlas:Momotalk_11": {
       "category": "atlas",
       "asset_key": "atlas_monotalkatlas",
-      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_11.png",
+      "path": "webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_11.png",
       "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_11/file",
       "name": null,
       "base_id": null,
@@ -654,7 +654,7 @@
     "atlas:atlas_monotalkatlas:Momotalk_12": {
       "category": "atlas",
       "asset_key": "atlas_monotalkatlas",
-      "path": "mimirtalk_webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_12.png",
+      "path": "webui/assets/atlas/atlas_monotalkatlas/sprite/Momotalk_12.png",
       "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_12/file",
       "name": null,
       "base_id": null,
@@ -663,7 +663,7 @@
     "backgrounds:texturebg_momotalk_momotalk_06:Momotalk_06": {
       "category": "backgrounds",
       "asset_key": "texturebg_momotalk_momotalk_06",
-      "path": "mimirtalk_webui/assets/backgrounds/texturebg_momotalk_momotalk_06/sprite/Momotalk_06.png",
+      "path": "webui/assets/backgrounds/texturebg_momotalk_momotalk_06/sprite/Momotalk_06.png",
       "url": "/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file",
       "name": null,
       "base_id": null,
