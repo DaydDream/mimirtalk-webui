@@ -8,15 +8,42 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%2F%2011%20x64-lightgrey)
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 
+<br>
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="docs/screenshots/final/最终-编辑器桌面.png"><img src="docs/screenshots/final/最终-编辑器桌面.png" alt="编辑器" width="360"></a><br>
+      <sub>编辑器 · 编辑角色对话</sub>
+    </td>
+    <td align="center">
+      <a href="docs/screenshots/final/最终-聊天预览桌面.png"><img src="docs/screenshots/final/最终-聊天预览桌面.png" alt="聊天预览" width="360"></a><br>
+      <sub>聊天预览 · 游戏内效果</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <a href="docs/screenshots/final/气泡主题总览.png"><img src="docs/screenshots/final/气泡主题总览.png" alt="气泡主题" width="380"></a><br>
+      <sub>气泡主题 · 31 类分类逐主题还原</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="docs/screenshots/final/项目管理界面.png"><img src="docs/screenshots/final/项目管理界面.png" alt="项目管理" width="150"></a><br>
+      <sub>项目管理 · 本地 JSON 存档</sub>
+    </td>
+    <td align="center">
+      <a href="docs/screenshots/final/长图导出展示.png"><img src="docs/screenshots/final/长图导出展示.png" alt="长图导出" width="150"></a><br>
+      <sub>长图导出 · 一键导出 PNG</sub>
+    </td>
+  </tr>
+</table>
+
 </div>
 
 > 深空之眼（AetherGazer）弥弥尔通讯 / MomoTalk 风格聊天编辑器与长图导出工具
 
 一个**离线可用**的本地 WebUI：编辑角色对话、选择气泡与贴纸、预览游戏内效果，并导出为长图。
-
-<img src="docs/screenshots/final/最终-聊天预览桌面.png" alt="聊天预览" width="720">
-
-<img src="docs/screenshots/final/长图导出展示.png" alt="长图导出展示" width="360">
 
 ## 功能与限制
 
