@@ -1758,70 +1758,34 @@
     "sha256": "AF3FF1A86153A688104631B4010DB988C676CE165A9ED75A3AA13BC35CF21E3F"
   },
   {
-    "source": "output/font-render-fix-after.png",
-    "archive": "生成物/关键截图/名字字体覆盖验证.png",
-    "bytes": 38498,
-    "sha256": "BD17DB725B69F6DA7DC41C4EBBCE7612C11CAE1851380DB1418E0E1C25C854F1"
+    "source": "docs/screenshots/final/最终-聊天预览桌面.png",
+    "archive": "docs/screenshots/final/最终-聊天预览桌面.png",
+    "bytes": 506102,
+    "sha256": "3309C6FCF7530742083E9419C29AA4B7DC5540CDD65C437FB638E629A7DE80A9"
   },
   {
-    "source": "output/ui-regression-recall-export/export-admin-avatar.png",
-    "archive": "生成物/关键截图/撤回消息导出验证.png",
-    "bytes": 2028300,
-    "sha256": "50907F6EC8779D42853A9BBAFE7955ED88FAABE0F92165D33658282B996BE6EA"
+    "source": "docs/screenshots/final/最终-编辑器桌面.png",
+    "archive": "docs/screenshots/final/最终-编辑器桌面.png",
+    "bytes": 704881,
+    "sha256": "9EC4F85D0FBA97598CE70FA85D63B0F46C58A39AFAB6D0E72B96DD2785B0BF23"
   },
   {
-    "source": "output/ui-regression-remove-english/desktop-editor.png",
-    "archive": "生成物/关键截图/最终-编辑器桌面.png",
-    "bytes": 486695,
-    "sha256": "0FD4413F1EEDBE6A940F9F0BCFEFC66A38A916CDDE468E0C0890530F12E89E84"
+    "source": "docs/screenshots/final/项目管理界面.png",
+    "archive": "docs/screenshots/final/项目管理界面.png",
+    "bytes": 76280,
+    "sha256": "C41326DCDFBE8EA26E310045F7B86C1D3F7F1BA4CCF8B07994F826053251E1DA"
   },
   {
-    "source": "output/ui-regression-remove-english/mobile-editor.png",
-    "archive": "生成物/关键截图/最终-编辑器移动端.png",
-    "bytes": 191752,
-    "sha256": "C1D83F4A11E98582CD561DE12868194EBDFA58A901BFC473C7A57ED95CC0893C"
+    "source": "docs/screenshots/final/气泡主题总览.png",
+    "archive": "docs/screenshots/final/气泡主题总览.png",
+    "bytes": 261374,
+    "sha256": "586B9F868FCD6DCE8921B3515CF60B8266CB5EE47489554BC4EBBD7EFF9C447A"
   },
   {
-    "source": "output/ui-regression-remove-english/desktop-phone.png",
-    "archive": "生成物/关键截图/最终-聊天预览桌面.png",
-    "bytes": 286696,
-    "sha256": "7EF19FBB3235FC0F212FB43E43A1C6C66896F4C1F0E7D6F283186BFD54BDCC4E"
-  },
-  {
-    "source": "output/ui-regression-remove-english/mobile-phone.png",
-    "archive": "生成物/关键截图/最终-聊天预览移动端.png",
-    "bytes": 63763,
-    "sha256": "9DF69B4CF9C162308AC5252235F2F1371AB8883594A037AD2D08795FBF1EDC11"
-  },
-  {
-    "source": "output/bubble_theme_contact_sheet.png",
-    "archive": "生成物/关键截图/气泡主题总览.png",
-    "bytes": 403946,
-    "sha256": "CBA63555448F7FE628265294C8E9D28624EECD109C178C1A1E56934B2F0BC869"
-  },
-  {
-    "source": "output/bubble_9016_export_after.png",
-    "archive": "生成物/关键截图/气泡九宫格导出.png",
-    "bytes": 541654,
-    "sha256": "7F07C1E6864CE8590AAB16F9FF95EF80DB3423BFE626D8BA97293061A8541C22"
-  },
-  {
-    "source": "output/bubble_9016_nine_slice_verify.png",
-    "archive": "生成物/关键截图/气泡九宫格验证.png",
-    "bytes": 211073,
-    "sha256": "65A7425F3699835101CE84222C5B535C389D0A8879FE4B1C9FC3FA8418A9F621"
-  },
-  {
-    "source": "output/bubble_name_checklist.png",
-    "archive": "生成物/关键截图/气泡名称对照表.png",
-    "bytes": 187063,
-    "sha256": "E5A7F3C2A156CCF20C3BBC04F7752CD1132FA822ED5BD4BB565CB33C83975C2F"
-  },
-  {
-    "source": "output/ui_project_management_active.png",
-    "archive": "生成物/关键截图/项目管理界面.png",
-    "bytes": 395721,
-    "sha256": "669FAD6CB627921C67CD8858D7D1346D4CE7B2B7540C4B54BE4474B9F84BBFFA"
+    "source": "docs/screenshots/final/长图导出展示.png",
+    "archive": "docs/screenshots/final/长图导出展示.png",
+    "bytes": 3415050,
+    "sha256": "B0E4718FEE1325C90371F252DE1A158126600A654E3A4C261B9E727F06502CB0"
   },
   {
     "source": "mimirtalk_webui/output/_bubble_after.png",

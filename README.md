@@ -16,6 +16,8 @@
 
 <img src="docs/screenshots/final/最终-聊天预览桌面.png" alt="聊天预览" width="720">
 
+<img src="docs/screenshots/final/长图导出展示.png" alt="长图导出展示" width="360">
+
 ## 功能与限制
 
 ### 功能
