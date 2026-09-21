@@ -418,3 +418,12 @@ C:\Users\ori\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pyt
 - 发布包 `assets_source` 从 1475 个文件降到 504 个，ZIP 从约 195 MB 降到约 48 MB。
 - 校验：513 条索引全部可在包内解析，79 个联系人无缺失头像，后端/前端/项目/联系人检查全部通过。
 - 被删素材在 `extract/aethergazer_chatbubble`、`extract/aethergazer_i18n` 等备份目录仍保留原件，可按需重新索引。
+
+## 2026-09-21 v1.0.1 发布包与索引口径统一
+
+- 发布目录、ZIP 与 SHA256 文件统一为 `MimirTalk_WebUI_v1.0.1_20260920`，不再使用无点号的 `v1` 命名。
+- 包内 `VERSION.txt`、`BUILD_INFO.txt`、`README-发布包.md` 与服务 `server_version` 统一标记 `v1.0.1`。
+- 素材索引统一为 518 条，发布包内 `assets_source` 509 个文件；验证脚本报告 0 条无法解析的引用。
+- `PACKAGE_FILES.sha256` 为 701 条，独立解压后逐文件复算 0 处不符；ZIP 内 702 个文件、4 个目录，顶层目录名正确。
+- 发布包验证：`check_asset_references.py` 与 `check_backend.py` 均退出码 0。
+- ZIP 大小 61,663,476 字节，SHA256：`FEFB75FB9734041CB16BED0C9195EADF79DB4A58950AABD1A59CBEF059CAA2C5`。

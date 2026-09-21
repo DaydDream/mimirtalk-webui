@@ -7,10 +7,10 @@
   },
   "stats": {
     "scanned_files": 2907,
-    "selected_assets": 513,
+    "selected_assets": 518,
     "duplicate_files_removed": 1423,
-    "avatar_count": 76,
-    "background_count": 3,
+    "avatar_count": 80,
+    "background_count": 4,
     "sticker_count": 344,
     "scanned_by_category": {
       "atlas": 48,
@@ -26,8 +26,8 @@
       "widgets": 159
     },
     "selected_by_category": {
-      "atlas": 1,
-      "backgrounds": 3,
+      "atlas": 5,
+      "backgrounds": 4,
       "character_itemshead": 69,
       "chat_stickers": 335,
       "chat_stickers_i18n": 9,
@@ -39,11 +39,11 @@
   "categories": {
     "atlas": {
       "label": "图集拆图",
-      "count": 1
+      "count": 5
     },
     "backgrounds": {
       "label": "聊天背景",
-      "count": 3
+      "count": 4
     },
     "character_itemshead": {
       "label": "角色头图池",
@@ -71,6 +71,50 @@
     }
   },
   "assets": [
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_09",
+      "name": "Momotalk_09",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_09.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_09/file",
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_10",
+      "name": "Momotalk_10",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_10.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_10/file",
+      "width": 400,
+      "height": 148
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_11",
+      "name": "Momotalk_11",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_11.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_11/file",
+      "width": 400,
+      "height": 148
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_12",
+      "name": "Momotalk_12",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_12.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_12/file",
+      "width": 20,
+      "height": 36
+    },
     {
       "identity": "atlas/atlas_monotalkatlas/momotalk_29",
       "category": "atlas",
@@ -144,6 +188,17 @@
       "label": "Momotalk_04",
       "category_label": "聊天背景",
       "url": "/api/assets/backgrounds_texturebg_momotalk_momotalk_04_Momotalk_04/file"
+    },
+    {
+      "id": "backgrounds:texturebg_momotalk_momotalk_06:Momotalk_06",
+      "name": "Momotalk_06",
+      "asset_key": "texturebg_momotalk_momotalk_06",
+      "category": "backgrounds",
+      "category_label": "聊天背景",
+      "path": "extract/aethergazer_momotalk/images/backgrounds/texturebg_momotalk_momotalk_06/sprite/Momotalk_06.png",
+      "url": "/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file",
+      "width": 132,
+      "height": 912
     },
     {
       "identity": "character_itemshead/story_comsingle/10066",
@@ -10633,6 +10688,50 @@
       "url": "/api/assets/momotalk_images_textureconfig_momotalk_momotalk_head_07_Momotalk_head_07/file",
       "width": 188,
       "height": 188
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_09",
+      "name": "Momotalk_09",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_09.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_09/file",
+      "width": 100,
+      "height": 100
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_10",
+      "name": "Momotalk_10",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_10.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_10/file",
+      "width": 400,
+      "height": 148
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_11",
+      "name": "Momotalk_11",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_11.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_11/file",
+      "width": 400,
+      "height": 148
+    },
+    {
+      "id": "atlas:atlas_monotalkatlas:Momotalk_12",
+      "name": "Momotalk_12",
+      "asset_key": "atlas_monotalkatlas",
+      "category": "atlas",
+      "category_label": "图集拆图",
+      "path": "extract/aethergazer_momotalk/images/atlas/atlas_monotalkatlas/sprite/Momotalk_12.png",
+      "url": "/api/assets/atlas_atlas_monotalkatlas_Momotalk_12/file",
+      "width": 20,
+      "height": 36
     }
   ],
   "backgrounds": [
@@ -10692,6 +10791,17 @@
       "label": "Momotalk_04",
       "category_label": "聊天背景",
       "url": "/api/assets/backgrounds_texturebg_momotalk_momotalk_04_Momotalk_04/file"
+    },
+    {
+      "id": "backgrounds:texturebg_momotalk_momotalk_06:Momotalk_06",
+      "name": "Momotalk_06",
+      "asset_key": "texturebg_momotalk_momotalk_06",
+      "category": "backgrounds",
+      "category_label": "聊天背景",
+      "path": "extract/aethergazer_momotalk/images/backgrounds/texturebg_momotalk_momotalk_06/sprite/Momotalk_06.png",
+      "url": "/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file",
+      "width": 132,
+      "height": 912
     }
   ],
   "stickers": [

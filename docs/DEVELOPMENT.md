@@ -237,13 +237,14 @@ http://127.0.0.1:8765/
 
 ## 八、发布封包
 
-- 发布目录：`webui项目封包/MimirTalk_WebUI_v1_20260920/`
-- ZIP：`webui项目封包/MimirTalk_WebUI_v1_20260920.zip`
-- 包内素材：索引实际引用的 1484 个资源，路径位于 `assets_source/`。
+- 发布目录：`webui项目封包/MimirTalk_WebUI_v1.0.1_20260920/`
+- ZIP：`webui项目封包/MimirTalk_WebUI_v1.0.1_20260920.zip`
+- 包内素材：索引实际引用的 518 个资源，路径位于 `assets_source/`。
 - 发布包不包含用户项目、上传图片、自定义群、内置群改名/删除覆盖、缩略图缓存和运行日志。
 - 包内启动入口：`启动WebUI.cmd`、`启动WebUI.ps1`。
-- 独立启动验证：资源 1484、项目 0、联系人 79、状态 `ok`。
+- 独立启动验证：资源 518、项目 0、联系人 79、状态 `ok`。
 - ZIP SHA256：见同级 `.zip.sha256`；打包基线记录见包内 `BUILD_INFO.txt`。
+- 当前发布包 SHA256：`FEFB75FB9734041CB16BED0C9195EADF79DB4A58950AABD1A59CBEF059CAA2C5`。
 
 ## 十、归档说明
 

@@ -620,7 +620,7 @@ class ApiError(Exception):
 class MomoTalkRequestHandler(BaseHTTPRequestHandler):
     """HTTP 请求处理器：分发 API/静态文件路由并统一生成本地服务响应。"""
     app: Application
-    server_version = "MimirTalkWebUI/0.2"
+    server_version = "MimirTalkWebUI/1.0.1"
 
     def log_message(self, format, *args):
         """将 HTTP 访问日志输出到服务终端。"""
