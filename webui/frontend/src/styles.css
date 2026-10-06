@@ -34,12 +34,23 @@
   --momotalk-name-font: "MomoTalk Serif", "Microsoft YaHei", serif;
   --momotalk-rail: url("/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file");
   --momotalk-speaker-panel: url("/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file");
-  /* 左右气泡同款（游戏内两侧一致），左侧靠 transform 镜像。
-     主体已剔除飘带，飘带作为独立装饰层，避免 9-slice 横向拉伸变形。 */
+  /* 首条消息保留原始带尾气泡；连续消息使用派生的无尾方框素材。 */
   --momotalk-default-bubble-left: url("/api/assets/misc_textureconfig_chatbubble_9000_9000/file");
   --momotalk-default-bubble-right: url("/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file");
   --momotalk-selected-bubble-left: url("/api/assets/misc_textureconfig_chatbubble_9000_9000/file");
   --momotalk-selected-bubble-right: url("/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file");
+  --momotalk-default-bubble-square-left: url("/assets/bubbles/square_9000_left.png");
+  --momotalk-default-bubble-square-right: url("/assets/bubbles/square_9000_right.png");
+  --momotalk-selected-bubble-square-left: url("/assets/bubbles/square_9000_left.png");
+  --momotalk-selected-bubble-square-right: url("/assets/bubbles/square_9000_right.png");
+  --momotalk-default-bubble-square-slice-left: 57 46 30 46;
+  --momotalk-default-bubble-square-slice-right: 57 46 30 46;
+  --momotalk-default-bubble-square-edge-left: 3.27cqw 2.64cqw 1.72cqw 2.64cqw;
+  --momotalk-default-bubble-square-edge-right: 3.27cqw 2.64cqw 1.72cqw 2.64cqw;
+  --momotalk-selected-bubble-square-slice-left: 57 46 30 46;
+  --momotalk-selected-bubble-square-slice-right: 57 46 30 46;
+  --momotalk-selected-bubble-square-edge-left: 3.27cqw 2.64cqw 1.72cqw 2.64cqw;
+  --momotalk-selected-bubble-square-edge-right: 3.27cqw 2.64cqw 1.72cqw 2.64cqw;
   --momotalk-default-bubble-slice: 57 63 30 63;
   --momotalk-default-bubble-edge: 3.27cqw 3.62cqw 1.72cqw 3.62cqw;
   --momotalk-selected-bubble-slice-left: 57 63 30 63;
@@ -331,16 +342,13 @@ h3 {
   background: #2b51c4;
 }
 
-.primary-button.compact {
-  min-height: 34px;
-}
-
 .secondary-button {
   border-color: var(--line);
   background: #fff;
   color: var(--ink);
 }
 
+.primary-button.compact,
 .secondary-button.compact {
   min-height: 32px;
   padding: 0 10px;
@@ -368,12 +376,15 @@ h3 {
 
 .preview-toolbar {
   flex: 0 0 auto;
+  flex-wrap: wrap;
   min-height: 50px;
 }
 
 .toolbar-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
 }
 
@@ -686,9 +697,45 @@ body.webui-closed .phone-stage {
   color: #3b4756;
   font: inherit;
   text-align: left;
+  user-select: none;
   scroll-snap-align: start;
   content-visibility: auto;
   contain-intrinsic-size: auto 16.3355408389cqh;
+}
+
+/* 会话列表卡片的移除入口：非当前会话可移除，当前会话不渲染该按钮。 */
+.side-entry-remove {
+  position: absolute;
+  z-index: 2;
+  top: 12%;
+  right: 3.4%;
+  display: grid;
+  place-items: center;
+  width: 5.6%;
+  min-width: 16px;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(59, 71, 86, 0.14);
+  color: #3b4756;
+  font: inherit;
+  font-size: 1.1cqw;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.side-entry:hover .side-entry-remove,
+.side-entry-remove:hover,
+.side-entry-remove:focus-visible {
+  opacity: 1;
+}
+
+.side-entry-remove:hover {
+  background: rgba(190, 72, 72, 0.22);
+  color: #9b3535;
 }
 
 /* 游戏 chatItem 卡片：Momotalk_10 普通态 / Momotalk_11 选中态，按 9-slice 拉伸。 */
@@ -1235,7 +1282,9 @@ body.webui-closed .phone-stage {
 
 .chat-scroll {
   --message-avatar-size: 6.6666666667cqw;
-  --message-gap: 0.9cqw;
+  /* 头像可见内容在框内单侧内缩 9.2592592593%，约 0.6173cqw。
+     可见间距 = gap + 内缩；此处取到约为原可见间距（1.5173cqw）的一半。 */
+  --message-gap: 0.14cqw;
   --message-lane-width: calc(
     100% - var(--message-avatar-size) - var(--message-gap)
     - var(--message-avatar-size) - var(--message-gap)
@@ -1272,7 +1321,7 @@ body.webui-closed .phone-stage {
 .chat-row {
   display: flex;
   align-items: flex-end;
-  gap: 0.9cqw;
+  gap: var(--message-gap);
   width: 100%;
   min-width: 0;
   max-width: 100%;
@@ -1360,6 +1409,76 @@ body.webui-closed .phone-stage {
   border-image-source: var(--momotalk-selected-bubble-left);
   border-image-slice: var(--momotalk-selected-bubble-slice-left) fill;
   border-image-width: var(--momotalk-selected-bubble-edge-left);
+}
+
+/* 连续消息只有首条保留气泡尾；后续气泡直接换成无尾方形整框静态图。 */
+.chat-row.bubble-square:not(.admin-message).left .bubble::before {
+  border-image-source: var(--momotalk-default-bubble-square-left);
+  border-image-slice: var(--momotalk-default-bubble-square-slice-left) fill;
+  border-image-width: var(--momotalk-default-bubble-square-edge-left);
+  clip-path: none;
+}
+
+.chat-row.bubble-square:not(.admin-message).right .bubble::before {
+  border-image-source: var(--momotalk-default-bubble-square-right);
+  border-image-slice: var(--momotalk-default-bubble-square-slice-right) fill;
+  border-image-width: var(--momotalk-default-bubble-square-edge-right);
+  clip-path: none;
+}
+
+.chat-row.bubble-square.admin-message.left .bubble::before {
+  border-image-source: var(--momotalk-selected-bubble-square-left);
+  border-image-slice: var(--momotalk-selected-bubble-square-slice-left) fill;
+  border-image-width: var(--momotalk-selected-bubble-square-edge-left);
+  clip-path: none;
+}
+
+.chat-row.bubble-square.admin-message.right .bubble::before {
+  border-image-source: var(--momotalk-selected-bubble-square-right);
+  border-image-slice: var(--momotalk-selected-bubble-square-slice-right) fill;
+  border-image-width: var(--momotalk-selected-bubble-square-edge-right);
+  clip-path: none;
+}
+
+/* 连续消息的方形外框要和首条带尾气泡的方框对齐：
+   带尾素材的外侧切片含尾巴，方框素材不含，按切片差把整列消息内缩，
+   使两者的方形边框外缘落在同一条线上，尾巴则自然伸出方框之外。 */
+.chat-row.bubble-square:not(.admin-message).left .message-stack {
+  margin-left: var(--momotalk-default-bubble-square-inset-left, 0px);
+}
+
+.chat-row.bubble-square:not(.admin-message).right .message-stack {
+  margin-right: var(--momotalk-default-bubble-square-inset-right, 0px);
+}
+
+.chat-row.bubble-square.admin-message.left .message-stack {
+  margin-left: var(--momotalk-selected-bubble-square-inset-left, 0px);
+}
+
+.chat-row.bubble-square.admin-message.right .message-stack {
+  margin-right: var(--momotalk-selected-bubble-square-inset-right, 0px);
+}
+
+/* 首条带尾气泡的方框在素材里四周留了透明边距，正文内边距要按这段内缩
+   补偿，才能和后续方形气泡的正文左右对齐（预览与 PNG 导出同一套公式）。 */
+.chat-row.bubble-tail:not(.admin-message).left .bubble {
+  padding-left: calc(2cqw + var(--momotalk-default-bubble-square-inset-left, 0px));
+  padding-right: calc(2cqw + var(--momotalk-default-bubble-square-inner-inset-left, 0px));
+}
+
+.chat-row.bubble-tail:not(.admin-message).right .bubble {
+  padding-right: calc(2cqw + var(--momotalk-default-bubble-square-inset-right, 0px));
+  padding-left: calc(2cqw + var(--momotalk-default-bubble-square-inner-inset-right, 0px));
+}
+
+.chat-row.bubble-tail.admin-message.left .bubble {
+  padding-left: calc(2cqw + var(--momotalk-selected-bubble-square-inset-left, 0px));
+  padding-right: calc(2cqw + var(--momotalk-selected-bubble-square-inner-inset-left, 0px));
+}
+
+.chat-row.bubble-tail.admin-message.right .bubble {
+  padding-right: calc(2cqw + var(--momotalk-selected-bubble-square-inset-right, 0px));
+  padding-left: calc(2cqw + var(--momotalk-selected-bubble-square-inner-inset-right, 0px));
 }
 
 .chat-row.admin-message .bubble {
@@ -1536,11 +1655,12 @@ body.webui-closed .phone-stage {
 }
 
 .editor-column {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   min-height: 0;
   min-width: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   overscroll-behavior: contain;
   background: var(--panel);
   border-left: 1px solid var(--line);
@@ -1550,10 +1670,232 @@ body.webui-closed .phone-stage {
   position: sticky;
   top: 0;
   z-index: 3;
+  display: block;
+  flex: 0 0 auto;
   padding: 16px;
   border-bottom: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(10px);
+}
+
+.editor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.editor-tab {
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #465365;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.editor-tab:hover {
+  background: var(--panel-soft);
+}
+
+.editor-tab[aria-selected="true"] {
+  border-color: #c3cfea;
+  background: var(--brand-soft);
+  color: #24449c;
+}
+
+.editor-tabpanel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.editor-panel-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.editor-contact-toolbar {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.editor-contact-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.editor-contact-filter {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: #465365;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.editor-contact-filter:hover {
+  background: var(--panel-soft);
+}
+
+.editor-contact-filter[aria-pressed="true"] {
+  border-color: #c3cfea;
+  background: var(--brand-soft);
+  color: #24449c;
+}
+
+.editor-contact-filter-count {
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.62;
+}
+
+.editor-contact-list {
+  display: grid;
+  flex: 1 1 auto;
+  align-content: start;
+  gap: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.editor-contact-card {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  color: #334156;
+  text-align: left;
+  user-select: none;
+}
+
+.editor-contact-card:hover {
+  border-color: #9db1e8;
+  background: #f7f9fd;
+}
+
+.editor-contact-avatar {
+  position: relative;
+  display: block;
+  width: 34px;
+  height: 34px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #dfe2e6;
+}
+
+.editor-contact-avatar .avatar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.editor-contact-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.editor-contact-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-contact-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-contact-badge {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #eef1f6;
+  color: #4a586e;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.editor-contact-badge[data-tone="group"] {
+  background: #eaf0fd;
+  color: #2c4c96;
+}
+
+.editor-contact-badge[data-tone="custom"] {
+  background: #e9f5ec;
+  color: #1f6b41;
+}
+
+.editor-contact-detail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-contact-pagination {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.editor-contact-pagination button {
+  min-width: 68px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  color: #334156;
+}
+
+.editor-contact-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.editor-contact-pagination span {
+  min-width: 84px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
 }
 
 .editor-section {
@@ -2249,6 +2591,18 @@ select:focus {
     border-left: 0;
     border-top: 1px solid var(--line);
   }
+
+  .editor-tabpanel {
+    overflow-y: visible;
+  }
+
+  .editor-panel-contacts {
+    overflow: visible;
+  }
+
+  .editor-contact-list {
+    overflow-y: visible;
+  }
 }
 
 @media (max-width: 560px) {
@@ -2265,10 +2619,14 @@ select:focus {
     gap: 8px;
   }
 
+  .preview-toolbar > div:first-child {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
   .toolbar-actions {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
+    justify-content: flex-end;
+    gap: 6px;
   }
 
   .phone-stack {

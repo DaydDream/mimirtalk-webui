@@ -38,7 +38,12 @@ def main() -> int:
     """命令行主入口。"""
     with tempfile.TemporaryDirectory() as temporary:
         projects_dir = Path(temporary) / "projects"
-        server = create_server(host="127.0.0.1", port=0, projects_dir=projects_dir)
+        server = create_server(
+            host="127.0.0.1",
+            port=0,
+            projects_dir=projects_dir,
+            conversation_contacts_path=Path(temporary) / "conversation_contacts.json",
+        )
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         host, port = server.server_address
@@ -52,8 +57,16 @@ def main() -> int:
                 b'id="phonePreview"',
                 b'id="messageEditor"',
                 b'id="newGroupButton"',
+                b'id="addMessageButton"',
                 b'id="groupModal"',
                 b'id="groupMemberList"',
+                b'id="editorTabs"',
+                b'id="editorPanelEdit"',
+                b'id="editorPanelContacts"',
+                b'id="editorContactSearch"',
+                b'id="editorContactFilters"',
+                b'id="editorContactList"',
+                b'id="editorContactPagination"',
             ):
                 if marker not in index_html:
                     raise AssertionError(f"Editor markup missing {marker!r}")
@@ -79,6 +92,20 @@ def main() -> int:
                 b"function contactAvatarHtml",
                 b"function renderAvatarNode",
                 b"function exportContactAvatarContent",
+                b"function loadConversationContacts",
+                b"function previewContactSource",
+                b"preview_ids",
+                b"function addPreviewContact",
+                b"function removePreviewContact",
+                b"function ensurePreviewContact",
+                b"function saveConversationPreviewIds",
+                b"remove-preview",
+                b"function renderEditorTabs",
+                b"function renderEditorContactList",
+                b"function renderEditorContactFilters",
+                b"CONTACT_CATEGORIES",
+                b"function selectEditorTab",
+                b"/conversation-contacts",
             ):
                 if marker not in app_js:
                     raise AssertionError(f"Editor JavaScript missing {marker!r}")
@@ -138,6 +165,9 @@ def main() -> int:
                 "reload_persistence": True,
                 "background_picker": True,
                 "delay_removed": True,
+                "editor_tabs": True,
+                "editor_contact_tab": True,
+                "editor_contact_filters": True,
             }
             print(json.dumps(result, ensure_ascii=False, indent=2))
         finally:

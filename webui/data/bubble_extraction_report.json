@@ -19,7 +19,7 @@
     "9012",
     "9101"
   ],
-  "note": "9016 and 9017 use a sliced single-image bg plus animated feather/particle child nodes; the static base is available in WebUI, while dynamic children are not recreated. 9019, 9021 and 9022 use runtime dynamic UI components and are intentionally excluded from the WebUI.",
+  "note": "9016 and 9017 use a sliced single-image bg plus animated feather/particle child nodes; WebUI now exposes the static-base-only versions as selectable themes while dynamic children are not recreated. 9019, 9021 and 9022 use runtime dynamic UI components and are intentionally excluded from the WebUI.",
   "legacy_theme_completeness": {
     "9016": {
       "complete": false,
@@ -35,7 +35,8 @@
         "lizi"
       ],
       "render_mode": "sliced_static_base_only",
-      "integration": "base_bg_included_dynamic_children_excluded"
+      "integration": "base_bg_included_dynamic_children_excluded",
+      "static_composition_available": true
     },
     "9017": {
       "complete": false,
@@ -50,7 +51,8 @@
         "feather02"
       ],
       "render_mode": "sliced_static_base_only",
-      "integration": "base_bg_included_dynamic_children_excluded"
+      "integration": "base_bg_included_dynamic_children_excluded",
+      "static_composition_available": true
     },
     "9019": {
       "complete": false,

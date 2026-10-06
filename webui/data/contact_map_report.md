@@ -1,15 +1,19 @@
 # MomoTalk 角色名与头像映射报告
 
-- 可会话角色：79（普通角色 69，系统/群组 10）
-- 通用头像库条目：563
-- 已解析名称：338
-- 未解析名称：225（保留资源 ID，后续可补）
+- 可会话角色：83（普通角色 73，系统/群组 10）
+- 通用头像库条目：78
+- 已解析名称：73
+- 未解析名称：5（保留资源 ID，后续可补）
 - 缺少正式头像的角色：
 
 ## 可会话角色
 
 | ID | 类型 | 名称 | 头像资源 | 游戏内图标路径 |
 | ---: | --- | --- | --- | --- |
+| 1076 | 普通角色 | 庚辰 | `character_itemshead:story_comsingle:1076` | `TextureConfig/Character/MediumIcon/1076` |
+| 1046 | 普通角色 | 雪儿 | `character_itemshead:story_comsingle:1046` | `TextureConfig/Character/MediumIcon/1046` |
+| 1045 | 普通角色 | 亚里沙 | `character_itemshead:story_comsingle:1045` | `TextureConfig/Character/MediumIcon/1045` |
+| 1036 | 普通角色 | 巴德尔 | `character_itemshead:story_comsingle:1036` | `TextureConfig/Character/MediumIcon/1036` |
 | 10170 | 普通角色 | 望舒 | `character_itemshead:story_comsingle:10170` | `TextureConfig/Character/MediumIcon/10170` |
 | 10066 | 普通角色 | 宁希达 | `character_itemshead:story_comsingle:10066` | `TextureConfig/Character/MediumIcon/10066` |
 | 10183 | 普通角色 | 克图格娅 | `character_itemshead:story_comsingle:10183` | `TextureConfig/Character/MediumIcon/10183` |
@@ -93,8 +97,6 @@
 ## 通用头像库来源优先级
 
 1. `character_itemshead`（角色头图池，56x56 弥弥尔联系人头像）
-2. `character_icon`（角色通用头像，512x1024 半身像，仅作兜底）
-3. `backhouse_rolehead`（后宅角色头像）
 
 系统/群组头像统一取自 `momotalk_images`。
 

@@ -24,6 +24,11 @@ D:\大眼解包图片资源\story_character0917\comsingle\textureconfig\story\ch
 | 后土 (10176) | `character_itemshead:story_comsingle:10176` | `character_itemshead/story_comsingle/sprite/10176.png` |
 | 尼娅 (10144) | `character_itemshead:story_comsingle:10144` | `character_itemshead/story_comsingle/sprite/10144.png` |
 | 苍术 (10111) | `character_itemshead:story_comsingle:10111` | `character_itemshead/story_comsingle/sprite/10111.png` |
+| 巴德尔 (1036) | `character_itemshead:story_comsingle:1036` | `character_itemshead/story_comsingle/sprite/1036.png` |
+| 亚里沙 (1045) | `character_itemshead:story_comsingle:1045` | `character_itemshead/story_comsingle/sprite/1045.png` |
+| 雪儿 (1046) | `character_itemshead:story_comsingle:1046` | `character_itemshead/story_comsingle/sprite/1046.png` |
+| 庚辰 (1076) | `character_itemshead:story_comsingle:1076` | `character_itemshead/story_comsingle/sprite/1076.png` |
+| 梅塞可 (10131) | `character_itemshead:story_comsingle:10131` | `character_itemshead/story_comsingle/sprite/10131.png` |
 
 The source PNG files are `300x144`, with alpha. The WebUI crops every avatar to
 the transparent inner hole of the game avatar frame (`10/108` inset,

@@ -31,7 +31,11 @@ DEFAULT_STICKER_CATEGORIES_PATH = WEBUI_DIR / "data" / "sticker_categories.json"
 DEFAULT_CHAT_CONTACTS_PATH = WEBUI_DIR / "data" / "chat_contacts.json"
 DEFAULT_GROUP_MEMBERS_PATH = WEBUI_DIR / "data" / "group_members.json"
 DEFAULT_CUSTOM_GROUPS_PATH = WEBUI_DIR / "data" / "custom_groups.json"
+DEFAULT_CONVERSATION_CONTACTS_PATH = WEBUI_DIR / "data" / "conversation_contacts.json"
 DEFAULT_UPLOADS_DIR = WEBUI_DIR / "data" / "uploads"
+CONVERSATION_CONTACTS_VERSION = 2
+DEFAULT_PREVIEW_HERO_ID = 1084
+DEFAULT_PREVIEW_HERO_NAME = "薇儿丹蒂"
 CUSTOM_GROUP_ID_START = 9200
 MIN_GROUP_MEMBERS = 2
 MAX_STATIC_IMAGE_BYTES = 8 * 1024 * 1024
@@ -53,6 +57,7 @@ class Application:
         chat_contacts_path: Path = DEFAULT_CHAT_CONTACTS_PATH,
         group_members_path: Path = DEFAULT_GROUP_MEMBERS_PATH,
         custom_groups_path: Path = DEFAULT_CUSTOM_GROUPS_PATH,
+        conversation_contacts_path: Path = DEFAULT_CONVERSATION_CONTACTS_PATH,
         uploads_dir: Path = DEFAULT_UPLOADS_DIR,
         bubble_themes_path: Path | None = None,
     ):
@@ -67,6 +72,7 @@ class Application:
         self.chat_contacts_path = Path(chat_contacts_path)
         self.group_members_path = Path(group_members_path)
         self.custom_groups_path = Path(custom_groups_path)
+        self.conversation_contacts_path = Path(conversation_contacts_path)
         self.uploads_dir = Path(uploads_dir)
         self.bubble_themes_path = Path(
             bubble_themes_path
@@ -319,6 +325,195 @@ class Application:
             )
         return enabled
 
+    def _enabled_contact_ids(self) -> list[int]:
+        """返回当前启用联系人的 ID 顺序（内置角色、内置群、自定义群）。"""
+        return [
+            contact["id"]
+            for contact in self.list_contacts()
+            if isinstance(contact.get("id"), int) and not isinstance(contact.get("id"), bool)
+        ]
+
+    def _load_conversation_contacts_payload(self) -> dict | None:
+        """读取 conversation_contacts.json；文件缺失时返回 None。"""
+        if not self.conversation_contacts_path.is_file():
+            return None
+        return self._load_json_object(self.conversation_contacts_path)
+
+    def _normalize_conversation_ids(
+        self,
+        raw_ids,
+        field: str,
+        known: set[str],
+        *,
+        reject_unknown: bool,
+    ) -> list[int]:
+        """校验单个 ID 数组：必须是整数、去重保序。
+
+        读取阶段（``reject_unknown=False``）静默过滤掉已删除或已禁用的联系人，
+        避免用户升级后突然丢数据或报错；写入阶段（``reject_unknown=True``）直接拒绝。
+        """
+        if not isinstance(raw_ids, list):
+            raise ValueError(f"{field} 必须是数组")
+        result: list[int] = []
+        seen: set[str] = set()
+        for index, value in enumerate(raw_ids):
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise ValueError(f"{field}[{index}] 必须是整数 ID")
+            key = str(value)
+            if key in seen:
+                continue
+            seen.add(key)
+            if key not in known:
+                if reject_unknown:
+                    raise ValueError(f"联系人不存在或已禁用: {value}")
+                continue
+            result.append(value)
+        return result
+
+    def _default_preview_contact_ids(self) -> list[int]:
+        """默认会话清单：薇儿丹蒂 + 所有内置群（不含自建群），去重保序。"""
+        contacts = self.list_contacts()
+        builtin_groups = sorted(
+            (
+                contact
+                for contact in contacts
+                if contact.get("kind") == "group" and not contact.get("custom")
+            ),
+            key=lambda contact: contact["id"],
+        )
+        hero = next(
+            (
+                contact
+                for contact in contacts
+                if str(contact.get("id")) == str(DEFAULT_PREVIEW_HERO_ID)
+            ),
+            None,
+        )
+        if hero is None:
+            hero = next(
+                (
+                    contact
+                    for contact in contacts
+                    if contact.get("kind") != "group"
+                    and str(contact.get("name", "")).strip() == DEFAULT_PREVIEW_HERO_NAME
+                ),
+                None,
+            )
+        if hero is None:
+            hero = next(
+                (contact for contact in contacts if contact.get("kind") != "group"),
+                None,
+            )
+        ordered = [hero["id"]] if hero is not None else []
+        ordered.extend(contact["id"] for contact in builtin_groups)
+        unique: list[int] = []
+        seen: set[str] = set()
+        for contact_id in ordered:
+            key = str(contact_id)
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(contact_id)
+        return unique
+
+    def _load_conversation_contact_ids(self) -> list[int]:
+        """读取 contact_ids（联系人列表来源）；文件缺失时默认全部启用联系人。"""
+        payload = self._load_conversation_contacts_payload()
+        if payload is None:
+            return self._enabled_contact_ids()
+        known = {str(contact_id) for contact_id in self._enabled_contact_ids()}
+        return self._normalize_conversation_ids(
+            payload.get("contact_ids"),
+            "conversation_contacts.json contact_ids",
+            known,
+            reject_unknown=False,
+        )
+
+    def _load_conversation_preview_ids(self) -> list[int]:
+        """读取 preview_ids（会话列表目标）。
+
+        文件缺失或旧版 ``version: 1`` 清单没有该字段时回退默认会话清单，
+        不报错也不改写文件；指向已删除/已禁用联系人的 ID 静默过滤。
+        """
+        payload = self._load_conversation_contacts_payload()
+        if payload is None or "preview_ids" not in payload:
+            return self._default_preview_contact_ids()
+        known = {str(contact_id) for contact_id in self._enabled_contact_ids()}
+        return self._normalize_conversation_ids(
+            payload.get("preview_ids"),
+            "conversation_contacts.json preview_ids",
+            known,
+            reject_unknown=False,
+        )
+
+    def _write_conversation_contacts(
+        self, contact_ids: list[int], preview_ids: list[int]
+    ) -> None:
+        """原子写入会话联系人清单（v2：contact_ids 来源 + preview_ids 目标）。"""
+        payload = {
+            "version": CONVERSATION_CONTACTS_VERSION,
+            "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "contact_ids": contact_ids,
+            "preview_ids": preview_ids,
+        }
+        self.conversation_contacts_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.conversation_contacts_path.with_suffix(".json.tmp")
+        temporary.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        temporary.replace(self.conversation_contacts_path)
+
+    def list_conversation_contacts(self) -> dict:
+        """返回联系人列表来源（``items``）与会话列表目标（``preview_items``）。"""
+        contacts = {
+            str(contact["id"]): contact
+            for contact in self.list_contacts()
+            if isinstance(contact.get("id"), int) and not isinstance(contact.get("id"), bool)
+        }
+        items = [
+            contacts[str(contact_id)]
+            for contact_id in self._load_conversation_contact_ids()
+            if str(contact_id) in contacts
+        ]
+        preview_items = [
+            contacts[str(contact_id)]
+            for contact_id in self._load_conversation_preview_ids()
+            if str(contact_id) in contacts
+        ]
+        return {
+            "version": CONVERSATION_CONTACTS_VERSION,
+            "items": items,
+            "total": len(items),
+            "preview_ids": [contact["id"] for contact in preview_items],
+            "preview_items": preview_items,
+            "preview_total": len(preview_items),
+        }
+
+    def set_conversation_contacts(self, payload: dict) -> dict:
+        """校验并写入清单；``contact_ids`` / ``preview_ids`` 缺省时保留当前值。"""
+        has_contacts = "contact_ids" in payload
+        has_preview = "preview_ids" in payload
+        if not has_contacts and not has_preview:
+            raise ValueError("contact_ids 或 preview_ids 至少需要一个数组")
+        known = {str(contact_id) for contact_id in self._enabled_contact_ids()}
+        contact_ids = (
+            self._normalize_conversation_ids(
+                payload.get("contact_ids"), "contact_ids", known, reject_unknown=True
+            )
+            if has_contacts
+            else self._load_conversation_contact_ids()
+        )
+        preview_ids = (
+            self._normalize_conversation_ids(
+                payload.get("preview_ids"), "preview_ids", known, reject_unknown=True
+            )
+            if has_preview
+            else self._load_conversation_preview_ids()
+        )
+        self._write_conversation_contacts(contact_ids, preview_ids)
+        return self.list_conversation_contacts()
+
     def _sync_project_group_contact(self, project: dict) -> dict:
         """用当前群组状态同步项目中的联系人快照。"""
         contact = project.get("contact")
@@ -466,6 +661,13 @@ class Application:
                 return contact
         raise ApiError(HTTPStatus.NOT_FOUND, "group_not_found", f"群聊不存在: {group_id}")
 
+    def _builtin_group_base_name(self, group_id: int) -> str:
+        """返回内置群在 chat_contacts.json 中的原始名称（不含用户覆盖）。"""
+        for contact in self._load_contact_catalog():
+            if contact.get("kind") == "group" and contact.get("id") == group_id:
+                return str(contact.get("name", "")).strip()
+        return ""
+
     def _validated_group_member_ids(self, payload: dict) -> list[int]:
         """校验并返回群成员 ID 列表。"""
         contacts = self.list_contacts()
@@ -513,7 +715,8 @@ class Application:
             groups = self._load_group_members()
             groups[group_id] = member_ids
             group_names = self._load_group_name_overrides()
-            if name:
+            # 改回内置原名时清除覆盖，避免留下与官方名相同的冗余记录。
+            if name and name != self._builtin_group_base_name(group_id):
                 group_names[group_id] = name
             else:
                 group_names.pop(group_id, None)
@@ -725,6 +928,13 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
             )
             return
 
+        if path == "/api/conversation-contacts":
+            self._send_json(
+                self.app.list_conversation_contacts(),
+                head_only=head_only,
+            )
+            return
+
         if path == "/api/sticker-categories":
             self._send_json(self.app.list_sticker_categories(), head_only=head_only)
             return
@@ -864,6 +1074,11 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
 
     def _route_put(self, path: str):
         """处理对应 HTTP 路由。"""
+        if path == "/api/conversation-contacts":
+            payload = self._read_json()
+            self._send_json(self.app.set_conversation_contacts(payload))
+            return
+
         group_id = _match_group_route(path)
         if group_id is not None:
             payload = self._read_json()
@@ -1115,6 +1330,7 @@ def create_server(
     chat_contacts_path: Path = DEFAULT_CHAT_CONTACTS_PATH,
     group_members_path: Path = DEFAULT_GROUP_MEMBERS_PATH,
     custom_groups_path: Path = DEFAULT_CUSTOM_GROUPS_PATH,
+    conversation_contacts_path: Path = DEFAULT_CONVERSATION_CONTACTS_PATH,
     uploads_dir: Path = DEFAULT_UPLOADS_DIR,
 ):
     """创建并返回目标对象。"""
@@ -1126,6 +1342,7 @@ def create_server(
         chat_contacts_path=chat_contacts_path,
         group_members_path=group_members_path,
         custom_groups_path=custom_groups_path,
+        conversation_contacts_path=conversation_contacts_path,
         uploads_dir=uploads_dir,
     )
 

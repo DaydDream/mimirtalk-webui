@@ -75,6 +75,7 @@ def main() -> int:
         projects_dir = Path(temporary) / "projects"
         custom_groups_path = Path(temporary) / "custom_groups.json"
         group_members_path = Path(temporary) / "group_members.json"
+        conversation_contacts_path = Path(temporary) / "conversation_contacts.json"
         group_members_path.write_text(
             (WEBUI_DIR / "data" / "group_members.json").read_text(encoding="utf-8"),
             encoding="utf-8",
@@ -94,6 +95,7 @@ def main() -> int:
             projects_dir=projects_dir,
             group_members_path=group_members_path,
             custom_groups_path=custom_groups_path,
+            conversation_contacts_path=conversation_contacts_path,
             uploads_dir=Path(temporary) / "uploads",
         )
         thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -365,6 +367,181 @@ def main() -> int:
             if [group["id"] for group in stored_groups] != [9200, 9201]:
                 raise AssertionError(f"Custom group file was not updated: {stored_groups}")
 
+            # 会话联系人清单 v2：items 默认全部启用联系人，preview_ids 默认“薇儿丹蒂 + 内置群”。
+            status, _, default_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+            )
+            default_ids = [contact["id"] for contact in default_conversation["items"]]
+            if status != 200 or default_conversation["total"] != len(default_ids):
+                raise AssertionError(f"Conversation contacts default response was wrong: {default_conversation}")
+            if default_ids != [contact["id"] for contact in contacts_after["items"]]:
+                raise AssertionError(
+                    f"Missing conversation manifest should default to all enabled contacts: {default_ids}"
+                )
+            builtin_group_ids = sorted(
+                contact["id"]
+                for contact in contacts_after["items"]
+                if contact.get("kind") == "group" and not contact.get("custom")
+            )
+            expected_preview_ids = [1084, *builtin_group_ids]
+            if default_conversation.get("version") != 2:
+                raise AssertionError(
+                    f"Conversation API version was wrong: {default_conversation.get('version')}"
+                )
+            if default_conversation.get("preview_ids") != expected_preview_ids:
+                raise AssertionError(
+                    f"Missing conversation manifest preview ids were wrong: "
+                    f"{default_conversation.get('preview_ids')}"
+                )
+            if [contact["id"] for contact in default_conversation["preview_items"]] != expected_preview_ids:
+                raise AssertionError(
+                    f"Conversation preview items were wrong: {default_conversation['preview_items']}"
+                )
+            if default_conversation.get("preview_total") != len(expected_preview_ids):
+                raise AssertionError(
+                    f"Conversation preview total was wrong: {default_conversation.get('preview_total')}"
+                )
+            if any(contact.get("custom") for contact in default_conversation["preview_items"]):
+                raise AssertionError("Custom groups must stay out of the default conversation preview")
+            if conversation_contacts_path.exists():
+                raise AssertionError("Reading conversation contacts created the manifest file")
+
+            chosen_conversation_ids = [hero_ids[1], 9200, 9201, hero_ids[0]]
+            status, _, saved_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={"contact_ids": chosen_conversation_ids},
+            )
+            if (
+                status != 200
+                or [contact["id"] for contact in saved_conversation["items"]] != chosen_conversation_ids
+            ):
+                raise AssertionError(f"Conversation contacts write failed: {status} {saved_conversation}")
+            if saved_conversation.get("preview_ids") != expected_preview_ids:
+                raise AssertionError(
+                    f"Writing contact_ids must keep the default preview ids: {saved_conversation}"
+                )
+            stored_conversation = json.loads(
+                conversation_contacts_path.read_text(encoding="utf-8")
+            )
+            if stored_conversation.get("version") != 2:
+                raise AssertionError(f"Conversation manifest version was wrong: {stored_conversation}")
+            if stored_conversation.get("contact_ids") != chosen_conversation_ids:
+                raise AssertionError(f"Conversation manifest ids were wrong: {stored_conversation}")
+            if stored_conversation.get("preview_ids") != expected_preview_ids:
+                raise AssertionError(
+                    f"Conversation manifest preview ids were wrong: {stored_conversation}"
+                )
+
+            chosen_preview_ids = [hero_ids[0], 9201, 9200]
+            status, _, saved_preview = request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={"preview_ids": chosen_preview_ids},
+            )
+            if status != 200 or saved_preview.get("preview_ids") != chosen_preview_ids:
+                raise AssertionError(f"Conversation preview write failed: {status} {saved_preview}")
+            if [contact["id"] for contact in saved_preview["items"]] != chosen_conversation_ids:
+                raise AssertionError(
+                    f"Writing preview_ids must keep contact_ids: {saved_preview}"
+                )
+            if [contact["id"] for contact in saved_preview["preview_items"]] != chosen_preview_ids:
+                raise AssertionError(f"Conversation preview items were wrong: {saved_preview}")
+
+            status, _, reloaded_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+            )
+            if [contact["id"] for contact in reloaded_conversation["items"]] != chosen_conversation_ids:
+                raise AssertionError(f"Conversation contacts did not persist: {reloaded_conversation}")
+            if reloaded_conversation.get("preview_ids") != chosen_preview_ids:
+                raise AssertionError(
+                    f"Conversation preview ids did not persist: {reloaded_conversation}"
+                )
+
+            status, _, rejected_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={"contact_ids": chosen_conversation_ids + [99999999]},
+            )
+            if status != 400 or rejected_conversation["error"]["code"] != "invalid_request":
+                raise AssertionError(
+                    f"Unknown conversation contact should be rejected: {rejected_conversation}"
+                )
+            status, _, invalid_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={"contact_ids": ["nope"]},
+            )
+            if status != 400 or invalid_conversation["error"]["code"] != "invalid_request":
+                raise AssertionError(
+                    f"Non-integer conversation contact should be rejected: {invalid_conversation}"
+                )
+            status, _, invalid_preview = request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={"preview_ids": [99999999]},
+            )
+            if status != 400 or invalid_preview["error"]["code"] != "invalid_request":
+                raise AssertionError(
+                    f"Unknown preview contact should be rejected: {invalid_preview}"
+                )
+            status, _, empty_write = request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={},
+            )
+            if status != 400 or empty_write["error"]["code"] != "invalid_request":
+                raise AssertionError(
+                    f"Empty conversation manifest write should be rejected: {empty_write}"
+                )
+            stored_after_reject = json.loads(
+                conversation_contacts_path.read_text(encoding="utf-8")
+            )
+            if (
+                stored_after_reject["contact_ids"] != chosen_conversation_ids
+                or stored_after_reject.get("preview_ids") != chosen_preview_ids
+            ):
+                raise AssertionError("Rejected conversation contact writes corrupted the manifest")
+
+            # 旧版 version:1 清单没有 preview_ids：回退默认会话清单，且不报错、不改写文件。
+            legacy_manifest = {
+                "version": 1,
+                "updated_at": "2026-01-01T00:00:00Z",
+                "contact_ids": chosen_conversation_ids,
+            }
+            conversation_contacts_path.write_text(
+                json.dumps(legacy_manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            status, _, legacy_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+            )
+            if status != 200 or legacy_conversation.get("preview_ids") != expected_preview_ids:
+                raise AssertionError(
+                    f"Legacy manifest preview fallback failed: {legacy_conversation}"
+                )
+            if [contact["id"] for contact in legacy_conversation["items"]] != chosen_conversation_ids:
+                raise AssertionError(
+                    f"Legacy manifest contact_ids were not respected: {legacy_conversation}"
+                )
+            if json.loads(conversation_contacts_path.read_text(encoding="utf-8")) != legacy_manifest:
+                raise AssertionError("Reading a legacy manifest rewrote the file")
+            request_json(
+                base_url,
+                "/api/conversation-contacts",
+                method="PUT",
+                body={"preview_ids": chosen_preview_ids},
+            )
+
             status, _, updated_custom = request_json(
                 base_url,
                 "/api/groups/9200",
@@ -449,6 +626,31 @@ def main() -> int:
             stored_groups = json.loads(custom_groups_path.read_text(encoding="utf-8"))["groups"]
             if [group["id"] for group in stored_groups] != [9200]:
                 raise AssertionError(f"Deleted custom group remains in file: {stored_groups}")
+
+            # 已删除/已禁用联系人从清单读取时静默过滤，但不会改写文件。
+            status, _, filtered_conversation = request_json(
+                base_url,
+                "/api/conversation-contacts",
+            )
+            filtered_ids = [contact["id"] for contact in filtered_conversation["items"]]
+            if 9201 in filtered_ids:
+                raise AssertionError(f"Deleted contact leaked into conversation list: {filtered_ids}")
+            if filtered_ids != [value for value in chosen_conversation_ids if value != 9201]:
+                raise AssertionError(f"Conversation list order was not preserved: {filtered_ids}")
+            filtered_preview_ids = filtered_conversation.get("preview_ids")
+            if 9201 in (filtered_preview_ids or []):
+                raise AssertionError(
+                    f"Deleted contact leaked into conversation preview: {filtered_preview_ids}"
+                )
+            if filtered_preview_ids != [value for value in chosen_preview_ids if value != 9201]:
+                raise AssertionError(
+                    f"Conversation preview order was not preserved: {filtered_preview_ids}"
+                )
+            if (
+                json.loads(conversation_contacts_path.read_text(encoding="utf-8"))["contact_ids"]
+                != chosen_conversation_ids
+            ):
+                raise AssertionError("Reading filtered conversation contacts rewrote the manifest")
 
             builtin_group = next(
                 contact
@@ -588,6 +790,10 @@ def main() -> int:
                 "custom_group_ids": custom_ids[-2:],
                 "custom_group_min_members": True,
                 "custom_group_invalid_member": True,
+                "conversation_contacts_default": True,
+                "conversation_contacts_roundtrip": True,
+                "conversation_contacts_validation": True,
+                "conversation_contacts_filter": True,
                 "custom_group_update": True,
                 "custom_group_rename": True,
                 "group_rename_project_sync": True,

@@ -42,6 +42,7 @@
             </div>
             <div class="toolbar-actions">
               <button id="newGroupButton" class="secondary-button compact" type="button" title="群聊管理" aria-label="群聊管理">群聊管理</button>
+              <button id="addMessageButton" class="primary-button compact" type="button" title="添加消息" aria-label="添加消息">添加消息</button>
             </div>
           </div>
           <div class="phone-stage">
@@ -124,14 +125,19 @@
 
         <aside class="editor-column">
           <div class="editor-header">
-            <div>
+            <div class="editor-header-title">
               <h2>编辑面板</h2>
             </div>
-            <div class="editor-actions">
-              <button id="addMessageButton" class="primary-button compact" type="button">添加消息</button>
-            </div>
+            <div id="editorTabs" class="editor-tabs" role="tablist" aria-label="编辑面板页签"></div>
           </div>
 
+          <section
+            id="editorPanelEdit"
+            class="editor-tabpanel editor-panel-edit"
+            role="tabpanel"
+            aria-labelledby="editorTabEdit"
+            tabindex="0"
+          >
           <section class="editor-section">
             <h3>项目与联系人</h3>
             <label>
@@ -181,6 +187,37 @@
             <h3>消息属性</h3>
             <div id="messageEditor" class="message-editor">
               <p class="empty-state">选择一条消息进行编辑。</p>
+            </div>
+          </section>
+          </section>
+
+          <section
+            id="editorPanelContacts"
+            class="editor-tabpanel editor-panel-contacts hidden"
+            role="tabpanel"
+            aria-labelledby="editorTabContacts"
+            tabindex="0"
+          >
+            <div class="editor-contact-toolbar">
+              <input
+                id="editorContactSearch"
+                type="search"
+                placeholder="搜索角色或群组"
+                aria-label="搜索联系人"
+                autocomplete="off"
+              />
+              <div
+                id="editorContactFilters"
+                class="editor-contact-filters"
+                role="group"
+                aria-label="联系人分类"
+              ></div>
+            </div>
+            <div id="editorContactList" class="editor-contact-list" role="list" aria-live="polite"></div>
+            <div id="editorContactPagination" class="editor-contact-pagination hidden">
+              <button id="editorContactPrevPage" type="button">上一页</button>
+              <span id="editorContactPageLabel"></span>
+              <button id="editorContactNextPage" type="button">下一页</button>
             </div>
           </section>
         </aside>

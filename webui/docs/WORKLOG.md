@@ -1,12 +1,170 @@
 # MimirTalk WebUI 工作记录
 
-更新日期：2026-09-20（晚间暂停快照）
+更新日期：2026-10-07
 
-当前状态：**中心界面开发已基本完成**。气泡资源审计后最终保留 17 组静态主题，运行时动态组件主题不纳入 WebUI。
-回归：联系人、项目读写、群聊管理、图片上传、前端和 Playwright UI 检查均通过。
+当前状态：**WebUI 1.1.0 功能完成并通过回归，已封包 `MimirTalk_WebUI_v1.1.0_20261007` 并同步本地 Git 仓库
+`github-repo`，本轮不推送 GitHub。**
+P0「静态版气泡主题 + 连续消息无尾方框」、P1「联系人库与可会话列表」、P2「新增可会话角色」均已完成；
+导出细线接缝、文字左右对齐、头像间距等收尾修复也已接入。运行时动态组件主题仍不纳入 WebUI。
+后续：按 `RELEASE_1.1.0.md` 写发布文案（草稿已备），再执行 GitHub 发布。
+阶段 B 的设计与落地记录见 `CONTACT_DIRECTORY_RIGHT_PANEL_PLAN.md` 的「阶段 B」。
 
 交接说明：早期一次「查看弥弥尔通讯开发进度」任务因模型侧工具调用参数非法 JSON 报错中断，
 排查结论与开工步骤见 `mimirtalk_webui/HANDOFF.md`。
+
+## 2026-10-07 1.1.0 收尾：梅塞可接入、导出细线与文字对齐修复、封包
+
+本阶段为 1.1.0 最后一批改动，完成后进入封包与本地仓库同步。
+
+- 新增可会话角色：梅塞可 `10131`，头像取自
+  `D:\大眼解包图片资源\story_character0917\comsingle\textureconfig\story\character\story_10131.png`，
+  复制到 `assets/avatars/character_itemshead/story_comsingle/sprite/10131.png` 并写入
+  `chat_contacts.json`（`character_itemshead:story_comsingle:10131`）。重建 `asset_index.json`
+  与 `asset_names.json` 后，联系人总数 83 → 84（角色 73 → 74，内置群 10）。`assets/avatars/README.md`
+  的 `story_comsingle` 清单同步补入梅塞可。
+- 修复导出图中气泡内部的 1px 细线 / 接缝：`drawNineSlice()` 现在按当前画布变换把九宫格每条边
+  吸附到设备像素，并让相邻切片共用同一条边界坐标，消除整数缩放下的反走样细缝。反馈样本
+  `9013 真心洞察` 的导出图细线已消失。
+- 修复导出文字框的文字左右未对齐：新增 `bodyInsetLeft` 与
+  `--momotalk-*-bubble-square-inset-*` / `-inner-inset-*` 变量，首条带尾气泡的正文按方框内缩补偿，
+  与后续无尾方框气泡对齐；左侧默认气泡与右侧管理员气泡都覆盖，预览 CSS 与 Canvas PNG 共用同一套公式。
+  同时连续消息方形外框按外侧切片差内缩，外缘与首条带尾气泡方框外缘落在同一条线上。
+- 头像与气泡可见间距按观感减半：`--message-gap` 由 `0.9cqw` 调整为 `0.14cqw`，PNG 导出
+  `avatarGap` 同步按比例推导；顺带修正导出 `maxBubbleWidth` 口径，与预览车道边界对齐。
+- 收尾验证：`node --check frontend/src/app.js`、`check_contact_map.py`、`check_asset_references.py`、
+  `check_backend.py`、`check_frontend.py`、`check_project_store.py` 全部通过；
+  Playwright `check_ui_playwright.js` 为 `issues: []`。
+- 封包：`MimirTalk_WebUI_v1.1.0_20261007`，内置 Python 运行时启动验证
+  （`/api/health`：`asset_count=523 contact_count=84 project_count=0`；静态气泡路由
+  `/assets/bubbles/square_9013_left.png` 返回 `200`）。包内 `PACKAGE_FILES.sha256`
+  与包目录逐文件校验一致（741 条），ZIP SHA256
+  `9906B37F18A6086FB91E2C53CA88A4D51433405106AEB0CDF8EFBB8C2EF738DC`。
+- 发布整理：新增 `RELEASE_1.1.0.md`，汇总 1.1.0 主要更新、修复、兼容性、已知限制与发布包信息，
+  供发布文案取用。
+
+## 2026-10-06 阶段 B 实现：双击加入会话列表 + 默认会话清单
+
+用户最终确认三条口径：旧项目联系人不在清单时临时置顶、不写盘；非当前会话卡提供移除入口，
+当前会话需先切换；默认群只含内置群（`custom=false`，`9001–9011`，其中无 `9008`），
+默认清单 = 薇儿丹蒂 `1084` + 10 个内置群 = **11 条**。
+
+本次落地：
+
+- 后端 `backend/app.py`：`CONVERSATION_CONTACTS_VERSION = 2`；新增
+  `_load_conversation_contacts_payload()` / `_normalize_conversation_ids()` /
+  `_default_preview_contact_ids()` / `_load_conversation_preview_ids()`；
+  `_write_conversation_contacts(contact_ids, preview_ids)` 写 v2 双数组；
+  `GET /api/conversation-contacts` 追加 `version` / `preview_ids` / `preview_items` / `preview_total`；
+  `PUT /api/conversation-contacts` 支持 `contact_ids?` / `preview_ids?`，缺省字段保留当前值，
+  未知或非法 ID、空 body 返回 `400`。缺文件或旧 `version: 1` 无 `preview_ids` → 默认清单读取，
+  未知或已禁用 ID 静默过滤，不改写文件。
+- 前端 `frontend/src/app.js`：新增 `state.previewContactIds`；`previewContactSource()` 按
+  `preview_ids` 保序过滤，当前会话不在清单时临时置顶且不写盘；`renderContactList()` 改读预览清单，
+  非当前会话显示 `data-action="remove-preview"`；新增 `saveConversationPreviewIds()` /
+  `ensurePreviewContact()` / `addPreviewContact()` / `removePreviewContact()`；
+  `selectRole()` 增加“必须在会话列表内”的编辑门槛；`#editorContactList` 双击加入并选中；
+  新建自定义群自动加入 `preview_ids` 并选中，删除群同步移除。
+- 样式 `frontend/src/styles.css`：新增 `.side-entry-remove` 及 hover/focus，
+  `.editor-contact-card` 禁止双击选中文本。
+- 回归脚本：`check_backend.py` 补默认清单、v2 双数组写盘、仅 preview PUT、未知 ID 400、
+  空 body 400、v1 兼容、删除群过滤 preview 等断言；`check_frontend.py` 补 JS marker；
+  `check_ui_playwright.js` 补默认 11 条、无自建群、单击不加入、双击追加并自动选中、
+  重复双击不重复、当前会话不可移除、非当前可移除、临时置顶不写盘；新增隔离服务
+  `tools/_tmp_isolated_server.py`（临时 projects/uploads/conversation_contacts/custom_groups，
+  继承真实 `chat_contacts.json` 与 `group_members.json`），并预置一个自建群用于分类筛选回归。
+- 回归结果：`node --check app.js`、`check_backend.py`、`check_frontend.py`、
+  `check_project_store.py` 全部通过；隔离服务 Playwright `issues=[]`，实测
+  `contact_count=11`、`default_preview_count=11`、`custom_group_in_default=false`、
+  `temporary_pin={active_id:"1084",written_back:false}`、`duplicate_count=1`、`removed_id=1076`。
+- 说明：`conversation_contacts.json` 是全局单文件、不按项目分；真实环境当前可能仍无该文件，
+  首次 PUT 才创建。运行中的后端 `8765` 需重启才能加载新代码，前端静态文件刷新即可。
+
+## 2026-10-06 右侧编辑面板：联系人列表页签（P1 阶段 A，方案 C）
+
+目标：把「联系人目录」迁到右侧编辑面板的页签里，页签结构可扩展；本阶段页签内容仍显示**全部启用联系人**，
+为阶段 B 的“双击加入会话列表”预留数据层。
+
+本次落地（方案 C：一份文件、未来两个数组）：
+
+- 后端 `backend/app.py`
+  - 新增 `DEFAULT_CONVERSATION_CONTACTS_PATH = data/conversation_contacts.json`，`Application` / `create_server`
+    新增 `conversation_contacts_path` 参数（默认指向真实数据文件，检查脚本注入临时路径）。
+  - 新增 `_enabled_contact_ids()`、`_load_conversation_contact_ids()`、`_write_conversation_contacts()`、
+    `list_conversation_contacts()`、`set_conversation_contacts()`。
+  - 新增 `GET /api/conversation-contacts`（按清单顺序返回联系人详情 `{items, total}`）与
+    `PUT /api/conversation-contacts`（校验后原子写入）。
+  - 关键取舍：**读取缺失文件不落盘**，只在内存里回退为“全部启用联系人”；只有 PUT 才创建文件。
+    写入时未知/已禁用/非整数 ID 报 400；读取时已删除/已禁用的 ID 静默过滤且不改写文件。
+  - 本阶段只写 `version: 1` + `updated_at` + `contact_ids`；`preview_ids` 留到阶段 B 再升 `version: 2`。
+- 前端 `frontend/index.html`：`.editor-header` 改成「标题 + `#editorTabs`（`role="tablist"`）」，
+  原三个 section 收进 `#editorPanelEdit`，新增隐藏的 `#editorPanelContacts`（搜索框 + 列表 + 分页条）。
+- 前端 `frontend/src/styles.css`：`.editor-column` 改为 flex 纵向 + `overflow: hidden`，滚动交给 `.editor-tabpanel`；
+  新增页签、联系人卡片、分页条样式；≤900px 回退整页滚动。
+- 前端 `frontend/src/app.js`：新增页签注册表 `EDITOR_TABS`、`renderEditorTabs()` / `renderEditorTabPanels()` /
+  `selectEditorTab()`；`renderEditor()` 按 `state.editorTab` 分发，原逻辑移到 `renderEditTab()`。
+  新增 `loadConversationContacts()`（失败回退 `/contacts`）、`renderEditorContactList()`、`editorContactSource()`、
+  `filteredEditorContacts()`、`contactListPageSize()`、`changeEditorContactPage()`；状态集中在 `state.contactList`。
+- 分页：`clamp(floor(列表可视高度 / 60), 6, 16)`，默认 8；`ResizeObserver` 只在页签激活时重算，避免隐藏容器 0 高度。
+- 交互按确认：卡片无选中/凸出态，单击不加入；双击加入留到阶段 B。
+- 检查脚本：`check_backend.py` 新增清单默认值、读写往返、非法 ID 拒绝、已删除 ID 过滤、拒绝写入不破坏文件等断言；
+  `check_frontend.py` 新增页签/搜索/分页标记与脚本标记断言；
+  `check_ui_playwright.js` 新增 `verifyEditorContactTab`（页签切换、分页翻页与首尾禁用、搜索过滤与空态、
+  卡片无选中 class、缩小窗口页大小重算、切回编辑页签内容不变），并让桌面 shell 检查改为校验活动 tabpanel 的滚动。
+- 回归结果：`check_backend.py`、`check_frontend.py`、`check_project_store.py` 全部通过；
+  Playwright `issues=[]`，`editor_contact_tab` 实测 `page_size=12`、`page_count=8`、缩窗后 `page_size=6`、搜索命中 1 条。
+- 设计文档 `CONTACT_DIRECTORY_RIGHT_PANEL_PLAN.md` 已同步状态与落地记录（阶段 A 完成，阶段 B 未开工）。
+
+## 2026-10-06 联系人列表：分类筛选（方案 1：顶部筛选条 + 类别徽标）
+
+背景：阶段 A 落地后，87 条数据由后端排序为「内置角色 → 内置群 → 自建群」，
+4 个自建群追加在最后，分页后要翻到末尾几页才能看到。评估过 QQ 式自定义分组后，
+本轮先按方案 1 做能直接落地的简单内容；QQ 方向只记录不实现。
+
+本次落地：
+
+- `frontend/index.html`：联系人页签工具栏新增 `#editorContactFilters`（`role="group"`）。
+- `frontend/src/app.js`：
+  - 新增 `CONTACT_CATEGORIES`（`all / hero / group / custom_group`）、
+    `matchesEditorContactCategory()`、`isCustomGroupContact()`、`renderEditorContactFilters()`。
+  - 自建群判定：`custom === true`，兜底 `asset_category === "custom_groups"`。
+  - `filteredEditorContacts()` 改为**分类 + 搜索**叠加过滤；筛选条数量随搜索词实时联动。
+  - 新增 `state.contactList.category`（默认 `all`）；切换分类或改搜索都把 `page` 重置为 0。
+  - 卡片新增类别徽标：角色 / 内置群 / 自建群，群组仍保留成员人数。
+- `frontend/src/styles.css`：新增筛选条、选中态、类别徽标样式；288px 编辑栏宽下筛选条换两行。
+- `tools/check_frontend.py`：新增筛选 DOM 与脚本标记断言，输出 `editor_contact_filters=true`。
+- `tools/check_ui_playwright.js`：新增筛选标签、分类计数、分类后卡片徽标、切分类重置页码断言。
+
+数据基线：全部 87 / 角色 73 / 群组 14（内置群 10 + 自建群 4）。
+
+验证结果：`node --check frontend/src/app.js`、`node --check tools/check_ui_playwright.js` 通过；
+`check_frontend.py` 输出 `editor_tabs=true`、`editor_contact_tab=true`、`editor_contact_filters=true`；
+用临时 `--projects-dir` 与端口 8813 跑 Playwright，`exit=0`、`issues=[]`。
+
+方向归档：QQ 式自定义分类与自定义分组的难度分档、模型风险和前置决策，
+已单独写入 `CONTACT_SECTIONS_QQ_STYLE_PLAN.md`，本轮不实现，待方案 1 稳定后再评估。
+
+## 2026-10-06 阶段 B 设计确认：双击加入会话列表 + 默认会话清单
+
+> 本节是开工前的设计确认记录；实际实现见上方「阶段 B 实现」。
+
+用户确认了「会话列表」的改造预想，设计已细化到 `CONTACT_DIRECTORY_RIGHT_PANEL_PLAN.md` 的「阶段 B」，本轮只写文档、不改代码。
+
+- 预览目录职责改为「会话列表」：在右侧「联系人列表」页签**双击**角色/群组卡片才加入，加入后才能编辑；单击不加入。
+- 默认会话列表 = 薇儿丹蒂（`1084`）+ 所有内置群（`9001–9011`，`custom=false`），共 11 条，避免初始界面为空；自建群（`9200+`）不默认加入，新建群组时自动加入。
+- 数据模型：`conversation_contacts.json` 升 `version: 2`，`contact_ids` 保持“联系人列表来源”，新增 `preview_ids` 作为“会话列表目标”；缺文件或 v1 文件按默认清单读取，不写盘。
+- 后端：新增默认清单常量与读取函数，`list_conversation_contacts()` 追加 `preview_ids` / `preview_items` / `preview_total`；`set_conversation_contacts()` 支持只改 `preview_ids`。
+- 前端：预览目录改为按 `preview_ids` 过滤渲染；双击加入并选中；`selectRole()` 增加“必须在会话列表内”的编辑门槛；新建项目初始会话取清单第一条。
+- 待拍板 3 点：旧项目联系人不在清单时是否自动加入（推荐临时置顶不写盘）、本批是否做移除入口（推荐做非当前会话卡）、默认群组是否含自建群（推荐不含）。
+
+## 2026-10-06 预览工具栏：添加消息上移（页签改造前的第一步）
+
+- 「添加消息」从右侧 `.editor-header` 移到预览区顶部 `.toolbar-actions`，与「群聊管理」同排（左右），
+  不再走上下堆叠；`.editor-header` 只保留「编辑面板」标题。
+- 两个工具栏按钮统一 compact 规格：32px 最小高度、10px 内边距、12px 字号，同排时高度与文字基线一致。
+- `.toolbar-actions` 允许换行，`.preview-toolbar` 整体可换行；窄屏下标题占一行、两个按钮仍在同一行右对齐。
+- `tools/check_ui_playwright.js` 新增位置断言：`#addMessageButton` 必须位于 `.toolbar-actions`，且不在 `.editor-header`。
+- 回归：`check_frontend.py`、`check_backend.py`、`check_project_store.py` 全部通过，Playwright `issues=[]`。
+- 后续：该改动先落地，再开始右侧编辑面板「页签 + 可会话角色分页」，设计与步骤见 `CONTACT_DIRECTORY_RIGHT_PANEL_PLAN.md`。
 
 ## 晚间恢复点
 
@@ -418,12 +576,127 @@ C:\Users\ori\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pyt
 - 发布包 `assets_source` 从 1475 个文件降到 504 个，ZIP 从约 195 MB 降到约 48 MB。
 - 校验：513 条索引全部可在包内解析，79 个联系人无缺失头像，后端/前端/项目/联系人检查全部通过。
 - 被删素材在 `extract/aethergazer_chatbubble`、`extract/aethergazer_i18n` 等备份目录仍保留原件，可按需重新索引。
+## 2026-09-21 收尾阶段：素材审计、GitHub 发布、导出分页
 
-## 2026-09-21 v1.0.1 发布包与索引口径统一
+本阶段的完整记录见 `webui开发日志/文档/2026-09-21-资产清理与GitHub发布.md`，要点：
 
-- 发布目录、ZIP 与 SHA256 文件统一为 `MimirTalk_WebUI_v1.0.1_20260920`，不再使用无点号的 `v1` 命名。
-- 包内 `VERSION.txt`、`BUILD_INFO.txt`、`README-发布包.md` 与服务 `server_version` 统一标记 `v1.0.1`。
-- 素材索引统一为 518 条，发布包内 `assets_source` 509 个文件；验证脚本报告 0 条无法解析的引用。
-- `PACKAGE_FILES.sha256` 为 701 条，独立解压后逐文件复算 0 处不符；ZIP 内 702 个文件、4 个目录，顶层目录名正确。
-- 发布包验证：`check_asset_references.py` 与 `check_backend.py` 均退出码 0。
-- ZIP 大小 61,663,476 字节，SHA256：`FEFB75FB9734041CB16BED0C9195EADF79DB4A58950AABD1A59CBEF059CAA2C5`。
+- 素材引用审计：按完整 id / safe_id / 文件名三种标识比对，删除 971 个未引用素材
+  （约 146.3 MB），索引 1484 → 513。
+- 误删与恢复：因首版审计未扫描 CSS，误删 5 个只以 safe_id 引用在 `styles.css`
+  的界面素材（导航栏背景、卡片、箭头、退出图标）。已从 `extract/` 备份恢复，
+  索引 513 → 518。
+- 防复发：新增 `tools/check_asset_references.py`，扫描 js/css/html/py 的
+  `/api/assets/<safe_id>/` 引用并接入 CI。
+- GitHub 仓库：`https://github.com/DaydDream/mimirtalk-webui`
+  （应用目录为 `webui/`，`assets_source/` 与 `extract/`、`tools/bin/` 不入库）。
+- 发布包：纯运行时包（内置 Python 3.12.10 + Pillow 12.3.0），
+  启动器改为纯 ASCII 以避免 PowerShell 5.1 按 ANSI 解析导致失败。
+- 长图导出：超过 30000 px 上限时不再报错，改为按高度自动拆分为多张 PNG。
+- CI：修复 cp1252 输出编码导致的 UnicodeEncodeError，升级 action 版本消除
+  Node 20 弃用警告。
+
+## 2026-09-21 封包命名与索引口径更新
+
+- 本地发布目录、ZIP 与 SHA256 文件统一改为 `MimirTalk_WebUI_v1.0.1_20260920`。
+- 包内 `VERSION.txt`、`BUILD_INFO.txt`、`README-发布包.md` 同步标记 v1.0.1。
+- 包内素材索引口径统一为 518 条，修正发布说明里的 513 条旧计数。
+- `PACKAGE_FILES.sha256` 与 ZIP 外层 `.sha256` 在内容更新后重新生成。
+
+## 2026-09-29 连续消息无尾方框需求记录
+
+- 连续消息“只首条保留气泡三角”的分组逻辑已全局实现：同侧、同发言人的连续文本首条为 `tailed`，后续为 `square`；预览 HTML 与 PNG 导出共用同一套分组。
+- 当前未完整覆盖的原因不是分组规则遗漏，而是 `square` 仍由带尾原图运行时裁剪得到，没有每个主题、左右两侧的独立无尾方框资源。
+- 当前裁剪逻辑假设尾巴与主体、装饰可以分离。尾巴识别失败时后续消息仍保留三角；装饰跨主体边缘时会被误裁，导致缺口或边框断裂。
+- 相对稳定、当前裁剪基本可用的主题：`9000` 默认白、`9001` 默认黑、`9005` 未命名、`9010` 喷香美味吐司、`9011` 雾中语。
+- 明确失败主题：`9003` 愿祈佳语左右两侧尾巴识别失败；`9016` 她与我的花季右侧作为边界案例，后续不再要求重复核对静态图。
+- 装饰压边、当前裁剪不可靠的主题：`9002` 岁序更新、`9004` 稳定与唯一、`9007` 未命名、`9008` 海滨邹鲁、`9013` 真心洞察、`9014` 掌上星、`9015` 紊中有序、`9017` 解心语、`9018` 拼凑的字符、`9020` 亲亲时刻。
+- 次日继续开发口径：为每个受到影响的气泡主题生成独立无尾方框资源，优先使用显式 `square_left`、`square_right`、`square_slice_left`、`square_slice_right` 元数据；前端加载和 PNG 导出统一使用该资源，当前自动裁剪只作为简单主题回退。
+- 验收重点：每个主题左右两侧连续 3 条消息只有首条显示三角；预览与 PNG 导出一致；无尾方框不缺口、不裁装饰、不残留三角。
+
+## 2026-10-06 P0 完成：静态版气泡主题与连续消息无尾方框
+
+### P0A 两个气泡素材未合成状态修复
+
+- `9016 她与我的花季`、`9017 解心语` 以“静态版”开放选择，可用于聊天预览和 PNG 导出。
+- 数据保留 `composition_complete:false`，新增 `static_composition_available:true` 与 `composition_mode:"static_base_only"`。
+- 选择器对两个主题显示“静态版”，不再显示“组件待合成”，也不再禁用。
+- 当前只接游戏 UI 中的静态主体切片，不还原动态羽饰、Image 子节点和粒子层；这是 1.1 的明确交付边界。
+
+### P0B 连续消息无尾方框
+
+- 新增 `tools/build_bubble_square_assets.py`，按主题和左右方向生成 34 张无尾方框资源：
+  - 目录：`frontend/assets/bubbles/`
+  - 命名：`square_<theme>_<side>.png`
+- 17 个主题均写入 `square_left`、`square_right`、`square_slice_left`、`square_slice_right`；切片口径与 Unity `Sprite.m_Border` 对齐。
+- `applyBubbleTheme()` 同步更新预览 CSS 变量与 `EXPORT_ASSET_URLS`，默认角色气泡固定使用 `9000`，管理员消息使用当前主题。
+- `refreshBubbleSquareThemes()` 优先读取显式方框资源和元数据；运行时 `bubbleSquareDataUrlFromImage()` 仅作为缺字段的兼容回退。
+- `groupContinuousBubbles()` 统一服务预览与 PNG 导出：同侧、同发言人连续文本仅首条为 `tailed`，后续为 `square`；系统消息、贴纸、图片和换边会打断连续分组。
+- CSS 方框分支使用独立的 `border-image-source`、`border-image-slice`、`border-image-width`；Canvas 方框分支改用 `squareBubbleSlice`，修复原先带尾切片被误用于无尾资源的问题。
+
+### 实现流程
+
+1. 主题数据 `bubble_themes.json` 提供带尾原图、官方切片和显式无尾方框资源。
+2. 主题切换时先同步写入 CSS 变量与导出 URL，再异步解析方框资源；同步阶段保证预览立即切换，异步阶段保证导出与主题完全一致。
+3. 预览和导出分别调用 `groupContinuousBubbles()`，得到统一的 `tailed`/`square` 标记。
+4. 预览通过 CSS 九宫格绘制，PNG 导出通过 `drawNineSlice()` 绘制；两者使用同一份切片元数据。
+5. 显式资源缺失时才调用自动裁剪兜底，避免旧数据因缺少字段直接失效。
+6. Playwright 审计全部主题字段、资源 URL、切片正值、重点主题 CSS 变量、连续消息分组和 PNG 导出结果。
+
+### 验证结果
+
+- `node --check frontend/src/app.js`：通过。
+- `node --check tools/check_ui_playwright.js`：通过。
+- `check_backend.py`、`check_frontend.py`、`check_project_store.py`：通过。
+- `check_asset_references.py`：通过；当前索引 522 条资源，无法解析 0 条。
+- `check_contact_map.py`：通过；联系人 83、角色 73、群组 10，缺失头像 0。
+- Playwright UI 回归：`issues: []`。
+- 连续消息关键观测：`9016` 右侧第二、三条命中 `square_9016_right.png`，PNG 导出变体为 `tailed, square, square, tailed, tailed, square, tailed`。
+- 34 张方框 PNG 均已通过本地 HTTP 访问检查。
+
+### 剩余风险与回退
+
+- 显式资源由尾巴像素移除和边缘重绘生成，复杂主题的边缘装饰仍需要人工视觉抽查；自动化只能确认资源存在、切片正值、主题切换和分组正确。
+- 当前保留 `buildBubbleSquareAsset()` 自动裁剪路径，仅用于旧数据或缺少显式 `square_*` 字段的兼容回退，不作为 1.1 主题资源的正式路径。
+- 如后续人工抽查发现某个主题边缘仍有缺口，应优先调整该主题在 `build_bubble_square_assets.py` 中的 `TAIL_RANGES` 和边缘修复范围，再重新生成资源，不能恢复运行时裁剪作为主路径。
+- 本轮生成的 `tmp_bubble_contact_sheet.png`、`tmp_bubble_square_sheet.png` 仅为人工拼图检查产物，验收后已删除。
+
+## 2026-10-06 修复：9008/9010/9020 气泡沿十字割裂
+
+### 根因
+
+- 这三个主题的 Unity `Sprite.m_Border` 切片在纵向（9008、9010）或纵横向（9020）上顶+底、左+右正好等于整图边长，九宫格中心区域为 `0`。
+- 预览用 CSS `border-image`、PNG 导出用 `drawNineSlice()`，中心为 `0` 时四角会在十字位置直接首尾相接，形成割裂；PNG 图像本身没有缺块。
+- 原 Playwright 审计只判断切片各值 `> 0`，无法发现“每边都大于 0 但中心为 0”的情况。
+
+### 修复
+
+- `tools/build_bubble_square_assets.py` 新增 `MIN_SLICE_CENTER = 1` 与 `safe_slice()`，按真实图片边长收缩较大的切片侧；原始 `variants.*.slice` 与无尾 `square_slice_*` 统一经过收口，并重新生成 34 张方框资源。
+- `frontend/src/app.js` 新增 `safeBubbleSlice()`、`clampBubbleSliceAxis()`、`resolvedBubbleVariantSlice()` 与 `warmBubbleThemeImageSizes()`：按实际加载到的图片尺寸收口切片，主题变体切片在应用前先修正并缓存。
+- `bubbleSquareSliceForGeometry()` 增加中心保底；`drawNineSlice()` 在源图或目标尺寸下再次收口，即使传入异常切片也不会让中心归零。
+- 方框资源与切片统一由 `refreshBubbleSquareThemes()` 在图片尺寸加载完成后写入 CSS 变量，避免同步阶段用未收口切片覆盖已收口结果。
+- `tools/check_ui_playwright.js` 的切片审计改为逐主题加载原图与方框图，断言 `left + right < width`、`top + bottom < height` 且中心宽高至少 `1px`。
+
+### 验证结果
+
+- 重新构建方框资源：PNG 哈希与 `bubble_themes.json` 均与修复前一致，构建幂等。
+- Playwright 切片审计：17 个主题、68 张切片图（34 张原图 + 34 张方框图），`zeroCenter=0`、`invalid=0`、`squareInvalid=0`。
+- `check_ui_playwright.js` 全量回归：`issues: []`。
+- `check_backend.py`、`check_frontend.py`、`check_project_store.py`、`check_asset_references.py`、`check_contact_map.py`：全部通过。
+- 视觉抽查：9008、9010、9020 的首条带尾气泡与连续无尾方框均正常，装饰件完整，无十字割裂。
+
+## 2026-10-06 调整：头像与气泡间距减半
+
+### 改动
+
+- 起因为人工观察反馈“气泡和角色头像的距离偏远”。头像框内有 `9.2592592593%` 的透明内缩，实际可见间距是 `gap + 头像内缩`，因此只改 `gap` 达不到“距离减半”的观感。
+- `frontend/src/styles.css`：`--message-gap` 由 `0.9cqw` 调整为 `0.14cqw`，`.chat-row` 的 `gap` 改为直接引用 `var(--message-gap)`，避免变量与实际间距再次脱节而影响 `--message-lane-width`。
+- 取值依据：头像框 `6.6666666667cqw`，单侧内缩约 `0.6173cqw`，原可见间距 `0.9 + 0.6173 = 1.5173cqw`，减半后 `0.7586cqw`，故 `gap ≈ 0.14cqw`。
+- `frontend/src/app.js`：PNG 导出 `avatarGap` 由 `15` 改为按同一比例推导（`avatarSize * 0.14 / 6.6666666667 ≈ 1.6px`），保证预览与导出观感一致。
+- 顺带修正导出 `maxBubbleWidth` 口径为 `width - 2 * (bodyPaddingX + avatarSize + avatarGap)`：原式漏掉 `bodyPaddingX`，间距变小后长消息会越过头像车道，现与预览的车道边界对齐。
+
+### 验证结果
+
+- `node --check frontend/src/app.js`、`node --check tools/check_ui_playwright.js`：通过。
+- Playwright 全量回归：`issues: []`；`anchorGap` 由原先约 `7.45px` 降到 `1.16px`，叠加头像内缩后可见间距约由 `12.6px` 降到 `6.3px`，正好减半。
+- 车道校验：长右侧气泡仍能扩展到 `laneLeft`，未跨越头像车道；`overlaps`、`overflow` 均为空。
+- 未尽事项：连续消息方形外框对齐逻辑（`squareInset` 与 `margin-*`）未改动。

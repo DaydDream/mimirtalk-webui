@@ -1,8 +1,53 @@
 {
   "version": 1,
-  "source": "ChatHeroCfg.lua + 用户补充角色",
-  "note": "可会话角色名单。用户补充角色使用项目内 story_comsingle 头像；头像 PNG 不需要预先裁切，WebUI 和 PNG 导出会统一按 MomoTalk 头像内孔裁切。",
+  "source": "ChatHeroCfg.lua + 用户补充角色（合并保留）",
+  "note": "可会话角色名单。新增角色时复制一条记录，填写 name、game_icon_path，并把 asset_id 指向 asset_index.json 中的头像资源 ID；没有正式头像时把 asset_id 设为 null。头像 PNG 不需要预先裁切，WebUI 和 PNG 导出会统一按 MomoTalk 头像内孔裁切。",
   "contacts": [
+    {
+      "id": 1076,
+      "name": "庚辰",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1076",
+      "asset_id": "character_itemshead:story_comsingle:1076",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 10131,
+      "name": "梅塞可",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/10131",
+      "asset_id": "character_itemshead:story_comsingle:10131",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1046,
+      "name": "雪儿",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1046",
+      "asset_id": "character_itemshead:story_comsingle:1046",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1045,
+      "name": "亚里沙",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1045",
+      "asset_id": "character_itemshead:story_comsingle:1045",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
+    {
+      "id": 1036,
+      "name": "巴德尔",
+      "kind": "hero",
+      "game_icon_path": "TextureConfig/Character/MediumIcon/1036",
+      "asset_id": "character_itemshead:story_comsingle:1036",
+      "asset_category": "character_itemshead",
+      "enabled": true
+    },
     {
       "id": 10170,
       "name": "望舒",

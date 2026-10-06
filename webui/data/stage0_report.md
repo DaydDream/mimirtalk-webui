@@ -2,28 +2,25 @@
 
 ## 结果
 
-- 扫描 PNG：2907
-- 去重后可展示素材：1484
-- 因 sprite/texture2d 重复而移除：1423
-- 可选头像：570
-- 可选背景：6
-- 可选贴纸：727
+- 扫描 PNG：522
+- 去重后可展示素材：522
+- 因 sprite/texture2d 重复而移除：0
+- 可选头像：80
+- 可选背景：4
+- 可选贴纸：344
 
 ## 分类
 
 | 分类 | 数量 |
 | --- | ---: |
-| 图集拆图 (`atlas`) | 48 |
-| 聊天背景 (`backgrounds`) | 6 |
-| 后宅角色头像 (`backhouse_rolehead`) | 104 |
-| 角色通用头像 (`character_icon`) | 254 |
-| 角色头图池 (`character_itemshead`) | 205 |
-| 聊天贴纸 (`chat_stickers`) | 718 |
+| 图集拆图 (`atlas`) | 5 |
+| 聊天背景 (`backgrounds`) | 4 |
+| 角色头图池 (`character_itemshead`) | 73 |
+| 聊天贴纸 (`chat_stickers`) | 335 |
 | 本地化聊天贴纸 (`chat_stickers_i18n`) | 9 |
-| 系统图标 (`icons`) | 1 |
 | misc (`misc`) | 30 |
-| 通讯图片与头像 (`momotalk_images`) | 28 |
-| UI 控件 (`widgets`) | 81 |
+| 通讯图片与头像 (`momotalk_images`) | 17 |
+| UI 控件 (`widgets`) | 49 |
 
 ## 去重规则
 

@@ -19,6 +19,10 @@ const AVATAR_FRAME_CORNER_RADIUS_RATIO = 6 / 108;
 const ADMIN_SPEAKER_ID = "__admin__";
 const MIN_GROUP_MEMBERS = 2;
 const GROUP_MEMBER_PAGE_SIZE = 8;
+const CONTACT_LIST_DEFAULT_ROWS = 8;
+const CONTACT_LIST_MIN_ROWS = 6;
+const CONTACT_LIST_MAX_ROWS = 16;
+const CONTACT_LIST_ROW_HEIGHT = 60;
 const MAX_STATIC_IMAGE_BYTES = 8 * 1024 * 1024;
 const STATIC_IMAGE_MIME_TYPES = new Set(["image/png", "image/jpeg"]);
 const ADMIN_AVATAR_ASSET_IDS = [
@@ -50,8 +54,12 @@ const CHAT_BACKGROUND_ASSET_IDS = new Set([
 const EXPORT_ASSET_URLS = {
   bubbleLeft: "/api/assets/misc_textureconfig_chatbubble_9000_9000/file",
   bubbleRight: "/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file",
+  squareBubbleLeft: "/assets/bubbles/square_9000_left.png",
+  squareBubbleRight: "/assets/bubbles/square_9000_right.png",
   selectedBubbleLeft: "/api/assets/misc_textureconfig_chatbubble_9000_9000/file",
   selectedBubbleRight: "/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file",
+  selectedSquareBubbleLeft: "/assets/bubbles/square_9000_left.png",
+  selectedSquareBubbleRight: "/assets/bubbles/square_9000_right.png",
   recallLine: "/api/assets/atlas_atlas_monotalkatlas_Momotalk_29/file",
 };
 
@@ -69,6 +77,16 @@ const state = {
   project: null,
   imageUploadTarget: null,
   contacts: [],
+  conversationContacts: [],
+  conversationContactsLoaded: false,
+  previewContactIds: [],
+  editorTab: "edit",
+  contactList: {
+    query: "",
+    category: "all",
+    page: 0,
+    pageSize: CONTACT_LIST_DEFAULT_ROWS,
+  },
   speakerContactId: null,
   selectedMessageId: null,
   assets: {
@@ -145,6 +163,16 @@ const elements = {
   selectedMessageLabel: document.getElementById("selectedMessageLabel"),
   messageList: document.getElementById("messageList"),
   messageEditor: document.getElementById("messageEditor"),
+  editorTabs: document.getElementById("editorTabs"),
+  editorPanelEdit: document.getElementById("editorPanelEdit"),
+  editorPanelContacts: document.getElementById("editorPanelContacts"),
+  editorContactSearch: document.getElementById("editorContactSearch"),
+  editorContactFilters: document.getElementById("editorContactFilters"),
+  editorContactList: document.getElementById("editorContactList"),
+  editorContactPagination: document.getElementById("editorContactPagination"),
+  editorContactPrevPage: document.getElementById("editorContactPrevPage"),
+  editorContactNextPage: document.getElementById("editorContactNextPage"),
+  editorContactPageLabel: document.getElementById("editorContactPageLabel"),
   assetModal: document.getElementById("assetModal"),
   assetModalTitle: document.getElementById("assetModalTitle"),
   assetToolbar: document.getElementById("assetToolbar"),
@@ -780,6 +808,22 @@ async function loadContacts() {
   state.contacts = payload.items || [];
 }
 
+async function loadConversationContacts() {
+  try {
+    const payload = await api("/conversation-contacts");
+    state.conversationContacts = Array.isArray(payload.items) ? payload.items : [];
+    state.previewContactIds = Array.isArray(payload.preview_ids)
+      ? payload.preview_ids.filter((id) => Number.isInteger(id))
+      : state.conversationContacts.map((contact) => contact.id);
+    state.conversationContactsLoaded = true;
+  } catch (error) {
+    // 旧版后端可能还没有该接口，退回 /contacts，避免页签空白。
+    state.conversationContacts = [];
+    state.previewContactIds = [];
+    state.conversationContactsLoaded = false;
+  }
+}
+
 async function loadProjects() {
   const payload = await api("/projects");
   state.projects = payload.items;
@@ -847,7 +891,7 @@ async function createProject() {
     body: JSON.stringify({ title: "未命名项目", contact_name: "角色名" }),
   });
   state.project = project;
-  const initialContact = sortedContacts()[0];
+  const initialContact = previewContactSource(null)[0] || sortedContacts()[0];
   if (initialContact) {
     state.project.contact.contact_id = initialContact.id;
     state.project.contact.kind = initialContact.kind || "hero";
@@ -953,8 +997,71 @@ function renderAll() {
   renderPreview();
 }
 
+// 右侧编辑面板的页签注册表：新增功能页签只需往这里追加一项。
+const EDITOR_TABS = [
+  {
+    id: "edit",
+    label: "编辑",
+    tabId: "editorTabEdit",
+    panelId: "editorPanelEdit",
+  },
+  {
+    id: "contacts",
+    label: "联系人列表",
+    tabId: "editorTabContacts",
+    panelId: "editorPanelContacts",
+  },
+];
+
 // 编辑器渲染与事件绑定。
+function renderEditorTabs() {
+  if (!elements.editorTabs) return;
+  if (!elements.editorTabs.childElementCount) {
+    elements.editorTabs.innerHTML = EDITOR_TABS.map(
+      (tab) => `
+        <button
+          id="${tab.tabId}"
+          class="editor-tab"
+          type="button"
+          role="tab"
+          aria-controls="${tab.panelId}"
+          data-editor-tab="${tab.id}"
+        >${tab.label}</button>
+      `,
+    ).join("");
+  }
+  elements.editorTabs.querySelectorAll("[data-editor-tab]").forEach((button) => {
+    const selected = button.dataset.editorTab === state.editorTab;
+    button.setAttribute("aria-selected", selected ? "true" : "false");
+    button.tabIndex = selected ? 0 : -1;
+  });
+}
+
+function renderEditorTabPanels() {
+  EDITOR_TABS.forEach((tab) => {
+    const panel = document.getElementById(tab.panelId);
+    if (panel) panel.classList.toggle("hidden", tab.id !== state.editorTab);
+  });
+}
+
+function selectEditorTab(tabId) {
+  if (!EDITOR_TABS.some((tab) => tab.id === tabId)) return;
+  if (state.editorTab === tabId) return;
+  state.editorTab = tabId;
+  renderEditor();
+}
+
 function renderEditor() {
+  renderEditorTabs();
+  renderEditorTabPanels();
+  if (state.editorTab === "contacts") {
+    renderEditorContactList();
+    return;
+  }
+  renderEditTab();
+}
+
+function renderEditTab() {
   const project = state.project;
   if (!project) {
     elements.projectTitleInput.value = "";
@@ -980,6 +1087,160 @@ function renderEditor() {
 
   renderMessageList();
   renderMessageEditor();
+}
+
+// 联系人列表页签：来源为 /conversation-contacts，缺省回退到 /contacts。
+const CONTACT_CATEGORIES = [
+  { id: "all", label: "全部" },
+  { id: "hero", label: "角色" },
+  { id: "group", label: "群组" },
+  { id: "custom_group", label: "自建群" },
+];
+
+function editorContactSource() {
+  return state.conversationContactsLoaded ? state.conversationContacts : state.contacts;
+}
+
+function isCustomGroupContact(contact) {
+  return (
+    isGroupContact(contact) &&
+    (contact?.custom === true || contact?.asset_category === "custom_groups")
+  );
+}
+
+function matchesEditorContactCategory(contact, category) {
+  if (category === "hero") return !isGroupContact(contact);
+  if (category === "group") return isGroupContact(contact);
+  if (category === "custom_group") return isCustomGroupContact(contact);
+  return true;
+}
+
+function matchesEditorContactQuery(contact, query) {
+  if (!query) return true;
+  return contactDisplayName(contact).toLowerCase().includes(query);
+}
+
+function filteredEditorContacts() {
+  const query = state.contactList.query.trim().toLowerCase();
+  const category = state.contactList.category;
+  return editorContactSource().filter(
+    (contact) =>
+      matchesEditorContactCategory(contact, category) &&
+      matchesEditorContactQuery(contact, query),
+  );
+}
+
+function renderEditorContactFilters() {
+  const container = elements.editorContactFilters;
+  if (!container) return;
+  if (!container.childElementCount) {
+    container.innerHTML = CONTACT_CATEGORIES.map(
+      (category) => `
+        <button
+          class="editor-contact-filter"
+          type="button"
+          data-contact-category="${category.id}"
+          aria-pressed="false"
+        >
+          <span class="editor-contact-filter-label">${category.label}</span>
+          <span class="editor-contact-filter-count" data-contact-count></span>
+        </button>
+      `,
+    ).join("");
+  }
+  const query = state.contactList.query.trim().toLowerCase();
+  const contacts = editorContactSource();
+  CONTACT_CATEGORIES.forEach((category) => {
+    const button = container.querySelector(`[data-contact-category="${category.id}"]`);
+    if (!button) return;
+    button.setAttribute(
+      "aria-pressed",
+      category.id === state.contactList.category ? "true" : "false",
+    );
+    const countNode = button.querySelector("[data-contact-count]");
+    if (!countNode) return;
+    countNode.textContent = String(
+      contacts.filter(
+        (contact) =>
+          matchesEditorContactCategory(contact, category.id) &&
+          matchesEditorContactQuery(contact, query),
+      ).length,
+    );
+  });
+}
+
+function contactListPageSize() {
+  const height = elements.editorContactList?.clientHeight || 0;
+  if (!height) return CONTACT_LIST_DEFAULT_ROWS;
+  const rows = Math.floor(height / CONTACT_LIST_ROW_HEIGHT);
+  return Math.max(CONTACT_LIST_MIN_ROWS, Math.min(CONTACT_LIST_MAX_ROWS, rows));
+}
+
+function renderEditorContactList() {
+  const list = elements.editorContactList;
+  if (!list) return;
+  renderEditorContactFilters();
+  const contacts = filteredEditorContacts();
+  const pageSize = contactListPageSize();
+  state.contactList.pageSize = pageSize;
+  const pageCount = Math.max(1, Math.ceil(contacts.length / pageSize));
+  state.contactList.page = Math.min(Math.max(state.contactList.page, 0), pageCount - 1);
+  const page = state.contactList.page;
+  const start = page * pageSize;
+  const pageContacts = contacts.slice(start, start + pageSize);
+
+  if (elements.editorContactPagination) {
+    elements.editorContactPagination.classList.toggle("hidden", contacts.length <= pageSize);
+    elements.editorContactPageLabel.textContent = `第 ${page + 1} / ${pageCount} 页`;
+    elements.editorContactPrevPage.disabled = page <= 0;
+    elements.editorContactNextPage.disabled = page >= pageCount - 1;
+  }
+
+  if (!contacts.length) {
+    list.innerHTML = '<p class="empty-state">没有匹配的联系人。</p>';
+    return;
+  }
+
+  list.innerHTML = pageContacts
+    .map((contact) => {
+      const name = contactDisplayName(contact);
+      const memberCount = contactMemberIds(contact).length;
+      const badge = isCustomGroupContact(contact)
+        ? { label: "自建群", tone: "custom" }
+        : isGroupContact(contact)
+          ? { label: "内置群", tone: "group" }
+          : { label: "角色", tone: "hero" };
+      const detail = isGroupContact(contact) && memberCount ? `${memberCount} 人` : "";
+      return `
+        <button
+          class="editor-contact-card"
+          type="button"
+          role="listitem"
+          data-editor-contact-id="${escapeHtml(contact.id)}"
+          title="${escapeHtml(name)}"
+        >
+          <span class="editor-contact-avatar">${contactAvatarHtml(contact, { loading: "lazy" })}</span>
+          <span class="editor-contact-text">
+            <span class="editor-contact-name">${escapeHtml(name)}</span>
+            <span class="editor-contact-meta">
+              <span class="editor-contact-badge" data-tone="${badge.tone}">${badge.label}</span>
+              ${detail ? `<span class="editor-contact-detail">${escapeHtml(detail)}</span>` : ""}
+            </span>
+          </span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function changeEditorContactPage(offset) {
+  const contacts = filteredEditorContacts();
+  const pageSize = state.contactList.pageSize || CONTACT_LIST_DEFAULT_ROWS;
+  const pageCount = Math.max(1, Math.ceil(contacts.length / pageSize));
+  const nextPage = Math.min(Math.max(state.contactList.page + offset, 0), pageCount - 1);
+  if (nextPage === state.contactList.page) return;
+  state.contactList.page = nextPage;
+  renderEditorContactList();
 }
 
 async function loadBubbleThemes() {
@@ -1012,8 +1273,8 @@ function applyBubbleTheme(themeId) {
   const root = document.documentElement;
   root.style.setProperty("--momotalk-selected-bubble-left", `url("${left.url}")`);
   root.style.setProperty("--momotalk-selected-bubble-right", `url("${right.url}")`);
-  const leftSlice = left.slice || right.slice;
-  const rightSlice = right.slice || leftSlice;
+  const leftSlice = resolvedBubbleVariantSlice(theme, "left");
+  const rightSlice = resolvedBubbleVariantSlice(theme, "right") || leftSlice;
   const applySlice = (suffix, slice) => {
     if (!slice) return;
     root.style.setProperty(`--momotalk-selected-bubble-slice-${suffix}`, `${slice.top} ${slice.right} ${slice.bottom} ${slice.left}`);
@@ -1035,6 +1296,10 @@ function applyBubbleTheme(themeId) {
   BUBBLE_TEXT_COLOR_RIGHT = rightText;
   EXPORT_ASSET_URLS.selectedBubbleLeft = left.url;
   EXPORT_ASSET_URLS.selectedBubbleRight = right.url;
+  // 方框（无尾）资源与切片统一由 refreshBubbleSquareThemes 在图片尺寸加载完成后
+  // 写入，避免这里用未收口的切片覆盖已经收口的结果。
+  const requestId = ++bubbleSquareThemeRequestId;
+  bubbleSquareAssetsPromise = refreshBubbleSquareThemes(theme, left, right, requestId);
   setPickerAsset(elements.bubblePickerImage, elements.bubblePickerLabel, {
     url: right.url, label: bubbleThemeLabel(theme),
   }, "\u9009\u62e9\u6c14\u6ce1");
@@ -1220,10 +1485,41 @@ function bindMessageEditorEvents(message) {
   });
 }
 
+// 「会话列表」目标来源：preview_ids 顺序；当前会话始终置顶，即使它不在清单里
+// （打开旧项目时临时置顶，不写盘）。
+function previewContactSource(project) {
+  const byId = new Map(state.contacts.map((contact) => [String(contact.id), contact]));
+  const ordered = [];
+  const seen = new Set();
+  for (const contactId of state.previewContactIds) {
+    const key = String(contactId);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const contact = byId.get(key);
+    if (contact) ordered.push(contact);
+  }
+  const activeId = project?.contact?.contact_id;
+  if (activeId !== null && activeId !== undefined && !seen.has(String(activeId))) {
+    const active = byId.get(String(activeId));
+    if (active) {
+      seen.add(String(activeId));
+      ordered.unshift(active);
+    }
+  }
+  return ordered;
+}
+
+function isPreviewContact(contactId) {
+  if (contactId === null || contactId === undefined) return false;
+  const key = String(contactId);
+  if (state.previewContactIds.some((value) => String(value) === key)) return true;
+  const activeId = state.project?.contact?.contact_id;
+  return activeId !== null && activeId !== undefined && String(activeId) === key;
+}
+
 function renderContactList(project) {
   if (!elements.contactList) return;
-  const contacts = sortedContacts();
-  if (!contacts.length) {
+  if (!state.contacts.length) {
     elements.contactList.innerHTML = '<p class="empty-state">可会话角色加载中。</p>';
     return;
   }
@@ -1231,17 +1527,7 @@ function renderContactList(project) {
   if (project) ensureConversations(project);
   if (project) ensureMessageTimestamps(project);
   const activeId = project?.contact?.contact_id ?? null;
-  const orderedContacts = [...contacts].sort((left, right) => {
-    const leftActive = String(left.id) === String(activeId);
-    const rightActive = String(right.id) === String(activeId);
-    if (leftActive !== rightActive) return leftActive ? -1 : 1;
-    const timeDelta = conversationLatestMessageMs(project, right) - conversationLatestMessageMs(project, left);
-    if (timeDelta) return timeDelta;
-    return contactDisplayName(left).localeCompare(contactDisplayName(right), "zh-Hans-CN", {
-      numeric: true,
-      sensitivity: "base",
-    });
-  });
+  const contacts = previewContactSource(project);
   const newGroupEntry = `
     <button
       class="side-entry side-entry-action"
@@ -1259,6 +1545,17 @@ function renderContactList(project) {
       </span>
     </button>
   `;
+  if (!contacts.length) {
+    elements.contactList.innerHTML =
+      newGroupEntry + '<p class="empty-state">从右侧联系人列表双击加入会话</p>';
+    return;
+  }
+  const orderedContacts = [...contacts].sort((left, right) => {
+    const leftActive = String(left.id) === String(activeId);
+    const rightActive = String(right.id) === String(activeId);
+    if (leftActive !== rightActive) return leftActive ? -1 : 1;
+    return 0;
+  });
   elements.contactList.innerHTML =
     newGroupEntry +
     orderedContacts
@@ -1273,10 +1570,10 @@ function renderContactList(project) {
         // 没有消息时不再回退到“群组 / 角色”类别文案，直接留空。
         const secondary = lastMessagePreview(contactMessages) || "";
         return `
-          <button
+          <div
             class="side-entry ${active ? "active" : ""}"
-            type="button"
             role="option"
+            tabindex="0"
             aria-selected="${active ? "true" : "false"}"
             data-contact-id="${escapeHtml(contact.id)}"
             title="${escapeHtml(secondary ? `${displayName} · ${secondary}` : displayName)}"
@@ -1288,10 +1585,84 @@ function renderContactList(project) {
               <strong>${escapeHtml(displayName)}</strong>
               <small>${escapeHtml(secondary)}</small>
             </span>
-          </button>
+            ${active
+              ? ""
+              : `<button
+                   class="side-entry-remove"
+                   type="button"
+                   data-action="remove-preview"
+                   title="移出会话列表"
+                   aria-label="移出会话列表"
+                 >×</button>`}
+          </div>
         `;
       })
       .join("");
+}
+
+// 会话列表写盘：只提交 preview_ids，后端保留 contact_ids 当前值。
+async function saveConversationPreviewIds(nextIds) {
+  const payload = await api("/conversation-contacts", {
+    method: "PUT",
+    body: JSON.stringify({ preview_ids: nextIds }),
+  });
+  state.previewContactIds = Array.isArray(payload.preview_ids)
+    ? payload.preview_ids.filter((id) => Number.isInteger(id))
+    : nextIds;
+  if (Array.isArray(payload.items)) {
+    state.conversationContacts = payload.items;
+    state.conversationContactsLoaded = true;
+  }
+  renderAll();
+  return state.previewContactIds;
+}
+
+function isPreviewContactId(contactId) {
+  const key = String(contactId);
+  return state.previewContactIds.some((value) => String(value) === key);
+}
+
+// 双击加入会话列表；返回 true 表示本次新增，false 表示已在清单里。
+async function ensurePreviewContact(contactId) {
+  const contact = findContact(contactId);
+  if (!contact) return false;
+  if (isPreviewContactId(contact.id)) return false;
+  await saveConversationPreviewIds([...state.previewContactIds, contact.id]);
+  return true;
+}
+
+async function addPreviewContact(contactId) {
+  const contact = findContact(contactId);
+  if (!contact) return;
+  let added = false;
+  try {
+    added = await ensurePreviewContact(contact.id);
+  } catch (error) {
+    showToast(error.message, "error");
+    return;
+  }
+  showToast(added ? `已加入会话列表：${contactDisplayName(contact)}` : "已在会话列表中");
+  selectRole(contact.id);
+}
+
+async function removePreviewContact(contactId) {
+  const key = String(contactId);
+  if (!isPreviewContactId(key)) return;
+  const activeId = state.project?.contact?.contact_id;
+  if (activeId !== null && activeId !== undefined && String(activeId) === key) {
+    showToast("请先切换到其它会话，再移除当前会话", "error");
+    return;
+  }
+  const contact = findContact(key);
+  try {
+    await saveConversationPreviewIds(
+      state.previewContactIds.filter((value) => String(value) !== key),
+    );
+  } catch (error) {
+    showToast(error.message, "error");
+    return;
+  }
+  showToast(contact ? `已移出会话列表：${contactDisplayName(contact)}` : "已移出会话列表");
 }
 
 function lastMessagePreview(messages = []) {
@@ -1308,6 +1679,8 @@ function lastMessagePreview(messages = []) {
 function selectRole(contactId) {
   const contact = findContact(contactId);
   if (!contact || !state.project) return;
+  // 只有已加入「会话列表」的联系人才能进入会话编辑。
+  if (!isPreviewContact(contact.id)) return;
   state.speakerContactId = ADMIN_SPEAKER_ID;
   updateProject((project) => {
     syncActiveConversation(project);
@@ -1395,8 +1768,8 @@ function renderPreview() {
     elements.previewRailAvatarButton.setAttribute("aria-label", "切换管理员头像");
   }
 
-  elements.chatScroll.innerHTML = previewMessages
-    .map(messagePreviewHtml)
+  elements.chatScroll.innerHTML = groupContinuousBubbles(previewMessages)
+    .map(({ message, showTail, bubbleVariant }) => messagePreviewHtml(message, { showTail, bubbleVariant }))
     .join("");
   elements.chatScroll.scrollLeft = 0;
   requestAnimationFrame(() => {
@@ -1451,13 +1824,48 @@ function messageSpeakerAttributes(message, project = state.project) {
   ].join(" ");
 }
 
+function sameMessageSpeaker(left, right, project = state.project) {
+  const leftSpeaker = messageSpeaker(left, project);
+  const rightSpeaker = messageSpeaker(right, project);
+  if (leftSpeaker.id != null && rightSpeaker.id != null) {
+    return String(leftSpeaker.id) === String(rightSpeaker.id);
+  }
+  return String(leftSpeaker.name || "") === String(rightSpeaker.name || "");
+}
+
+function canContinueBubble(previous, current, project = state.project) {
+  if (previous?.type !== "text" || current?.type !== "text") return false;
+  const side = current.side === "right" ? "right" : current.side === "left" ? "left" : "center";
+  const previousSide = previous.side === "right" ? "right" : previous.side === "left" ? "left" : "center";
+  if (side === "center" || side !== previousSide) return false;
+  return sameMessageSpeaker(previous, current, project);
+}
+
+// 连续文本只让首条保留气泡尾，后续同侧同发言人改用方形整框。
+function groupContinuousBubbles(messages, project = state.project) {
+  const rows = [];
+  let previous = null;
+  for (const message of messages) {
+    const continues = canContinueBubble(previous, message, project);
+    rows.push({
+      message,
+      showTail: !continues,
+      bubbleVariant: continues ? "square" : "tailed",
+    });
+    previous = message;
+  }
+  return rows;
+}
+
 // 聊天预览与消息展示。
-function messagePreviewHtml(message) {
+function messagePreviewHtml(message, options = {}) {
   const sideClass = message.side === "right" ? "right" : message.side === "center" ? "center" : "left";
   if (message.type === "text") {
     const longTextStack = String(message.text || "").length >= 60 ? " long-text-stack" : "";
+    const bubbleVariant = options.bubbleVariant || (options.showTail === false ? "square" : "tailed");
+    const bubbleClass = bubbleVariant === "square" ? " bubble-square" : " bubble-tail";
     return `
-      <div class="chat-row ${sideClass} text-row${isAdminMessage(message) ? " admin-message" : " character-message"}" ${messageSpeakerAttributes(message)}>
+      <div class="chat-row ${sideClass} text-row${bubbleClass}${isAdminMessage(message) ? " admin-message" : " character-message"}" ${messageSpeakerAttributes(message)}>
         ${messageAvatarHtml(message)}
         <div class="message-stack${longTextStack}">
           ${messageSpeakerNameHtml(message)}
@@ -1659,9 +2067,13 @@ function renderBubbleThemeGrid() {
     .map((theme) => {
       const preview = (theme.variants && (theme.variants.right || theme.variants.left)) || null;
       if (!preview) return "";
-      const incomplete = theme.composition_complete === false;
+      const staticOnly = theme.static_composition_available === true;
+      const incomplete = theme.composition_complete === false && !staticOnly;
       const active = !incomplete && String(theme.id) === String(activeId) ? " active" : "";
-      const label = preview.width + "\u00d7" + preview.height + (incomplete ? " \u00b7 \u7ec4\u4ef6\u5f85\u5408\u6210" : "");
+      const stateLabel = staticOnly
+        ? " \u00b7 \u9759\u6001\u7248"
+        : (incomplete ? " \u00b7 \u7ec4\u4ef6\u5f85\u5408\u6210" : "");
+      const label = preview.width + "\u00d7" + preview.height + stateLabel;
       const themeName = bubbleThemeLabel(theme);
       return `
         <button class="asset-card${active}" type="button" data-bubble-theme-id="${escapeHtml(theme.id)}"${incomplete ? " disabled" : ""}>
@@ -1675,8 +2087,9 @@ function renderBubbleThemeGrid() {
   elements.assetModalStatus.textContent = `\u5171 ${themes.length} \u4e2a\u6c14\u6ce1\u4e3b\u9898`;
 }
 
-function chooseBubbleTheme(themeId) {
+async function chooseBubbleTheme(themeId) {
   if (!themeId) return;
+  await warmBubbleThemeImageSizes(bubbleThemeById(themeId));
   updateProject((project) => {
     project.appearance.bubble_theme_id = themeId;
   });
@@ -2048,11 +2461,9 @@ async function submitGroupCreation() {
     await loadContacts();
     await loadContactAvatars();
     closeGroupModal();
-    if (!state.project) {
-      await createProject();
-    } else {
-      selectRole(group.id);
-    }
+    if (!state.project) await createProject();
+    await ensurePreviewContact(group.id);
+    selectRole(group.id);
     showToast(`已创建群聊：${contactDisplayName(group)}`);
   } catch (error) {
     elements.groupModalStatus.textContent = error.message;
@@ -2118,9 +2529,14 @@ async function deleteManagedGroup() {
     const wasActive = state.project && String(state.project.contact.contact_id) === String(groupId);
     await loadContacts();
     await loadContactAvatars();
+    if (isPreviewContactId(groupId)) {
+      await saveConversationPreviewIds(
+        state.previewContactIds.filter((value) => String(value) !== String(groupId)),
+      );
+    }
     const remaining = groupContacts();
     if (wasActive) {
-      const fallback = sortedContacts()[0];
+      const fallback = previewContactSource(null)[0];
       if (fallback) selectRole(fallback.id);
     }
     if (remaining.length) {
@@ -2439,21 +2855,440 @@ function drawCanvasContain(ctx, image, x, y, width, height) {
 }
 
 const DEFAULT_BUBBLE_NINE_SLICE = Object.freeze({ top: 57, right: 63, bottom: 30, left: 63 });
+const DEFAULT_SQUARE_BUBBLE_NINE_SLICE_LEFT = Object.freeze({ top: 57, right: 46, bottom: 30, left: 46 });
+const DEFAULT_SQUARE_BUBBLE_NINE_SLICE_RIGHT = Object.freeze({ top: 57, right: 46, bottom: 30, left: 46 });
+const DEFAULT_SQUARE_BUBBLE_THEME_ID = "9000";
 let BUBBLE_NINE_SLICE_LEFT = { ...DEFAULT_BUBBLE_NINE_SLICE };
 let BUBBLE_NINE_SLICE_RIGHT = { ...DEFAULT_BUBBLE_NINE_SLICE };
+let BUBBLE_DEFAULT_SQUARE_NINE_SLICE_LEFT = { ...DEFAULT_SQUARE_BUBBLE_NINE_SLICE_LEFT };
+let BUBBLE_DEFAULT_SQUARE_NINE_SLICE_RIGHT = { ...DEFAULT_SQUARE_BUBBLE_NINE_SLICE_RIGHT };
+let BUBBLE_SELECTED_SQUARE_NINE_SLICE_LEFT = { ...DEFAULT_SQUARE_BUBBLE_NINE_SLICE_LEFT };
+let BUBBLE_SELECTED_SQUARE_NINE_SLICE_RIGHT = { ...DEFAULT_SQUARE_BUBBLE_NINE_SLICE_RIGHT };
 let BUBBLE_TEXT_COLOR_LEFT = "#303b4b";
 let BUBBLE_TEXT_COLOR_RIGHT = "#303b4b";
+const BUBBLE_SOURCE_TO_CQW = 0.0574;
+const bubbleSquareAssetCache = new Map();
+let bubbleSquareAssetsPromise = Promise.resolve();
+let bubbleSquareThemeRequestId = 0;
+
+function canonicalAssetUrl(url) {
+  try {
+    return new URL(url, window.location.href).href;
+  } catch (error) {
+    return String(url || "");
+  }
+}
+
+function bubbleSquareCacheKey(url, side) {
+  return `${side}:${canonicalAssetUrl(url)}`;
+}
+
+function validBubbleSlice(slice) {
+  if (!slice) return false;
+  return ["top", "right", "bottom", "left"].every((key) => {
+    const value = Number(slice[key]);
+    return Number.isFinite(value) && value > 0;
+  });
+}
+
+function normalizedBubbleSlice(slice) {
+  return {
+    top: Number(slice.top),
+    right: Number(slice.right),
+    bottom: Number(slice.bottom),
+    left: Number(slice.left),
+  };
+}
+
+// 九宫格必须保留可拉伸的中心区域。Unity 的 m_Border 少数情况下会给出
+// 顶+底或左+右等于整图边长的值，此时 CSS border-image 和 Canvas 导出都会
+// 把四角在十字位置直接拼起来，表现为沿十字割裂。这里按实际图片尺寸收缩
+// 较大的那一侧，保证中心至少留出 MIN_BUBBLE_SLICE_CENTER 像素。
+const MIN_BUBBLE_SLICE_CENTER = 1;
+
+function bubbleSliceImageSize(url, theme) {
+  const canonical = canonicalAssetUrl(url);
+  const measured = bubbleSquareAssetSizeCache.get(canonical);
+  if (measured && measured.width > 0 && measured.height > 0) {
+    return { width: measured.width, height: measured.height };
+  }
+  const cached = canvasImageCache.get(url) || canvasImageCache.get(canonical);
+  const dimensions = (image) => (
+    image && image.naturalWidth > 0 && image.naturalHeight > 0
+      ? { width: image.naturalWidth, height: image.naturalHeight }
+      : null
+  );
+  const fromCache = dimensions(cached);
+  if (fromCache) {
+    return fromCache;
+  }
+  const documentImage = [...document.images].find((image) => (
+    image && (canonicalAssetUrl(image.currentSrc) === canonical || canonicalAssetUrl(image.src) === canonical)
+  ));
+  const fromDocument = dimensions(documentImage);
+  if (fromDocument) {
+    return fromDocument;
+  }
+  for (const side of ["left", "right"]) {
+    const variant = theme?.variants?.[side];
+    if (variant && canonicalAssetUrl(variant.url) === canonical) {
+      const width = Number(variant.width);
+      const height = Number(variant.height);
+      if (Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0) {
+        return { width, height };
+      }
+    }
+  }
+  return null;
+}
+
+function rememberBubbleImageSize(url, image) {
+  if (!url || !image || image.naturalWidth <= 0 || image.naturalHeight <= 0) return;
+  bubbleSquareAssetSizeCache.set(canonicalAssetUrl(url), {
+    width: image.naturalWidth,
+    height: image.naturalHeight,
+  });
+}
+
+function clampBubbleSliceAxis(first, second, limit, minCenter, floor = 1) {
+  const maxValue = limit > 0 ? limit : Number.MAX_SAFE_INTEGER;
+  let start = Math.max(floor, Math.min(maxValue, Math.round(Number(first) || 0)));
+  let end = Math.max(floor, Math.min(maxValue, Math.round(Number(second) || 0)));
+  if (!(limit > 0)) return [start, end];
+  while (start + end > limit - minCenter && (start > floor || end > floor)) {
+    if (start >= end && start > floor) {
+      start -= 1;
+    } else if (end > floor) {
+      end -= 1;
+    } else {
+      break;
+    }
+  }
+  return [start, end];
+}
+
+function safeBubbleSlice(slice, url, theme, minCenter = MIN_BUBBLE_SLICE_CENTER) {
+  if (!slice) return slice;
+  const normalized = normalizedBubbleSlice(slice);
+  if (!["top", "right", "bottom", "left"].every((key) => Number.isFinite(normalized[key]) && normalized[key] > 0)) {
+    return null;
+  }
+  const size = bubbleSliceImageSize(url, theme);
+  if (!size) return normalized;
+  const [left, right] = clampBubbleSliceAxis(normalized.left, normalized.right, size.width, minCenter, 1);
+  const [top, bottom] = clampBubbleSliceAxis(normalized.top, normalized.bottom, size.height, minCenter, 1);
+  return { top, right, bottom, left };
+}
+
+function explicitBubbleSquareAsset(theme, side) {
+  const url = String(theme?.[`square_${side}`] || "").trim();
+  const slice = theme?.[`square_slice_${side}`];
+  if (!url || !validBubbleSlice(slice)) return null;
+  const normalized = safeBubbleSlice(slice, url, theme) || normalizedBubbleSlice(slice);
+  return { url, slice: normalized, targetSlice: { ...normalized } };
+}
+
+function resolvedBubbleVariantSlice(theme, side) {
+  const variant = theme?.variants?.[side];
+  if (!variant || !variant.slice) return null;
+  const resolved = safeBubbleSlice(variant.slice, canonicalAssetUrl(variant.url), theme) || normalizedBubbleSlice(variant.slice);
+  variant.slice = { ...resolved };
+  return resolved;
+}
+
+function defaultBubbleTheme() {
+  return bubbleThemeById(DEFAULT_SQUARE_BUBBLE_THEME_ID) || bubbleThemeById(state.bubbleThemes.defaultTheme);
+}
 
 function bubbleNineSlice(side, speakerIsAdmin = true) {
   if (!speakerIsAdmin) return DEFAULT_BUBBLE_NINE_SLICE;
   return side === "left" ? BUBBLE_NINE_SLICE_LEFT : BUBBLE_NINE_SLICE_RIGHT;
 }
 
-function bubbleTextHorizontalPadding(side = "right", speakerIsAdmin = true) {
-  const slice = bubbleNineSlice(side, speakerIsAdmin);
+function bubbleSquareNineSlice(side, speakerIsAdmin = true) {
+  if (!speakerIsAdmin) {
+    return side === "left"
+      ? BUBBLE_DEFAULT_SQUARE_NINE_SLICE_LEFT
+      : BUBBLE_DEFAULT_SQUARE_NINE_SLICE_RIGHT;
+  }
+  return side === "left"
+    ? BUBBLE_SELECTED_SQUARE_NINE_SLICE_LEFT
+    : BUBBLE_SELECTED_SQUARE_NINE_SLICE_RIGHT;
+}
+
+function bubbleAlphaBounds(data, width, height) {
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (data[(y * width + x) * 4 + 3] <= 8) continue;
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+    }
+  }
+  return maxX >= minX && maxY >= minY
+    ? { left: minX, top: minY, right: maxX + 1, bottom: maxY + 1 }
+    : null;
+}
+
+function bubbleHorizontalBounds(data, width, height, y) {
+  const row = Math.max(0, Math.min(height - 1, Math.round(y)));
+  let min = width;
+  let max = -1;
+  for (let x = 0; x < width; x += 1) {
+    if (data[(row * width + x) * 4 + 3] <= 8) continue;
+    min = Math.min(min, x);
+    max = Math.max(max, x);
+  }
+  return max >= min ? { min, max } : null;
+}
+
+function bubbleBodyEdgeFromImageData(data, width, height, side) {
+  const sampleBounds = (ratios) => ratios
+    .map((ratio) => bubbleHorizontalBounds(data, width, height, height * ratio))
+    .filter(Boolean);
+  const bodyBounds = sampleBounds([0.18, 0.28, 0.72, 0.82]);
+  if (!bodyBounds.length) return null;
+  return side === "left"
+    ? Math.min(...bodyBounds.map((bounds) => bounds.min))
+    : Math.max(...bodyBounds.map((bounds) => bounds.max));
+}
+
+function bubbleSquareGeometryFromImageData(data, width, height, side) {
+  const active = bubbleAlphaBounds(data, width, height);
+  const bodyEdge = bubbleBodyEdgeFromImageData(data, width, height, side);
+  if (!active || bodyEdge == null) return null;
+  if (side === "left") {
+    const hasTail = active.left < bodyEdge - 1;
+    const cropLeft = hasTail ? bodyEdge : active.left;
+    return {
+      left: Math.max(0, Math.min(width, cropLeft)),
+      top: 0,
+      right: Math.min(width, active.right),
+      bottom: height,
+      sourceWidth: width,
+      sourceHeight: height,
+    };
+  }
+  const hasTail = active.right > bodyEdge + 2;
+  const cropRight = hasTail ? bodyEdge + 1 : active.right;
   return {
-    left: Math.max(BUBBLE_TEXT_PADDING_X, Math.round(slice.left * 0.72)),
-    right: Math.max(BUBBLE_TEXT_PADDING_X, Math.round(slice.right * 0.72)),
+    left: Math.max(0, active.left),
+    top: 0,
+    right: Math.max(0, Math.min(width, cropRight)),
+    bottom: height,
+    sourceWidth: width,
+    sourceHeight: height,
+  };
+}
+
+function bubbleSquareSliceForGeometry(slice, geometry) {
+  if (!slice || !geometry) return slice;
+  const removedLeft = geometry.left;
+  const removedRight = geometry.sourceWidth - geometry.right;
+  const width = geometry.right - geometry.left;
+  const height = geometry.bottom - geometry.top;
+  const adjusted = {
+    top: slice.top,
+    right: Math.max(0, Math.min(width, slice.right - removedRight)),
+    bottom: slice.bottom,
+    left: Math.max(0, Math.min(width, slice.left - removedLeft)),
+  };
+  const [left, right] = clampBubbleSliceAxis(adjusted.left, adjusted.right, width, 0);
+  const [top, bottom] = clampBubbleSliceAxis(adjusted.top, adjusted.bottom, height, 0);
+  return { top, right, bottom, left };
+}
+
+function bubbleSquareDataUrlFromImage(image, side) {
+  if (!image || image.naturalWidth <= 0 || image.naturalHeight <= 0) {
+    return { url: "", geometry: null };
+  }
+  const width = image.naturalWidth;
+  const height = image.naturalHeight;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return { url: "", geometry: null };
+  ctx.drawImage(image, 0, 0);
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+  const geometry = bubbleSquareGeometryFromImageData(data, width, height, side);
+  if (!geometry) return { url: "", geometry: null };
+  const cropWidth = geometry.right - geometry.left;
+  const cropHeight = geometry.bottom - geometry.top;
+  if (cropWidth <= 0 || cropHeight <= 0) return { url: "", geometry: null };
+  canvas.width = cropWidth;
+  canvas.height = cropHeight;
+  ctx.drawImage(
+    image,
+    geometry.left,
+    geometry.top,
+    cropWidth,
+    cropHeight,
+    0,
+    0,
+    cropWidth,
+    cropHeight,
+  );
+  return { url: canvas.toDataURL("image/png"), geometry };
+}
+
+async function buildBubbleSquareAsset(url, side, slice) {
+  const key = bubbleSquareCacheKey(url, side);
+  if (bubbleSquareAssetCache.has(key)) return bubbleSquareAssetCache.get(key);
+  const image = await loadCanvasImage(url);
+  const generated = bubbleSquareDataUrlFromImage(image, side);
+  const targetSlice = slice || DEFAULT_BUBBLE_NINE_SLICE;
+  const asset = {
+    url: generated.url || url,
+    slice: bubbleSquareSliceForGeometry(targetSlice, generated.geometry) || targetSlice,
+    targetSlice,
+  };
+  bubbleSquareAssetCache.set(key, asset);
+  return asset;
+}
+
+// 带尾素材的外侧切片含尾巴，方框素材不含；两者外侧切片的差值就是
+// 方形外框相对带尾气泡方框需要内缩的距离（cqw）。预览与 PNG 导出共用。
+function applyBubbleSquareCssVariables(prefix, urls, tailSlices) {
+  const root = document.documentElement;
+  for (const side of ["left", "right"]) {
+    const asset = urls[side];
+    if (!asset) continue;
+    if (asset.url) {
+      root.style.setProperty(`--momotalk-${prefix}-bubble-square-${side}`, `url("${asset.url}")`);
+    }
+    if (asset.slice) {
+      root.style.setProperty(
+        `--momotalk-${prefix}-bubble-square-slice-${side}`,
+        `${asset.slice.top} ${asset.slice.right} ${asset.slice.bottom} ${asset.slice.left}`,
+      );
+    }
+    const targetSlice = asset.targetSlice || asset.slice;
+    const squareSlice = asset.slice || targetSlice;
+    if (targetSlice) {
+      root.style.setProperty(
+        `--momotalk-${prefix}-bubble-square-edge-${side}`,
+        `${(targetSlice.top * BUBBLE_SOURCE_TO_CQW).toFixed(2)}cqw ${(targetSlice.right * BUBBLE_SOURCE_TO_CQW).toFixed(2)}cqw ${(targetSlice.bottom * BUBBLE_SOURCE_TO_CQW).toFixed(2)}cqw ${(targetSlice.left * BUBBLE_SOURCE_TO_CQW).toFixed(2)}cqw`,
+      );
+    }
+    const tailSlice = tailSlices && tailSlices[side];
+    if (tailSlices && tailSlice && squareSlice) {
+      const outer = side === "right" ? "right" : "left";
+      const inner = side === "right" ? "left" : "right";
+      const inset = Number(tailSlice[outer]) - Number(squareSlice[outer]);
+      if (Number.isFinite(inset) && inset > 0) {
+        root.style.setProperty(
+          `--momotalk-${prefix}-bubble-square-inset-${side}`,
+          `${(inset * BUBBLE_SOURCE_TO_CQW).toFixed(2)}cqw`,
+        );
+      } else {
+        root.style.setProperty(`--momotalk-${prefix}-bubble-square-inset-${side}`, "0px");
+      }
+      // 带尾素材方框在里侧也留了同样的透明边距，正文补偿需要两侧都算上。
+      const innerInset = Number(tailSlice[inner]) - Number(squareSlice[inner]);
+      if (Number.isFinite(innerInset) && innerInset > 0) {
+        root.style.setProperty(
+          `--momotalk-${prefix}-bubble-square-inner-inset-${side}`,
+          `${(innerInset * BUBBLE_SOURCE_TO_CQW).toFixed(2)}cqw`,
+        );
+      } else {
+        root.style.setProperty(`--momotalk-${prefix}-bubble-square-inner-inset-${side}`, "0px");
+      }
+    }
+  }
+}
+
+const bubbleSquareAssetSizeCache = new Map();
+
+// 加载并记录九宫格图片的真实尺寸，供 safeBubbleSlice 收口使用。
+async function warmBubbleThemeImageSizes(theme) {
+  if (!theme) return;
+  const urls = [];
+  for (const side of ["left", "right"]) {
+    const variantUrl = String(theme.variants?.[side]?.url || "").trim();
+    const squareUrl = String(theme[`square_${side}`] || "").trim();
+    if (variantUrl) urls.push(variantUrl);
+    if (squareUrl) urls.push(squareUrl);
+  }
+  await Promise.all(urls.map(async (url) => {
+    rememberBubbleImageSize(url, await loadCanvasImage(url));
+  }));
+}
+
+async function refreshBubbleSquareThemes(theme, left, right, requestId) {
+  const defaultTheme = defaultBubbleTheme();
+  await Promise.all([
+    warmBubbleThemeImageSizes(theme),
+    warmBubbleThemeImageSizes(defaultTheme),
+  ]);
+  const leftSlice = resolvedBubbleVariantSlice(theme, "left") || left.slice || DEFAULT_BUBBLE_NINE_SLICE;
+  const rightSlice = resolvedBubbleVariantSlice(theme, "right") || leftSlice;
+  const [defaultLeft, defaultRight, selectedLeft, selectedRight] = await Promise.all([
+    resolveBubbleSquareAsset(defaultTheme, "left", EXPORT_ASSET_URLS.bubbleLeft, DEFAULT_BUBBLE_NINE_SLICE),
+    resolveBubbleSquareAsset(defaultTheme, "right", EXPORT_ASSET_URLS.bubbleRight, DEFAULT_BUBBLE_NINE_SLICE),
+    resolveBubbleSquareAsset(theme, "left", left.url, leftSlice),
+    resolveBubbleSquareAsset(theme, "right", right.url, rightSlice),
+  ]);
+  BUBBLE_DEFAULT_SQUARE_NINE_SLICE_LEFT = { ...defaultLeft.slice };
+  BUBBLE_DEFAULT_SQUARE_NINE_SLICE_RIGHT = { ...defaultRight.slice };
+  EXPORT_ASSET_URLS.squareBubbleLeft = defaultLeft.url;
+  EXPORT_ASSET_URLS.squareBubbleRight = defaultRight.url;
+  applyBubbleSquareCssVariables(
+    "default",
+    { left: defaultLeft, right: defaultRight },
+    { left: DEFAULT_BUBBLE_NINE_SLICE, right: DEFAULT_BUBBLE_NINE_SLICE },
+  );
+  if (requestId !== bubbleSquareThemeRequestId) return;
+  BUBBLE_SELECTED_SQUARE_NINE_SLICE_LEFT = { ...selectedLeft.slice };
+  BUBBLE_SELECTED_SQUARE_NINE_SLICE_RIGHT = { ...selectedRight.slice };
+  EXPORT_ASSET_URLS.selectedSquareBubbleLeft = selectedLeft.url;
+  EXPORT_ASSET_URLS.selectedSquareBubbleRight = selectedRight.url;
+  applyBubbleSquareCssVariables(
+    "selected",
+    { left: selectedLeft, right: selectedRight },
+    { left: leftSlice, right: rightSlice },
+  );
+  renderPreview();
+}
+
+async function resolveBubbleSquareAsset(theme, side, fallbackUrl, fallbackSlice) {
+  return explicitBubbleSquareAsset(theme, side)
+    || buildBubbleSquareAsset(fallbackUrl, side, fallbackSlice);
+}
+
+function waitForBubbleSquareAssets() {
+  return bubbleSquareAssetsPromise;
+}
+
+// 正文内边距统一以「无尾方框」切片为基准：方形素材已裁到方框边缘，
+// 用它算出的左右内边距才是相对方框的正文留白。
+function bubbleTextHorizontalPadding(side = "right", speakerIsAdmin = true) {
+  const slice = bubbleSquareNineSlice(side, speakerIsAdmin);
+  const paddingX = Math.max(
+    BUBBLE_TEXT_PADDING_X,
+    Math.round(Math.max(Number(slice.left) || 0, Number(slice.right) || 0) * 0.72),
+  );
+  return {
+    left: paddingX,
+    right: paddingX,
+  };
+}
+
+// 带尾素材的方框四周留有透明边距（尾巴就伸在外侧那段边距里），方形素材
+// 已裁到方框边缘，两者左右切片的差值就是方框相对气泡盒的内缩距离。
+// 正文内边距要以方框边缘为起点，预览和 PNG 导出都依赖这两个值。
+function bubbleBodyInset(side = "left", speakerIsAdmin = true) {
+  const tailSlice = bubbleNineSlice(side, speakerIsAdmin);
+  const squareSlice = bubbleSquareNineSlice(side, speakerIsAdmin);
+  return {
+    left: Math.max(0, Number(tailSlice.left) - Number(squareSlice.left)),
+    right: Math.max(0, Number(tailSlice.right) - Number(squareSlice.right)),
   };
 }
 
@@ -2463,7 +3298,7 @@ function bubbleSpeakerHorizontalPadding(side = "left", speakerIsAdmin = true) {
 }
 
 // PNG 导出绘制工具。
-function drawNineSlice(ctx, image, x, y, width, height, slice) {
+function drawNineSlice(ctx, image, x, y, width, height, slice, targetSlice = slice) {
   if (!image || image.naturalWidth <= 0 || image.naturalHeight <= 0) {
     ctx.fillStyle = "#f3f5f7";
     roundedRectPath(ctx, x, y, width, height, 16);
@@ -2475,35 +3310,52 @@ function drawNineSlice(ctx, image, x, y, width, height, slice) {
     : slice;
   const sourceWidth = image.naturalWidth;
   const sourceHeight = image.naturalHeight;
-  const edgeLeft = Math.min(spec.left, sourceWidth / 2);
-  const edgeRight = Math.min(spec.right, sourceWidth / 2);
-  const edgeTop = Math.min(spec.top, sourceHeight / 2);
-  const edgeBottom = Math.min(spec.bottom, sourceHeight / 2);
-  const targetLeft = Math.min(edgeLeft, width / 2);
-  const targetRight = Math.min(edgeRight, width / 2);
-  const targetTop = Math.min(edgeTop, height / 2);
-  const targetBottom = Math.min(edgeBottom, height / 2);
-  const sourceMiddleWidth = Math.max(0, sourceWidth - edgeLeft - edgeRight);
-  const sourceMiddleHeight = Math.max(0, sourceHeight - edgeTop - edgeBottom);
-  const targetMiddleWidth = Math.max(0, width - targetLeft - targetRight);
-  const targetMiddleHeight = Math.max(0, height - targetTop - targetBottom);
+  const targetSpec = typeof targetSlice === "number"
+    ? { top: targetSlice, right: targetSlice, bottom: targetSlice, left: targetSlice }
+    : (targetSlice || spec);
+  // 这里再兜底一次：即使外部传入了让中心归零的切片，也要保证中心可拉伸，
+  // 否则四角会在十字位置首尾相接。
+  const [edgeLeft, edgeRight] = clampBubbleSliceAxis(spec.left, spec.right, sourceWidth, 1, 0);
+  const [edgeTop, edgeBottom] = clampBubbleSliceAxis(spec.top, spec.bottom, sourceHeight, 1, 0);
+  const [targetLeft, targetRight] = clampBubbleSliceAxis(targetSpec.left, targetSpec.right, width, 1, 0);
+  const [targetTop, targetBottom] = clampBubbleSliceAxis(targetSpec.top, targetSpec.bottom, height, 1, 0);
+  const sourceMiddleWidth = sourceWidth - edgeLeft - edgeRight;
+  const sourceMiddleHeight = sourceHeight - edgeTop - edgeBottom;
+  // 设备像素对齐：导出画布带整数缩放（PNG_EXPORT_SCALE），若切片边界落在
+  // 半像素上，反走样会在气泡内部留出 1px 细缝。这里把每条边吸附到设备像素，
+  // 并让相邻切片共用同一条边界坐标，消除竖线/横线接缝。
+  const transform = typeof ctx.getTransform === "function" ? ctx.getTransform() : null;
+  const scaleX = transform && Number.isFinite(transform.a) && transform.a > 0 ? transform.a : 1;
+  const scaleY = transform && Number.isFinite(transform.d) && transform.d > 0 ? transform.d : 1;
+  const snapX = (value) => Math.round(value * scaleX) / scaleX;
+  const snapY = (value) => Math.round(value * scaleY) / scaleY;
+  const x0 = snapX(x);
+  const x1 = snapX(x + width);
+  const y0 = snapY(y);
+  const y1 = snapY(y + height);
+  const midDx = snapX(x + targetLeft);
+  const midDy = snapY(y + targetTop);
+  const midRightX = snapX(x + width - targetRight);
+  const midBottomY = snapY(y + height - targetBottom);
+  const colLeftWidth = Math.max(0, midDx - x0);
+  const colMiddleWidth = Math.max(0, midRightX - midDx);
+  const colRightWidth = Math.max(0, x1 - midRightX);
+  const rowTopHeight = Math.max(0, midDy - y0);
+  const rowMiddleHeight = Math.max(0, midBottomY - midDy);
+  const rowBottomHeight = Math.max(0, y1 - midBottomY);
   const drawPart = (sx, sy, sw, sh, dx, dy, dw, dh) => {
     if (sw <= 0 || sh <= 0 || dw <= 0 || dh <= 0) return;
     ctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
   };
-  const midDx = x + targetLeft;
-  const midDy = y + targetTop;
-  const midRightX = x + width - targetRight;
-  const midBottomY = y + height - targetBottom;
-  drawPart(0, 0, edgeLeft, edgeTop, x, y, targetLeft, targetTop);
-  drawPart(sourceWidth - edgeRight, 0, edgeRight, edgeTop, midRightX, y, targetRight, targetTop);
-  drawPart(0, sourceHeight - edgeBottom, edgeLeft, edgeBottom, x, midBottomY, targetLeft, targetBottom);
-  drawPart(sourceWidth - edgeRight, sourceHeight - edgeBottom, edgeRight, edgeBottom, midRightX, midBottomY, targetRight, targetBottom);
-  drawPart(edgeLeft, 0, sourceMiddleWidth, edgeTop, midDx, y, targetMiddleWidth, targetTop);
-  drawPart(edgeLeft, sourceHeight - edgeBottom, sourceMiddleWidth, edgeBottom, midDx, midBottomY, targetMiddleWidth, targetBottom);
-  drawPart(0, edgeTop, edgeLeft, sourceMiddleHeight, x, midDy, targetLeft, targetMiddleHeight);
-  drawPart(sourceWidth - edgeRight, edgeTop, edgeRight, sourceMiddleHeight, midRightX, midDy, targetRight, targetMiddleHeight);
-  drawPart(edgeLeft, edgeTop, sourceMiddleWidth, sourceMiddleHeight, midDx, midDy, targetMiddleWidth, targetMiddleHeight);
+  drawPart(0, 0, edgeLeft, edgeTop, x0, y0, colLeftWidth, rowTopHeight);
+  drawPart(sourceWidth - edgeRight, 0, edgeRight, edgeTop, midRightX, y0, colRightWidth, rowTopHeight);
+  drawPart(0, sourceHeight - edgeBottom, edgeLeft, edgeBottom, x0, midBottomY, colLeftWidth, rowBottomHeight);
+  drawPart(sourceWidth - edgeRight, sourceHeight - edgeBottom, edgeRight, edgeBottom, midRightX, midBottomY, colRightWidth, rowBottomHeight);
+  drawPart(edgeLeft, 0, sourceMiddleWidth, edgeTop, midDx, y0, colMiddleWidth, rowTopHeight);
+  drawPart(edgeLeft, sourceHeight - edgeBottom, sourceMiddleWidth, edgeBottom, midDx, midBottomY, colMiddleWidth, rowBottomHeight);
+  drawPart(0, edgeTop, edgeLeft, sourceMiddleHeight, x0, midDy, colLeftWidth, rowMiddleHeight);
+  drawPart(sourceWidth - edgeRight, edgeTop, edgeRight, sourceMiddleHeight, midRightX, midDy, colRightWidth, rowMiddleHeight);
+  drawPart(edgeLeft, edgeTop, sourceMiddleWidth, sourceMiddleHeight, midDx, midDy, colMiddleWidth, rowMiddleHeight);
 }
 function drawExportAvatarContent(ctx, x, y, size, content) {
   const inset = size * AVATAR_FRAME_INSET_RATIO;
@@ -2639,21 +3491,30 @@ function buildChatExportLayout(ctx, project, messages = project.messages) {
   const bodyPaddingBottom = 24;
   const rowGap = 20;
   const avatarSize = 76;
-  const avatarGap = 15;
-  const maxBubbleWidth = width - 2 * (avatarSize + avatarGap);
+  // 与预览 CSS 对齐：--message-gap 0.14cqw / --message-avatar-size 6.6666666667cqw。
+  const avatarGap = Math.round(avatarSize * (0.14 / 6.6666666667) * 100) / 100;
+  // 气泡可用宽度以「正文左右内边距 + 头像 + 间距」为界，避免长消息压到头像区域。
+  const maxBubbleWidth = width - 2 * (bodyPaddingX + avatarSize + avatarGap);
   const items = [];
 
-  for (const message of exportableMessages(messages)) {
+  for (const { message, showTail, bubbleVariant } of groupContinuousBubbles(exportableMessages(messages), project)) {
     if (message.type === "text") {
       const speaker = exportSpeakerMeta(message, project);
-      const bubbleSlice = bubbleNineSlice(message.side, speaker.speakerIsAdmin);
+      const square = bubbleVariant === "square";
+      const bubbleSlice = square
+        ? bubbleSquareNineSlice(message.side, speaker.speakerIsAdmin)
+        : bubbleNineSlice(message.side, speaker.speakerIsAdmin);
       const bubblePadding = bubbleTextHorizontalPadding(message.side, speaker.speakerIsAdmin);
-      const textPaddingX = bubblePadding.left + bubblePadding.right;
+      // 带尾气泡的方框相对气泡盒左右各内缩一段，宽度和正文位置都要算进去。
+      const bodyInset = square
+        ? { left: 0, right: 0 }
+        : bubbleBodyInset(message.side, speaker.speakerIsAdmin);
+      const textPaddingX = bubblePadding.left + bubblePadding.right + bodyInset.left + bodyInset.right;
       ctx.font = `400 ${MOMO_MESSAGE_FONT_SIZE}px ${MOMO_SANS_FONT_FAMILY}`;
       const lines = canvasTextLines(ctx, message.text, maxBubbleWidth - textPaddingX);
       const textWidth = Math.max(...lines.map((line) => ctx.measureText(line).width), 24);
       const minBubbleWidth = Math.max(96, bubbleSlice.left + bubbleSlice.right);
-      const bubbleWidth = Math.min(maxBubbleWidth, Math.max(minBubbleWidth, textWidth + textPaddingX));
+      const bubbleWidth = Math.ceil(Math.min(maxBubbleWidth, Math.max(minBubbleWidth, textWidth + textPaddingX)));
       const lineHeight = MOMO_MESSAGE_LINE_HEIGHT;
       const minBubbleHeight = Math.max(64, bubbleSlice.top + bubbleSlice.bottom);
       const bubbleHeight = Math.max(minBubbleHeight, lines.length * lineHeight + 32);
@@ -2661,11 +3522,14 @@ function buildChatExportLayout(ctx, project, messages = project.messages) {
       items.push({
         type: "text",
         side: message.side,
+        showTail,
+        bubbleVariant,
         lines,
         lineHeight,
         bubbleWidth,
         bubbleHeight,
         labelHeight,
+        bodyInsetLeft: bodyInset.left,
         ...speaker,
         height: Math.max(avatarSize, labelHeight + bubbleHeight + 4),
       });
@@ -2766,14 +3630,26 @@ function drawChatExportItem(ctx, item, layout, images, y) {
   const contactAvatarSize = layout.avatarSize;
   if (item.type === "text") {
     const bubbleY = y + (item.labelHeight ? item.labelHeight + 2 : 4);
+    const square = item.bubbleVariant === "square";
     const bubbleImage = item.speakerIsAdmin
-      ? (item.side === "right" ? images.selectedBubbleRight : images.selectedBubbleLeft)
-      : (item.side === "right" ? images.bubbleRight : images.bubbleLeft);
-    let bubbleX = contentLeft + contactAvatarSize + layout.avatarGap;
+      ? (item.side === "right"
+        ? (square ? images.selectedSquareBubbleRight : images.selectedBubbleRight)
+        : (square ? images.selectedSquareBubbleLeft : images.selectedBubbleLeft))
+      : (item.side === "right"
+        ? (square ? images.squareBubbleRight : images.bubbleRight)
+        : (square ? images.squareBubbleLeft : images.bubbleLeft));
+    const bubbleSlice = bubbleNineSlice(item.side, item.speakerIsAdmin);
+    const squareBubbleSlice = bubbleSquareNineSlice(item.side, item.speakerIsAdmin);
+    // 方形外框按外侧切片差内缩，与首条带尾气泡的方框对齐（与预览一致）。
+    const outerSide = item.side === "right" ? "right" : "left";
+    const squareInset = square
+      ? Math.max(0, Number(bubbleSlice[outerSide]) - Number(squareBubbleSlice[outerSide]))
+      : 0;
+    let bubbleX = contentLeft + contactAvatarSize + layout.avatarGap + squareInset;
     let avatarX = contentLeft;
     if (item.side === "right") {
       avatarX = contentRight - contactAvatarSize;
-      bubbleX = contentRight - contactAvatarSize - layout.avatarGap - item.bubbleWidth;
+      bubbleX = contentRight - contactAvatarSize - layout.avatarGap - item.bubbleWidth - squareInset;
     }
     drawExportAvatarContent(
       ctx,
@@ -2782,7 +3658,6 @@ function drawChatExportItem(ctx, item, layout, images, y) {
       contactAvatarSize,
       exportContactAvatarContent(item.speaker, images),
     );
-    const bubbleSlice = bubbleNineSlice(item.side, item.speakerIsAdmin);
     const bubblePadding = bubbleTextHorizontalPadding(item.side, item.speakerIsAdmin);
     drawNineSlice(
       ctx,
@@ -2791,7 +3666,8 @@ function drawChatExportItem(ctx, item, layout, images, y) {
       bubbleY,
       item.bubbleWidth,
       item.bubbleHeight,
-      bubbleSlice,
+      square ? squareBubbleSlice : bubbleSlice,
+      square ? squareBubbleSlice : bubbleSlice,
     );
     if (item.speakerName) {
       ctx.fillStyle = "#5f6b7b";
@@ -2808,7 +3684,9 @@ function drawChatExportItem(ctx, item, layout, images, y) {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     const textBlockTop = bubbleY + (item.bubbleHeight - item.lines.length * item.lineHeight) / 2;
-    const textX = bubbleX + bubblePadding.left;
+    // 带尾素材的方框相对气泡盒内侧留了透明边距，正文按方框边缘起排，
+    // 首条带尾气泡才能和后续方形气泡的正文左右对齐。
+    const textX = bubbleX + bubblePadding.left + (item.bodyInsetLeft || 0);
     item.lines.forEach((line, lineIndex) => {
       ctx.fillText(line, textX, textBlockTop + item.lineHeight * (lineIndex + 0.5));
     });
@@ -2978,8 +3856,12 @@ async function loadChatExportImages(project, messages = project.messages) {
     byUrl,
     bubbleLeft: byUrl.get(EXPORT_ASSET_URLS.bubbleLeft),
     bubbleRight: byUrl.get(EXPORT_ASSET_URLS.bubbleRight),
+    squareBubbleLeft: byUrl.get(EXPORT_ASSET_URLS.squareBubbleLeft),
+    squareBubbleRight: byUrl.get(EXPORT_ASSET_URLS.squareBubbleRight),
     selectedBubbleLeft: byUrl.get(EXPORT_ASSET_URLS.selectedBubbleLeft),
     selectedBubbleRight: byUrl.get(EXPORT_ASSET_URLS.selectedBubbleRight),
+    selectedSquareBubbleLeft: byUrl.get(EXPORT_ASSET_URLS.selectedSquareBubbleLeft),
+    selectedSquareBubbleRight: byUrl.get(EXPORT_ASSET_URLS.selectedSquareBubbleRight),
     recallLine: byUrl.get(EXPORT_ASSET_URLS.recallLine),
     background: background ? byUrl.get(assetFullUrl(background)) : null,
   };
@@ -3073,6 +3955,7 @@ async function downloadChatPng() {
   showToast("正在生成 PNG 长图");
   try {
     await saveProject({ quiet: true });
+    await waitForBubbleSquareAssets();
     if (document.fonts?.load) {
       await Promise.all([
         document.fonts.load(`400 ${MOMO_MESSAGE_FONT_SIZE}px ${MOMO_SANS_FONT_FAMILY}`),
@@ -3177,6 +4060,50 @@ function bindEvents() {
     event.preventDefault();
     sendDirectMessage();
   });
+  elements.editorTabs?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-editor-tab]");
+    if (!button) return;
+    selectEditorTab(button.dataset.editorTab);
+  });
+  elements.editorTabs?.addEventListener("keydown", (event) => {
+    const navigationKeys = ["ArrowLeft", "ArrowRight", "Home", "End"];
+    if (!navigationKeys.includes(event.key)) return;
+    event.preventDefault();
+    const tabIds = EDITOR_TABS.map((tab) => tab.id);
+    const current = Math.max(0, tabIds.indexOf(state.editorTab));
+    let next = current;
+    if (event.key === "ArrowLeft") next = (current - 1 + tabIds.length) % tabIds.length;
+    if (event.key === "ArrowRight") next = (current + 1) % tabIds.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = tabIds.length - 1;
+    selectEditorTab(tabIds[next]);
+    elements.editorTabs.querySelector(`[data-editor-tab="${tabIds[next]}"]`)?.focus();
+  });
+  elements.editorContactSearch?.addEventListener("input", (event) => {
+    state.contactList.query = event.target.value;
+    state.contactList.page = 0;
+    renderEditorContactList();
+  });
+  elements.editorContactFilters?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-contact-category]");
+    if (!button) return;
+    const category = button.dataset.contactCategory;
+    if (!CONTACT_CATEGORIES.some((item) => item.id === category)) return;
+    if (state.contactList.category === category) return;
+    state.contactList.category = category;
+    state.contactList.page = 0;
+    renderEditorContactList();
+  });
+  elements.editorContactPrevPage?.addEventListener("click", () => changeEditorContactPage(-1));
+  elements.editorContactNextPage?.addEventListener("click", () => changeEditorContactPage(1));
+  if (typeof ResizeObserver === "function" && elements.editorContactList) {
+    const contactListObserver = new ResizeObserver(() => {
+      if (state.editorTab !== "contacts") return;
+      if (contactListPageSize() === state.contactList.pageSize) return;
+      renderEditorContactList();
+    });
+    contactListObserver.observe(elements.editorContactList);
+  }
   elements.addMessageButton.addEventListener("click", addMessage);
   elements.projectTitleInput.addEventListener("input", (event) => {
     updateProject((project) => {
@@ -3235,9 +4162,36 @@ function bindEvents() {
       openGroupCreate();
       return;
     }
+    const removeButton = event.target.closest('[data-action="remove-preview"]');
+    if (removeButton) {
+      const row = removeButton.closest("[data-contact-id]");
+      if (row) {
+        removePreviewContact(row.dataset.contactId).catch((error) =>
+          showToast(error.message, "error"),
+        );
+      }
+      return;
+    }
     const item = event.target.closest("[data-contact-id]");
     if (!item) return;
     selectRole(item.dataset.contactId);
+  });
+  elements.contactList.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    if (event.target.closest('[data-action="remove-preview"]')) return;
+    const item = event.target.closest("[data-contact-id]");
+    if (!item) return;
+    event.preventDefault();
+    selectRole(item.dataset.contactId);
+  });
+  // 双击右侧「联系人列表」卡片，把角色/群组加入「会话列表」。
+  elements.editorContactList?.addEventListener("dblclick", (event) => {
+    const card = event.target.closest("[data-editor-contact-id]");
+    if (!card) return;
+    event.preventDefault();
+    addPreviewContact(card.dataset.editorContactId).catch((error) =>
+      showToast(error.message, "error"),
+    );
   });
   elements.messageList.addEventListener("click", (event) => {
     const item = event.target.closest("[data-message-id]");
@@ -3324,6 +4278,7 @@ async function init() {
   resizeDirectMessageInput();
   try {
     await loadContacts();
+    await loadConversationContacts();
     await Promise.all([loadAssets(), loadContactAvatars(), loadBubbleThemes()]);
     await loadProjects();
     const lastProjectId = localStorage.getItem(LAST_PROJECT_KEY);

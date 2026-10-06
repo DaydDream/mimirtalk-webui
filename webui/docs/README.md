@@ -43,7 +43,7 @@ C:\Users\ori\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pyt
 
 Outputs:
 
-- `mimirtalk_webui/data/chat_contacts.json` - 79 selectable chat contacts (69 heroes, 10 system/group)
+- `mimirtalk_webui/data/chat_contacts.json` - 83 selectable chat contacts (73 heroes, 10 system/group)
 - `mimirtalk_webui/data/asset_names.json` - general avatar pool keyed by asset id
 - `mimirtalk_webui/data/contact_map_report.md` - human readable mapping report
 - `mimirtalk_webui/data/group_members.json` - local member mapping for built-in group contacts
@@ -67,8 +67,9 @@ C:\Users\ori\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\pyt
 Notes:
 
 - `101701` is a variant of base id `1017`, not an avatar for `10170` (望舒).
-- 望舒(`10170`), 奥丁(`1029`), 宁希达(`10066`) now use project-local story
-  portraits copied into `mimirtalk_webui/assets/avatars/`.
+- 望舒(`10170`), 奥丁(`1029`), 宁希达(`10066`), 巴德尔(`1036`),
+  亚里沙(`1045`), 雪儿(`1046`), and 庚辰(`1076`) now use project-local
+  story portraits copied into `mimirtalk_webui/assets/avatars/`.
 - The general pool keeps the numeric asset id as the key when a name is unknown.
 
 ## Phase 1
@@ -344,8 +345,9 @@ Pending checks and reminders:
 
 - Static sticker assets are complete under the current catalog; dynamic sticker
   groups are intentionally excluded rather than reported as missing.
-- The extracted general avatar gaps for 望舒 `10170`, 奥丁 `1029`, and
-  宁希达 `10066` are covered by the project-local story portraits.
+- The extracted general avatar gaps for 望舒 `10170`, 奥丁 `1029`,
+  宁希达 `10066`, 巴德尔 `1036`, 亚里沙 `1045`, 雪儿 `1046`, and 庚辰
+  `1076` are covered by the project-local story portraits.
 - Collect all remaining missing asset gaps across stickers, avatars,
   backgrounds, and MomoTalk images, then fill them together at the end.
 - Keep missing-but-valid paths separate from illegal paths in the final asset
