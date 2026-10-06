@@ -84,6 +84,31 @@
 - 移除联系人不会删除基础角色库，也不会破坏历史项目中的 `contact_id`。
 - 发布包内 `custom_groups.json` 已重置为空，`group_members.json` 仅保留基础成员映射。
 
+### 解压到旧目录时
+
+本包为绿色全量包，没有安装器，不会出现“覆盖安装”提示；解压到新目录即可直接运行。
+程序与用户数据都在包内 `mimirtalk_webui/data/` 下。把新包覆盖解压到旧目录
+（资源管理器提示替换文件时选“是”）后：
+
+| 旧内容 | 结果 |
+| --- | --- |
+| `data/projects/`（项目工程） | 保留 |
+| `data/uploads/`、`data/thumbnails/` | 保留 |
+| `data/conversation_contacts.json`（联系人 / 可会话清单） | 保留 |
+| `data/custom_groups.json`（自建群） | 被重置为空，自建群丢失 |
+| `data/group_members.json`（内置群改名、自建群成员） | 被重置为默认，改名与自建群成员丢失 |
+| 其余随包 JSON（素材索引、气泡主题、基础角色等） | 正常替换为新版 |
+
+结论：覆盖解压旧目录后，**旧项目数据本身会保留，但自建群和内置群改名会丢失**。
+
+保留旧数据的做法：
+
+- 推荐：解压到新目录，再把旧包 `mimirtalk_webui/data` 整个覆盖到新包同位置，
+  工程、上传、缩略图、联系人清单、自建群、群改名一并带过去。
+- 若必须在旧目录上覆盖解压：先备份 `data/custom_groups.json` 和
+  `data/group_members.json`（建议连 `data/conversation_contacts.json` 一起备份），
+  覆盖解压后再放回。
+
 ## 已知限制与不在本版范围
 
 以下三项继续保留在反馈文档中，后续单独立项，不属于 1.1.0：
