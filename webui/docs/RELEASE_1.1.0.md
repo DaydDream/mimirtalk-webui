@@ -14,11 +14,6 @@
 > 本次 1.1.0 为**全量更新**：发布的是完整发布包，包含内置运行时、全部代码与全部素材，
 > **需解压到新目录使用，不能直接覆盖安装到旧目录**，也不依赖上一版文件。
 
-## 一句话概述
-
-1.1.0 围绕「会话组织更顺手」展开：统一连续消息的无尾方框表现，重做右侧联系人库与
-可会话列表，并补充 5 名可会话角色；同时为后续功能预留了可扩展模块。
-
 ## 主要更新
 
 ### 1. 连续消息：统一无尾方框
@@ -37,12 +32,17 @@
 - 右侧编辑面板新增「联系人列表」页签，与「编辑」页签并列，页签结构可扩展。
 - 支持按分类筛选：全部 / 角色 / 内置群 / 自建群，筛选条数量随搜索词实时联动。
 - 双击联系人卡片即可加入可会话列表并自动选中；单击不加入，支持搜索与分页。
+
+![联系人列表：页签、分类筛选与分页](https://raw.githubusercontent.com/DaydDream/mimirtalk-webui/main/docs/screenshots/final/联系人列表.png)
+
 - 可会话列表持久保存到 `data/conversation_contacts.json`（`version: 2`）：
   `contact_ids` 为联系人列表来源，`preview_ids` 为会话列表目标。
 - 首次启动默认清单为 11 条：薇儿丹蒂 `1084` + 10 个内置群，避免初始界面为空；
   自建群不默认加入，新建群组时自动加入、删除群组时同步移除。
 - 旧项目如果引用了不在清单中的联系人，会临时置顶且不写盘，保证历史项目仍能正常打开；
   非当前会话卡提供移除入口，当前会话需先切换。
+
+![会话选项卡：非当前会话卡可移除](https://raw.githubusercontent.com/DaydDream/mimirtalk-webui/main/docs/screenshots/final/会话选项卡移除.png)
 
 ### 3. 新增可会话角色
 
@@ -55,6 +55,8 @@
 | 雪儿 | 1046 | `character_itemshead:story_comsingle:1046` |
 | 庚辰 | 1076 | `character_itemshead:story_comsingle:1076` |
 | 梅塞可 | 10131 | `character_itemshead:story_comsingle:10131` |
+
+![新增角色目录：5 名可会话角色](https://raw.githubusercontent.com/DaydDream/mimirtalk-webui/main/docs/screenshots/final/新增角色目录.png)
 
 - 5 名角色的头像均可用于联系人列表、可会话列表、聊天预览与 PNG 导出。
 
@@ -105,7 +107,7 @@
 | mimirtalk_webui 文件数 | 68 |
 | 清单文件数 | 741 |
 | ZIP | `MimirTalk_WebUI_v1.1.0_20261007.zip` |
-| ZIP SHA256 | `9906B37F18A6086FB91E2C53CA88A4D51433405106AEB0CDF8EFBB8C2EF738DC` |
+| ZIP SHA256 | `AB24859BC5FF21653CBF6E3F00B149CBCAEF179A58FA9C05A7088B49AF84046D` |
 
 ## 验证记录
 
