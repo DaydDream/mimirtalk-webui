@@ -87,27 +87,34 @@
 ### 解压到旧目录时
 
 本包为绿色全量包，没有安装器，不会出现“覆盖安装”提示；解压到新目录即可直接运行。
-程序与用户数据都在包内 `mimirtalk_webui/data/` 下。把新包覆盖解压到旧目录
-（资源管理器提示替换文件时选“是”）后：
+程序与随包数据、用户数据都放在包内 `mimirtalk_webui/data/` 下，因此**不要用旧包的整个
+`data/` 覆盖新包**：旧包里的 `chat_contacts.json`、`bubble_themes.json`、
+`asset_index.json`、`asset_names.json`、`sticker_categories.json` 会覆盖新版随包数据，
+导致新增角色、新增气泡主题等新功能失效。
+
+把新包覆盖解压到旧目录（资源管理器提示替换文件时选“是”）后：
 
 | 旧内容 | 结果 |
 | --- | --- |
-| `data/projects/`（项目工程） | 保留 |
+| `data/projects/`（项目工程） | 保留（包内不含该目录） |
 | `data/uploads/`、`data/thumbnails/` | 保留 |
-| `data/conversation_contacts.json`（联系人 / 可会话清单） | 保留 |
+| `data/conversation_contacts.json` | 1.0.1 无此文件，自动生成新版默认清单 |
 | `data/custom_groups.json`（自建群） | 被重置为空，自建群丢失 |
-| `data/group_members.json`（内置群改名、自建群成员） | 被重置为默认，改名与自建群成员丢失 |
-| 其余随包 JSON（素材索引、气泡主题、基础角色等） | 正常替换为新版 |
+| `data/group_members.json`（内置群改名） | 被重置为默认，改名丢失 |
+| 其余随包 JSON（`chat_contacts` / `bubble_themes` / `asset_index` 等） | 正确更新为新版 |
 
-结论：覆盖解压旧目录后，**旧项目数据本身会保留，但自建群和内置群改名会丢失**。
+结论：直接覆盖解压旧目录，**旧工程、上传、缩略图会自动保留且新功能正常**，
+但**自建群和内置群改名会丢失**。
 
-保留旧数据的做法：
+保留全部旧数据的做法（多一步）：
 
-- 推荐：解压到新目录，再把旧包 `mimirtalk_webui/data` 整个覆盖到新包同位置，
-  工程、上传、缩略图、联系人清单、自建群、群改名一并带过去。
-- 若必须在旧目录上覆盖解压：先备份 `data/custom_groups.json` 和
-  `data/group_members.json`（建议连 `data/conversation_contacts.json` 一起备份），
-  覆盖解压后再放回。
+1. 覆盖解压到旧目录：旧工程、上传、缩略图自动保留，新角色、新气泡等新数据正常。
+2. 再从旧包备份里只拷回用户改过的文件：`data/custom_groups.json` 与
+   `data/group_members.json`。1.0.1 与 1.1.0 的 `group_members.json` 仅
+   `group_names`（群改名）不同，基础成员映射一致，可直接还原；
+   其他随包 JSON 一律不要拷回旧版。
+
+目前没有一键完成第 2 步的安装器，这是后续可以补的更新脚本。
 
 ## 已知限制与不在本版范围
 
