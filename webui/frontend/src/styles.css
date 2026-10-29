@@ -1,16 +1,16 @@
 @font-face {
   font-family: "MomoTalk Sans";
-  src: url("/assets/fonts/source-han-sans.ttf") format("truetype");
+  src: url("/assets/fonts/noto-sans-sc-variable.ttf") format("truetype");
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
 }
 
 @font-face {
   font-family: "MomoTalk Serif";
-  src: url("/assets/fonts/noto-serif-sc-vf.ttf") format("truetype");
+  src: url("/assets/fonts/noto-serif-sc-bold.ttf") format("truetype");
   font-style: normal;
-  font-weight: 100 900;
+  font-weight: 700;
   font-display: swap;
 }
 
@@ -32,13 +32,11 @@
   --side-panel-width: clamp(260px, 20vw, 360px);
   --momotalk-font: "MomoTalk Sans", "Microsoft YaHei", sans-serif;
   --momotalk-name-font: "MomoTalk Serif", "Microsoft YaHei", serif;
-  --momotalk-rail: url("/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file");
-  --momotalk-speaker-panel: url("/api/assets/backgrounds_texturebg_momotalk_momotalk_06_Momotalk_06/file");
-  /* 首条消息保留原始带尾气泡；连续消息使用派生的无尾方框素材。 */
-  --momotalk-default-bubble-left: url("/api/assets/misc_textureconfig_chatbubble_9000_9000/file");
-  --momotalk-default-bubble-right: url("/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file");
-  --momotalk-selected-bubble-left: url("/api/assets/misc_textureconfig_chatbubble_9000_9000/file");
-  --momotalk-selected-bubble-right: url("/api/assets/misc_textureconfig_chatbubble_9000_1_9000_1/file");
+  /*
+   * 游戏外框与气泡素材地址不写死在后端路径上：web 走 `/api/assets/...`，
+   * 静态模式走打包路径，两者由适配层在启动时注入（见 app.js 的
+   * applyPlatformCssAssets），避免静态包在首帧请求不存在的后端接口。
+   */
   --momotalk-default-bubble-square-left: url("/assets/bubbles/square_9000_left.png");
   --momotalk-default-bubble-square-right: url("/assets/bubbles/square_9000_right.png");
   --momotalk-selected-bubble-square-left: url("/assets/bubbles/square_9000_left.png");
@@ -57,11 +55,6 @@
   --momotalk-selected-bubble-slice-right: 57 63 30 63;
   --momotalk-selected-bubble-edge-left: 3.27cqw 3.62cqw 1.72cqw 3.62cqw;
   --momotalk-selected-bubble-edge-right: 3.27cqw 3.62cqw 1.72cqw 3.62cqw;
-  --momotalk-line: url("/api/assets/atlas_atlas_monotalkatlas_Momotalk_29/file");
-  --momotalk-out-icon: url("/api/assets/atlas_atlas_monotalkatlas_Momotalk_09/file");
-  --momotalk-card: url("/api/assets/atlas_atlas_monotalkatlas_Momotalk_10/file");
-  --momotalk-card-active: url("/api/assets/atlas_atlas_monotalkatlas_Momotalk_11/file");
-  --momotalk-card-arrow: url("/api/assets/atlas_atlas_monotalkatlas_Momotalk_12/file");
 }
 
 * {
@@ -965,11 +958,28 @@ body.webui-closed .phone-stage {
   min-width: 0;
 }
 
+/* 桌面端图片 / 表情按钮仍作为输入条网格的直接子项参与布局；
+   安卓外壳把它改成一行 flex 容器（见 android-shell.css）。 */
+.composer-tools {
+  display: contents;
+}
+
+.composer-tools > * {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
 .composer-speaker {
   display: grid;
   min-width: 0;
   overflow: visible;
   isolation: auto;
+}
+
+/* 安卓外壳专用入口；桌面继续使用原生 select。 */
+.android-speaker-button {
+  display: none;
 }
 
 .composer-speaker select {
@@ -1029,6 +1039,11 @@ body.webui-closed .phone-stage {
   color: #344052;
   font-size: 2.1cqw;
   line-height: 1;
+}
+
+/* 安卓外壳输入区的发送按钮；桌面端用回车发送，这里隐藏，避免撑破输入条列布局。 */
+.composer-send-button {
+  display: none;
 }
 
 .composer-save-button:hover {
@@ -2127,6 +2142,19 @@ select:focus {
   height: auto;
   max-height: min(720px, 90vh);
   grid-template-rows: auto auto auto auto;
+}
+
+/* 行 68：气泡列表项较多，需要弹窗中段可滚动。仅气泡分类启用固定高度 +
+   中段 1fr 行，让 #assetGrid 成为实际滚动容器；管理员头像仍保持内容自适应。 */
+#assetModal[data-asset-category="bubble"] .modal-panel {
+  height: min(720px, 90vh);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+}
+
+#assetModal[data-asset-category="bubble"] .asset-grid {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 状态行紧贴网格，视觉上落在网格框内（DOM 位置不变，避免被渲染覆盖）。 */

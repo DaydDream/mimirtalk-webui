@@ -32,13 +32,18 @@ DEFAULT_CHAT_CONTACTS_PATH = WEBUI_DIR / "data" / "chat_contacts.json"
 DEFAULT_GROUP_MEMBERS_PATH = WEBUI_DIR / "data" / "group_members.json"
 DEFAULT_CUSTOM_GROUPS_PATH = WEBUI_DIR / "data" / "custom_groups.json"
 DEFAULT_CONVERSATION_CONTACTS_PATH = WEBUI_DIR / "data" / "conversation_contacts.json"
+DEFAULT_CHARACTER_PROFILES_PATH = WEBUI_DIR / "data" / "character_profiles.json"
+DEFAULT_STICKER_FAVORITES_PATH = WEBUI_DIR / "data" / "sticker_favorites.json"
 DEFAULT_UPLOADS_DIR = WEBUI_DIR / "data" / "uploads"
-CONVERSATION_CONTACTS_VERSION = 2
+CONVERSATION_CONTACTS_VERSION = 3
+STICKER_FAVORITES_VERSION = 1
+STICKER_FAVORITE_SOURCES = ("builtin", "upload")
 DEFAULT_PREVIEW_HERO_ID = 1084
 DEFAULT_PREVIEW_HERO_NAME = "薇儿丹蒂"
 CUSTOM_GROUP_ID_START = 9200
 MIN_GROUP_MEMBERS = 2
 MAX_STATIC_IMAGE_BYTES = 8 * 1024 * 1024
+MAX_DRAIN_REQUEST_BYTES = 64 * 1024 * 1024
 STATIC_IMAGE_FORMATS = {
     "image/png": (".png", b"\x89PNG\r\n\x1a\n"),
     "image/jpeg": (".jpg", b"\xff\xd8\xff"),
@@ -60,6 +65,8 @@ class Application:
         conversation_contacts_path: Path = DEFAULT_CONVERSATION_CONTACTS_PATH,
         uploads_dir: Path = DEFAULT_UPLOADS_DIR,
         bubble_themes_path: Path | None = None,
+        character_profiles_path: Path | None = None,
+        sticker_favorites_path: Path | None = None,
     ):
         self.workspace_dir = Path(workspace_dir)
         self.frontend_dir = Path(frontend_dir)
@@ -77,6 +84,14 @@ class Application:
         self.bubble_themes_path = Path(
             bubble_themes_path
             or WEBUI_DIR / "data" / "bubble_themes.json"
+        )
+        self.character_profiles_path = Path(
+            character_profiles_path
+            or DEFAULT_CHARACTER_PROFILES_PATH
+        )
+        self.sticker_favorites_path = Path(
+            sticker_favorites_path
+            or DEFAULT_STICKER_FAVORITES_PATH
         )
         self.index.load()
         self._load_sticker_categories()
@@ -271,6 +286,14 @@ class Application:
             "themes": themes,
         }
 
+    def character_profiles(self) -> dict:
+        """角色身份档案清单（角色信息页数据源）。"""
+        payload = self._load_json_object(self.character_profiles_path)
+        profiles = payload.get("profiles") or []
+        if not isinstance(profiles, list):
+            profiles = []
+        return {"items": profiles, "total": len(profiles)}
+
     def list_contacts(self) -> list[dict]:
         """加载角色、内置群和自定义群，返回启用且未删除的联系人列表。"""
         contacts = self._load_contact_catalog()
@@ -446,15 +469,36 @@ class Application:
             reject_unknown=False,
         )
 
+    def _load_conversation_pinned_ids(self) -> list[int]:
+        """读取 pinned_ids（会话列表置顶项）。
+
+        文件缺失或旧版 ``version: 2`` 清单没有该字段时回退空列表（不置顶任何会话），
+        不报错也不改写文件；指向已删除/已禁用联系人的 ID 静默过滤，并裁剪到
+        ``preview_ids`` 子集，保证置顶项始终属于会话列表（v3 起）。
+        """
+        payload = self._load_conversation_contacts_payload()
+        if payload is None or "pinned_ids" not in payload:
+            return []
+        known = {str(contact_id) for contact_id in self._enabled_contact_ids()}
+        pinned = self._normalize_conversation_ids(
+            payload.get("pinned_ids"),
+            "conversation_contacts.json pinned_ids",
+            known,
+            reject_unknown=False,
+        )
+        preview = {str(contact_id) for contact_id in self._load_conversation_preview_ids()}
+        return [contact_id for contact_id in pinned if str(contact_id) in preview]
+
     def _write_conversation_contacts(
-        self, contact_ids: list[int], preview_ids: list[int]
+        self, contact_ids: list[int], preview_ids: list[int], pinned_ids: list[int]
     ) -> None:
-        """原子写入会话联系人清单（v2：contact_ids 来源 + preview_ids 目标）。"""
+        """原子写入会话联系人清单（v3：contact_ids 来源 + preview_ids 目标 + pinned_ids 置顶）。"""
         payload = {
             "version": CONVERSATION_CONTACTS_VERSION,
             "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "contact_ids": contact_ids,
             "preview_ids": preview_ids,
+            "pinned_ids": pinned_ids,
         }
         self.conversation_contacts_path.parent.mkdir(parents=True, exist_ok=True)
         temporary = self.conversation_contacts_path.with_suffix(".json.tmp")
@@ -488,14 +532,20 @@ class Application:
             "preview_ids": [contact["id"] for contact in preview_items],
             "preview_items": preview_items,
             "preview_total": len(preview_items),
+            "pinned_ids": [
+                contact_id
+                for contact_id in self._load_conversation_pinned_ids()
+                if str(contact_id) in contacts
+            ],
         }
 
     def set_conversation_contacts(self, payload: dict) -> dict:
-        """校验并写入清单；``contact_ids`` / ``preview_ids`` 缺省时保留当前值。"""
+        """校验并写入清单；``contact_ids`` / ``preview_ids`` / ``pinned_ids`` 缺省时保留当前值。"""
         has_contacts = "contact_ids" in payload
         has_preview = "preview_ids" in payload
-        if not has_contacts and not has_preview:
-            raise ValueError("contact_ids 或 preview_ids 至少需要一个数组")
+        has_pinned = "pinned_ids" in payload
+        if not has_contacts and not has_preview and not has_pinned:
+            raise ValueError("contact_ids、preview_ids 或 pinned_ids 至少需要一个数组")
         known = {str(contact_id) for contact_id in self._enabled_contact_ids()}
         contact_ids = (
             self._normalize_conversation_ids(
@@ -511,7 +561,17 @@ class Application:
             if has_preview
             else self._load_conversation_preview_ids()
         )
-        self._write_conversation_contacts(contact_ids, preview_ids)
+        pinned = (
+            self._normalize_conversation_ids(
+                payload.get("pinned_ids"), "pinned_ids", known, reject_unknown=True
+            )
+            if has_pinned
+            else self._load_conversation_pinned_ids()
+        )
+        # 置顶项必须属于会话列表：写入时裁剪到 preview_ids 子集，保持置顶顺序。
+        preview_set = {str(contact_id) for contact_id in preview_ids}
+        pinned_ids = [contact_id for contact_id in pinned if str(contact_id) in preview_set]
+        self._write_conversation_contacts(contact_ids, preview_ids, pinned_ids)
         return self.list_conversation_contacts()
 
     def _sync_project_group_contact(self, project: dict) -> dict:
@@ -803,6 +863,54 @@ class Application:
             "items": items,
         }
 
+    def list_sticker_favorites(self) -> dict:
+        """返回用户收藏的表情记录，按 sort_order 稳定排序。"""
+        payload = self._load_json_object(self.sticker_favorites_path)
+        items = payload.get("items") or []
+        if not isinstance(items, list):
+            raise ValueError("sticker_favorites.json items must be an array")
+        records = [
+            _normalize_sticker_favorite(item, index)
+            for index, item in enumerate(items)
+        ]
+        records = _dedupe_sticker_favorites(records)
+        return {"items": records, "total": len(records)}
+
+    def save_sticker_favorites(self, payload) -> dict:
+        """整体替换用户收藏的表情记录并返回落盘结果。"""
+        if isinstance(payload, list):
+            items = payload
+        elif isinstance(payload, dict):
+            items = payload.get("items")
+        else:
+            items = None
+        if not isinstance(items, list):
+            raise ValueError(
+                "Sticker favorites payload must be an array or an object with an items array"
+            )
+        records = [
+            _normalize_sticker_favorite(item, index)
+            for index, item in enumerate(items)
+        ]
+        records = _dedupe_sticker_favorites(records)
+        self._write_sticker_favorites(records)
+        return {"items": records, "total": len(records)}
+
+    def _write_sticker_favorites(self, records: list[dict]) -> None:
+        """将数据写入目标文件。"""
+        self.sticker_favorites_path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = self.sticker_favorites_path.with_suffix(".json.tmp")
+        temporary.write_text(
+            json.dumps(
+                {"version": STICKER_FAVORITES_VERSION, "items": records},
+                ensure_ascii=False,
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        temporary.replace(self.sticker_favorites_path)
+
 
 class ApiError(Exception):
     """API 业务异常：携带 HTTP 状态码、错误码和用户可读消息。"""
@@ -917,6 +1025,10 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
             self._send_json(self.app.bubble_themes(), head_only=head_only)
             return
 
+        if path == "/api/character-profiles":
+            self._send_json(self.app.character_profiles(), head_only=head_only)
+            return
+
         if path == "/api/contacts":
             contacts = self.app.list_contacts()
             self._send_json(
@@ -937,6 +1049,10 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/sticker-categories":
             self._send_json(self.app.list_sticker_categories(), head_only=head_only)
+            return
+
+        if path == "/api/sticker-favorites":
+            self._send_json(self.app.list_sticker_favorites(), head_only=head_only)
             return
 
         sticker_category_route = _match_sticker_category_stickers_route(path)
@@ -1023,12 +1139,10 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
             self._send_frontend_file("index.html", head_only=head_only)
             return
 
-        if path == "/src/app.js":
-            self._send_frontend_file("src/app.js", head_only=head_only)
-            return
-
-        if path == "/src/styles.css":
-            self._send_frontend_file("src/styles.css", head_only=head_only)
+        if path.startswith("/src/"):
+            # 放行 frontend/src 下的全部文件（app.js、styles.css、dev/logger.js 等），
+            # _send_frontend_file 会做目录逃逸校验，缺失文件按 404 处理。
+            self._send_frontend_file(path[len("/") :], head_only=head_only)
             return
 
         if path.startswith("/assets/"):
@@ -1074,6 +1188,11 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
 
     def _route_put(self, path: str):
         """处理对应 HTTP 路由。"""
+        if path == "/api/sticker-favorites":
+            payload = self._read_json()
+            self._send_json(self.app.save_sticker_favorites(payload))
+            return
+
         if path == "/api/conversation-contacts":
             payload = self._read_json()
             self._send_json(self.app.set_conversation_contacts(payload))
@@ -1125,8 +1244,25 @@ class MomoTalkRequestHandler(BaseHTTPRequestHandler):
         if length <= 0:
             raise ValueError("图片文件不能为空")
         if length > maximum:
+            # 超限时先排空请求体再报错。若带着未读数据关闭连接，客户端会收到
+            # ECONNRESET 而不是这条业务错误。
+            self._drain_request_body(length)
             raise ValueError("图片不能超过 8 MiB")
         return self.rfile.read(length)
+
+    def _drain_request_body(self, length: int) -> None:
+        """丢弃请求体，避免拒绝超限上传时连接被重置。"""
+        if length > MAX_DRAIN_REQUEST_BYTES:
+            # 异常超长的请求体不值得为它阻塞读取，直接让连接关闭。
+            self.close_connection = True
+            return
+        remaining = length
+        chunk_size = 64 * 1024
+        while remaining > 0:
+            chunk = self.rfile.read(min(chunk_size, remaining))
+            if not chunk:
+                break
+            remaining -= len(chunk)
 
     def _read_json(self, required: bool = True) -> dict:
         """读取并解析 JSON 请求正文。"""
@@ -1284,6 +1420,69 @@ def _match_sticker_category_stickers_route(path: str) -> str | None:
     return category_id
 
 
+def _utc_now_iso() -> str:
+    """返回秒精度的 UTC ISO 8601 时间戳。"""
+    return (
+        datetime.now(timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+
+
+def _normalize_sticker_favorite(record, fallback_order: int) -> dict:
+    """校验并规范化单条表情收藏记录。"""
+    if not isinstance(record, dict):
+        raise ValueError("Sticker favorite record must be an object")
+    source = record.get("source")
+    if source not in STICKER_FAVORITE_SOURCES:
+        raise ValueError("Sticker favorite source must be 'builtin' or 'upload'")
+    raw_asset_id = record.get("asset_id")
+    asset_id = "" if raw_asset_id is None else raw_asset_id
+    if not isinstance(asset_id, str):
+        raise ValueError("Sticker favorite asset_id must be a string")
+    file_id = record.get("file_id")
+    if source == "upload":
+        if not isinstance(file_id, str) or not file_id:
+            raise ValueError("Sticker favorite with source 'upload' requires a file_id")
+    else:
+        file_id = None
+        if not asset_id:
+            raise ValueError("Sticker favorite with source 'builtin' requires an asset_id")
+    raw_sort_order = record.get("sort_order")
+    if isinstance(raw_sort_order, bool) or not isinstance(raw_sort_order, (int, float)):
+        sort_order = fallback_order
+    else:
+        sort_order = int(raw_sort_order)
+    created_at = record.get("created_at")
+    if not isinstance(created_at, str) or not created_at.strip():
+        created_at = _utc_now_iso()
+    normalized = {
+        "asset_id": asset_id,
+        "source": source,
+        "sort_order": sort_order,
+        "created_at": created_at,
+    }
+    if file_id is not None:
+        normalized["file_id"] = file_id
+    return normalized
+
+
+def _sticker_favorite_key(record: dict) -> tuple[str, str]:
+    """收藏去重键：source 加 asset_id 或 file_id。"""
+    identity = record.get("file_id") if record["source"] == "upload" else record["asset_id"]
+    return (record["source"], str(identity))
+
+
+def _dedupe_sticker_favorites(records: list[dict]) -> list[dict]:
+    """按逻辑键去重（后者覆盖前者），再按 sort_order 稳定排序。"""
+    deduped: dict[tuple[str, str], dict] = {}
+    for record in records:
+        deduped[_sticker_favorite_key(record)] = record
+    ordered = sorted(deduped.values(), key=lambda item: item["sort_order"])
+    return ordered
+
+
 def _match_upload_route(path: str) -> str | None:
     """匹配并解析对应路由。"""
     prefix = "/api/uploads/"
@@ -1332,6 +1531,7 @@ def create_server(
     custom_groups_path: Path = DEFAULT_CUSTOM_GROUPS_PATH,
     conversation_contacts_path: Path = DEFAULT_CONVERSATION_CONTACTS_PATH,
     uploads_dir: Path = DEFAULT_UPLOADS_DIR,
+    sticker_favorites_path: Path | None = None,
 ):
     """创建并返回目标对象。"""
     app = Application(
@@ -1344,6 +1544,7 @@ def create_server(
         custom_groups_path=custom_groups_path,
         conversation_contacts_path=conversation_contacts_path,
         uploads_dir=uploads_dir,
+        sticker_favorites_path=sticker_favorites_path,
     )
 
     class Handler(MomoTalkRequestHandler):

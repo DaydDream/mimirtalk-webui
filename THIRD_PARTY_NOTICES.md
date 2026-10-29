@@ -1,52 +1,34 @@
 # 第三方资源声明
 
-本仓库的**源代码**以 [MIT 许可证](LICENSE) 发布。
+本项目有权许可的源代码采用MIT许可证，见 [LICENSE](LICENSE)。字体、游戏素材和第三方组件不因项目采用MIT而自动适用同一许可。
 
-本仓库同时包含或依赖以下第三方资源，其版权与许可归各自权利人所有，
-**不适用** MIT 许可证。
+## 当前运行字体
 
-## 1. 字体
-
-| 字体 | 用途 | 许可证 |
+| 字体 | 用途及处理 | 许可 |
 | --- | --- | --- |
-| Source Han Sans（思源黑体） | 正文与界面 | SIL Open Font License 1.1 |
-| Noto Serif SC（思源宋体 / Noto 衬线） | 角色名字体 | SIL Open Font License 1.1 |
+| Noto Sans SC | 正文与界面，保留官方完整可变TTF，100～900字重 | SIL Open Font License 1.1 |
+| Noto Serif SC | 发言人名字，由官方完整可变TTF实例化为静态700，不裁剪字符 | SIL Open Font License 1.1 |
 
-字体文件位于 `webui/frontend/assets/fonts/`。
+字体文件、完整版权与OFL文本位于 `webui/frontend/assets/fonts/`。固定版本、源文件与输出哈希见同目录 `manifest.json`。源码包另保留 `docs/font-sources/`，用于复现字体构建。
 
-SIL Open Font License 1.1 允许自由使用、修改与再分发，但要求：
+- [Noto Sans SC固定来源](https://github.com/google/fonts/tree/a85815a42757630ce188fdad368c2dfc444d4773/ofl/notosanssc)，许可附件 `NotoSansSC-OFL.txt`。
+- [Noto Serif SC固定来源](https://github.com/google/fonts/tree/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/notoserifsc)，许可附件 `NotoSerifSC-OFL.txt`。静态实例是修改版，未冒充原始可变文件。
 
-- 字体副本保留原始版权声明与许可文件
-- 不得单独出售字体本身
-- 修改后的版本不得使用保留字体名称（Reserved Font Name）
+字体不得作为独立商品出售，须保留版权与许可，并遵守OFL的修改及分发条件。完整条件以随附许可原文为准。本次源码与运行包不包含历史来源未核实的鸿蒙字体或旧字体归档。
 
-许可证全文见 <https://scripts.sil.org/OFL>。
+## 游戏素材
 
-## 2. 游戏素材
+头像、贴纸、气泡、背景、界面图片及部分联系人、角色数据来自《深空之眼》客户端或其衍生处理，相关权利属于各自权利人。本项目不主张拥有这些素材，项目MIT许可证不覆盖游戏素材。
 
-《深空之眼》（AetherGazer）相关的角色名称、头像、图标、贴纸、
-气泡组件、聊天背景及配置数据等，版权归其各自权利人所有。
+素材位于运行包 `assets_source/`、`webui/assets/`、`webui/frontend/assets/` 及相关数据文件中。去尾、缩放、提取或格式转换不改变原素材的权利归属。
 
-这些素材来自对游戏客户端的解包，位于：
+本项目为粉丝向二次创作与学习交流工具，与游戏官方无隶属关系。现有记录中未确认覆盖提取素材再分发的完整授权依据；免费、非商业说明及本声明本身不构成权利人授权。维护者决定保留素材正常分发，不代表取得额外授权。
 
-- `assets_source/`（发布包内）
-- `webui/data/`（素材索引与联系人数据）
-- `docs/reports/`（素材相关审计报告）
+## 运行时与Android组件
 
-本项目为**粉丝向二次创作与学习交流**用途：
+- Python及其标准库：运行包 `python-runtime/LICENSE.txt`。
+- Pillow：运行包 `python-runtime/Lib/site-packages/pillow-12.3.0.dist-info/` 中的许可附件。
+- Capacitor：MIT许可，安装npm依赖后可在对应依赖目录查阅；Android原生模板及启动资源沿用其适用许可。
+- Gradle Wrapper：遵循Gradle上游适用许可；该构建工具不改变应用源代码与资源的许可。
 
-- 不主张对上述素材的任何权利
-- 不将其用于商业目的
-- 如权利人提出异议，将立即移除相关素材
-
-## 3. 解包与处理工具
-
-`tools/` 目录下的脚本由本项目编写，以 MIT 许可证发布。
-
-脚本运行所需的第三方二进制工具（如 ffmpeg、vgmstream、hazuki 等）
-**未包含在本仓库中**，需由使用者自行获取，并遵守各自的许可条款。
-
-## 4. 代码
-
-除上述第三方资源外，本项目源码以 MIT 许可证发布，
-详见 [LICENSE](LICENSE)。
+源码构建使用的其他依赖应遵守各自许可证。接收者在其他项目中使用第三方资源前，应独立核实相应权利与条件。

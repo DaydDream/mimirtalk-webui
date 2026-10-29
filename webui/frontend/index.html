@@ -4,7 +4,36 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MimirTalk WebUI</title>
+    <script>
+      // 安卓外壳的主题偏好必须在样式与业务脚本之前应用，避免启动时先闪浅色。
+      (function () {
+        try {
+          var theme = window.localStorage.getItem("mimirtalk_webui.android_theme");
+          if (theme === "dark") document.documentElement.dataset.theme = "dark";
+        } catch (error) {
+          /* 隐私模式或存储不可用时保持浅色默认。 */
+        }
+      })();
+      // 运行模式由启动阶段显式注入：打包后的静态/离线端直接写入
+      // window.MIMIRTALK_PLATFORM_MODE = "static"，开发用静态服务器则以
+      // ?platform=static 传入。这里只做透传，不做任何网络探测，桌面上
+      // 后端未带标记时保持默认 web 模式，避免探测静态目录产生 404。
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var mode = params.get("platform");
+          if (mode) window.MIMIRTALK_PLATFORM_MODE = mode;
+          // 开发/测试用：?streaming-export=1 强制走低内存分片导出（安卓口径），
+          // 桌面端缺省仍按能力位 streaming_export=false 走整幅渲染（D10/D11）。
+          var streaming = params.get("streaming-export");
+          if (streaming === "1" || streaming === "0") window.MIMIRTALK_STREAMING_EXPORT = streaming;
+        } catch (error) {
+          /* 缺少 URLSearchParams 时保持默认 web 模式。 */
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="/src/styles.css" />
+    <link rel="stylesheet" href="/src/shell/android-shell.css" />
   </head>
   <body>
     <div id="app" class="app-shell">
@@ -72,31 +101,63 @@
                       <label class="composer-speaker">
                         <select id="speakerPicker" aria-label="选择发言人"></select>
                       </label>
+                      <button
+                        id="androidSpeakerButton"
+                        class="android-speaker-button"
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-controls="androidSpeakerPanel"
+                        title="选择发言人"
+                        aria-label="选择发言人"
+                      >
+                        <span id="androidSpeakerButtonText">发言人</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                          <path d="m7 10 5 5 5-5"></path>
+                        </svg>
+                      </button>
+                      <div
+                        id="androidSpeakerPanel"
+                        class="android-speaker-panel hidden"
+                        role="listbox"
+                        aria-label="选择发言人"
+                        aria-hidden="true"
+                      ></div>
                       <textarea id="directMessageInput" rows="1" maxlength="2000" placeholder="输入对话内容"></textarea>
+                      <!-- 安卓外壳把它排到输入行右侧作为发送按钮（data-hook=composer-send）；桌面端隐藏。 -->
+                      <button id="chatSendButton" class="composer-send-button" type="submit" data-hook="composer-send" title="发送" aria-label="发送">发送</button>
                       <input id="chatImageInput" type="file" accept="image/png,image/jpeg" hidden />
-                      <button id="chatImageButton" class="composer-save-button composer-image-button" type="button" title="发送图片" aria-label="发送图片">
-                        <span class="composer-image-icon" aria-hidden="true">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
-                            <rect x="4" y="5" width="16" height="14" rx="2"></rect>
-                            <circle cx="9" cy="10" r="1.5"></circle>
-                            <path d="m5.5 17 4.2-4.2 3.1 3.1 2.1-2.1 3.6 3.2"></path>
-                          </svg>
-                        </span>
-                      </button>
-                      <button id="chatStickerButton" class="composer-save-button composer-sticker-button" type="button" title="选择表情" aria-label="选择表情">
-                        <span class="composer-sticker-icon" aria-hidden="true">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
-                            <circle cx="12" cy="12" r="8.5"></circle>
-                            <path d="M8.5 10h.01" stroke-width="2.4"></path>
-                            <path d="M15.5 10h.01" stroke-width="2.4"></path>
-                            <path d="M8.2 13.6c.9 1.5 2.2 2.3 3.8 2.3s2.9-.8 3.8-2.3"></path>
-                          </svg>
-                        </span>
-                      </button>
+                      <!-- 安卓外壳把这两个工具按钮排到输入区第二行；桌面用 display:contents 保持原网格列不变。 -->
+                      <div class="composer-tools">
+                        <button id="chatImageButton" class="composer-save-button composer-image-button" type="button" title="发送图片" aria-label="发送图片">
+                          <span class="composer-image-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                              <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+                              <circle cx="9" cy="10" r="1.5"></circle>
+                              <path d="m5.5 17 4.2-4.2 3.1 3.1 2.1-2.1 3.6 3.2"></path>
+                            </svg>
+                          </span>
+                        </button>
+                        <button id="chatStickerButton" class="composer-save-button composer-sticker-button" type="button" title="选择表情" aria-label="选择表情">
+                          <span class="composer-sticker-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                              <circle cx="12" cy="12" r="8.5"></circle>
+                              <path d="M8.5 10h.01" stroke-width="2.4"></path>
+                              <path d="M15.5 10h.01" stroke-width="2.4"></path>
+                              <path d="M8.2 13.6c.9 1.5 2.2 2.3 3.8 2.3s2.9-.8 3.8-2.3"></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
                       <button id="saveChatImageButton" class="composer-save-button" type="button" title="保存 PNG 聊天长图" aria-label="保存 PNG 聊天长图">
                         <span aria-hidden="true">⇩</span>
                       </button>
                     </form>
+                    <!--
+                      安卓外壳的表情面板宿主：点输入条的表情按钮后，素材弹窗整块挪进这里，
+                      在输入条下方内联展开（不再作为全屏遮罩弹窗）。桌面端该容器始终为空。
+                    -->
+                    <div id="androidStickerPanel" class="android-sticker-panel hidden" role="region" aria-label="表情面板"></div>
                     <div id="emptyMessageModal" class="chat-alert hidden" role="alertdialog" aria-modal="true" aria-labelledby="emptyMessageModalText">
                       <div class="chat-alert-panel">
                         <p id="emptyMessageModalText">输入不能为空</p>
@@ -224,11 +285,467 @@
       </main>
     </div>
 
+    <!--
+      安卓三页签外壳（B1.5）。桌面端保持上方三栏编辑器结构不变；
+      只有安卓原生外壳才展示本容器，并把桌面外壳里的业务节点（会话列表、
+      联系人、编辑 / 预览）搬进这里的占位容器复用（约束 §3.1 第 7 条）。
+    -->
+    <div id="androidShell" class="android-shell hidden">
+      <header class="android-appbar">
+        <button id="androidBackButton" class="android-icon-button android-back hidden" type="button" aria-label="返回">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7"></path>
+          </svg>
+        </button>
+        <div class="android-appbar-heading">
+          <h1 id="androidAppbarTitle" class="android-appbar-title">弥弥尔通讯</h1>
+          <span
+            id="androidAppbarSubtitle"
+            class="android-appbar-subtitle hidden"
+            data-hook="conversation-subtitle"
+          ></span>
+        </div>
+        <div id="androidAppbarActions" class="android-appbar-actions">
+          <button
+            id="androidAddSystemMessageButton"
+            class="android-icon-button android-appbar-action hidden"
+            type="button"
+            aria-label="添加系统消息"
+            title="添加系统消息"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M4.5 5.5h15v10h-8l-4 3v-3h-3z"></path>
+              <path d="M12 8.5v4.5"></path>
+              <path d="M9.75 10.75h4.5"></path>
+            </svg>
+          </button>
+          <button
+            id="androidDrawerButton"
+            class="android-icon-button android-appbar-action hidden"
+            type="button"
+            aria-label="会话编辑"
+            title="会话编辑"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M4 6h16"></path>
+              <path d="M4 12h16"></path>
+              <path d="M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!--
+        全局个人显示设置条（图 2 横置）：常驻在所有分页上方，方便用户在任何页
+        全局调整管理员头像 / 聊天气泡，右侧预留夜间日间、总搜索、更新信息入口。
+        avatar / bubble 两个槽位在挂载时由外壳层搬入业务按钮（保留原事件处理）。
+      -->
+      <div class="android-display-bar" aria-label="个人显示设置">
+        <div id="androidDisplayAvatarSlot" class="android-display-slot" aria-label="管理员头像" title="管理员头像"></div>
+        <span class="android-display-name">管理员</span>
+        <div id="androidDisplayBubbleSlot" class="android-display-slot" aria-label="聊天气泡" title="聊天气泡"></div>
+        <div class="android-display-actions">
+          <button id="androidThemeToggle" class="android-display-action android-theme-toggle" type="button" data-android-action="theme" aria-label="切换到深色模式" title="切换到深色模式" aria-pressed="false">
+            <svg class="android-theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2.8v2.1M12 19.1v2.1M2.8 12h2.1M19.1 12h2.1M5.5 5.5l1.5 1.5M17 17l1.5 1.5M18.5 5.5 17 7M7 17l-1.5 1.5"></path>
+            </svg>
+            <svg class="android-theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M20 14.5A8 8 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z"></path>
+            </svg>
+          </button>
+          <button class="android-display-action" type="button" data-android-action="update-info" aria-label="应用更新信息" title="应用更新信息">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5"></circle>
+              <path d="M12 11v5.5"></path>
+              <path d="M12 7.8h.01" stroke-width="2.4"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="android-views">
+        <section id="androidViewConversations" class="android-view" data-android-view="conversations" aria-label="会话列表">
+          <!-- 页面内搜索即总搜索（角色 + 聊天记录）的预留入口（视觉稿 ①）。 -->
+          <div class="android-search-wrap">
+            <button class="android-searchbox" type="button" data-hook="global-search" aria-label="搜索角色或聊天记录">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="m20 20-4.4-4.4"></path>
+              </svg>
+              <span>搜索角色或聊天记录</span>
+            </button>
+          </div>
+          <div id="androidConversationsHost" class="android-host"></div>
+        </section>
+
+        <section id="androidViewSearch" class="android-view android-view-search hidden" data-android-view="search" aria-label="全局搜索">
+          <div class="android-search-bar">
+            <label class="android-search-field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="m20 20-4.4-4.4"></path>
+              </svg>
+              <input id="androidSearchInput" type="search" autocomplete="off" spellcheck="false" placeholder="搜索角色、群组和聊天记录" aria-label="搜索角色、群组和聊天记录" />
+              <button id="androidSearchClear" class="android-search-clear hidden" type="button" aria-label="清空搜索">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                  <path d="M6 6l12 12"></path>
+                  <path d="M18 6 6 18"></path>
+                </svg>
+              </button>
+            </label>
+            <button id="androidSearchCancel" class="android-search-cancel" type="button">取消</button>
+          </div>
+          <div id="androidSearchResults" class="android-search-results" role="list" aria-live="polite"></div>
+        </section>
+
+        <section id="androidViewContacts" class="android-view hidden" data-android-view="contacts" aria-label="联系人列表">
+          <div id="androidContactsHost" class="android-host android-contacts-body"></div>
+        </section>
+
+        <section id="androidViewSettings" class="android-view android-view-settings hidden" data-android-view="settings" aria-label="设置">
+          <!-- 设置首页：只放各功能入口的列表，项目目录作为其中一项进入子页。 -->
+          <div id="androidSettingsList" class="android-settings-list">
+            <div class="android-settings-band"></div>
+            <section class="android-settings-group">
+              <h2 class="android-settings-group-title">内容</h2>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-settings-entry="projects">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M3.5 6.5h6l2 2h9v9.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"></path>
+                    <path d="M3.5 9.5h17"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">项目目录</span>
+                <span id="androidProjectCount" class="android-settings-row-value"></span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+              <div class="android-settings-row android-settings-row-static" data-hook="settings-row">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M12 3.5v4"></path>
+                    <path d="M12 16.5v4"></path>
+                    <path d="M4.9 7.7l3.4 2"></path>
+                    <path d="M15.7 14.3l3.4 2"></path>
+                    <path d="M4.9 16.3l3.4-2"></path>
+                    <path d="M15.7 9.7l3.4-2"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">使用模式</span>
+                <div class="android-segmented android-mode-switch" role="tablist" aria-label="使用模式">
+                  <button type="button" role="tab" data-android-mode="local" aria-selected="true">本地编辑</button>
+                  <button type="button" role="tab" data-android-mode="ai" aria-selected="false">AI 对话</button>
+                </div>
+              </div>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="profile">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <circle cx="12" cy="8.5" r="3.6"></circle>
+                    <path d="M5 19.5a7 7 0 0 1 14 0"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">个人资料</span>
+                <span class="android-settings-row-value">未设置</span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="ai-endpoint">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M7 17.5h10a4 4 0 0 0 .5-7.97A5.5 5.5 0 0 0 6.7 8.6A3.9 3.9 0 0 0 7 17.5z"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">AI 接口设置</span>
+                <span class="android-settings-row-value">占位</span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+            </section>
+
+            <div class="android-settings-band"></div>
+            <section class="android-settings-group">
+              <h2 class="android-settings-group-title">显示与工具</h2>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="export-overview">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M12 4v10"></path>
+                    <path d="m8 10 4 4 4-4"></path>
+                    <path d="M5 19h14"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">导出长图</span>
+                <span id="androidExportCount" class="android-settings-row-value">0 个</span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+            </section>
+
+            <div class="android-settings-band"></div>
+            <section class="android-settings-group">
+              <h2 class="android-settings-group-title">关于</h2>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="bug-folder">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M3.5 7.5h6l2 2h9v9.5a1.5 1.5 0 0 1-1.5 1.5h-14A1.5 1.5 0 0 1 3.5 19z"></path>
+                    <path d="M3.5 7.5V6A1.5 1.5 0 0 1 5 4.5h4l2 2h8A1.5 1.5 0 0 1 20.5 8v1.5"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">Bug 记录文件夹</span>
+                <span id="androidBugFolderValue" class="android-settings-row-value">未设置</span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="check-update">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3"></path>
+                    <path d="M19.5 5v4h-4"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">检查更新</span>
+                <span class="android-settings-row-value"></span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="feedback">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">意见反馈</span>
+                <span id="androidFeedbackValue" class="android-settings-row-value"></span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+              <button class="android-settings-row" type="button" data-hook="settings-row" data-android-action="update-info">
+                <span class="android-settings-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <circle cx="12" cy="12" r="8.5"></circle>
+                    <path d="M12 11v5.5"></path>
+                    <path d="M12 7.8h.01" stroke-width="2.4"></path>
+                  </svg>
+                </span>
+                <span class="android-settings-row-label">关于与更新信息</span>
+                <span id="androidVersionValue" class="android-settings-row-value">未知</span>
+                <span class="android-settings-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                    <path d="m9 5 7 7-7 7"></path>
+                  </svg>
+                </span>
+              </button>
+            </section>
+          </div>
+
+          <!-- 项目目录子页：从「项目目录」入口进入，承载安卓化项目列表与删除。 -->
+          <div id="androidSettingsProjectsPage" class="android-settings-page hidden">
+            <div class="android-subpage-bar">
+              <button id="androidSettingsProjectsBack" class="android-icon-button" type="button" aria-label="返回设置">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                  <path d="M15 5l-7 7 7 7"></path>
+                </svg>
+              </button>
+              <h2 class="android-subpage-title">项目目录</h2>
+            </div>
+            <div id="androidProjectHost" class="android-project-host"></div>
+          </div>
+
+          <div id="androidSettingsFeedbackPage" class="android-settings-page hidden">
+            <div class="android-subpage-bar">
+              <button class="android-icon-button" type="button" data-android-subpage-back="list" aria-label="返回设置">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                  <path d="M15 5l-7 7 7 7"></path>
+                </svg>
+              </button>
+              <h2 class="android-subpage-title">意见反馈</h2>
+            </div>
+            <div class="android-settings-content">
+              <section class="android-settings-group">
+                <button class="android-settings-row" type="button" data-feedback-copy="805865625">
+                  <span class="android-settings-row-label">沟通群群号</span>
+                  <span class="android-settings-row-value">805865625</span>
+                </button>
+                <button class="android-settings-row" type="button" data-feedback-copy="3085304196@qq.com">
+                  <span class="android-settings-row-label">个人邮箱</span>
+                  <span class="android-settings-row-value">3085304196@qq.com</span>
+                </button>
+              </section>
+            </div>
+          </div>
+
+          <div id="androidSettingsUpdatePage" class="android-settings-page hidden">
+            <div class="android-subpage-bar">
+              <button class="android-icon-button" type="button" data-android-subpage-back="list" aria-label="返回设置">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                  <path d="M15 5l-7 7 7 7"></path>
+                </svg>
+              </button>
+              <h2 class="android-subpage-title">关于与更新信息</h2>
+            </div>
+            <div class="android-settings-content">
+              <section class="android-settings-group">
+                <div class="android-settings-row android-settings-row-static">
+                  <span class="android-settings-row-label">APK 版本</span>
+                  <span id="androidAboutApkVersion" class="android-settings-row-value">未知</span>
+                </div>
+                <div class="android-settings-row android-settings-row-static">
+                  <span class="android-settings-row-label">WebUI 资源版本</span>
+                  <span id="androidAboutWebuiVersion" class="android-settings-row-value">1.1.1</span>
+                </div>
+                <div class="android-settings-row android-settings-row-static">
+                  <span class="android-settings-row-label">热更新包</span>
+                  <span id="androidAboutHotupdateVersion" class="android-settings-row-value">尚未启用</span>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div id="androidSettingsExportPage" class="android-settings-page hidden">
+            <div class="android-subpage-bar">
+              <button class="android-icon-button" type="button" data-android-subpage-back="list" aria-label="返回设置">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                  <path d="M15 5l-7 7 7 7"></path>
+                </svg>
+              </button>
+              <h2 class="android-subpage-title">导出长图总览</h2>
+            </div>
+            <div class="android-settings-content">
+              <p id="androidExportFolderLabel" class="android-settings-note">导出位置：Pictures/MimirTalk</p>
+              <div id="androidExportOverviewList" class="android-export-overview" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="androidViewConversation" class="android-view android-view-conversation hidden" data-android-view="conversation" aria-label="会话">
+          <div id="androidConversationHost" class="android-host"></div>
+
+          <!--
+            会话编辑抽屉：会话详情默认铺满聊天界面，从右边缘往左滑（或点右侧把手）
+            拉出本抽屉，抽屉里承载桌面编辑面板（编辑列）。
+          -->
+          <div id="androidDrawerEdge" class="android-drawer-edge" aria-hidden="true"></div>
+          <button id="androidDrawerHandle" class="android-drawer-handle" type="button" aria-label="打开会话编辑" title="会话编辑"></button>
+          <div id="androidDrawerScrim" class="android-drawer-scrim" data-open="false"></div>
+          <aside id="androidConversationDrawer" class="android-drawer" data-open="false" aria-label="会话编辑面板">
+            <header class="android-drawer-header">
+              <h2 class="android-drawer-title">编辑会话</h2>
+              <button id="androidDrawerClose" class="android-icon-button" type="button" aria-label="收起编辑">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                  <path d="M6 6l12 12"></path>
+                  <path d="M18 6 6 18"></path>
+                </svg>
+              </button>
+            </header>
+            <div id="androidConversationDrawerHost" class="android-drawer-host"></div>
+          </aside>
+        </section>
+
+        <!-- 群组管理页（新增，视觉稿 ⑥）：由联系人 · 群组点击进入，内容由业务层渲染。 -->
+        <section id="androidViewGroupInfo" class="android-view android-view-profile hidden" data-android-view="group-info" aria-label="聊天信息">
+          <div id="androidGroupInfoHost" class="android-profile-host"></div>
+        </section>
+
+        <!-- 全屏成员选择页（B1.6 §3.1）：邀请 / 新建 / 移除共用，全面屏覆盖内容区，内容由业务层渲染。 -->
+        <section id="androidViewGroupPicker" class="android-view android-view-picker hidden" data-android-view="group-picker" aria-label="选择成员">
+          <div id="androidGroupPickerHost" class="android-picker-host"></div>
+        </section>
+
+        <!-- 角色信息页（新增，视觉稿 ⑦）：由联系人 · 角色点击进入，内容由业务层渲染。 -->
+        <section id="androidViewCharacterInfo" class="android-view android-view-profile hidden" data-android-view="character-info" aria-label="角色信息">
+          <div id="androidCharacterInfoHost" class="android-profile-host"></div>
+        </section>
+      </div>
+
+      <nav class="android-tabbar" role="tablist" aria-label="主导航">
+        <button class="android-tab" type="button" role="tab" data-android-tab="conversations" aria-selected="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+            <path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>会话</span>
+        </button>
+        <button class="android-tab" type="button" role="tab" data-android-tab="contacts" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+            <circle cx="9" cy="8" r="3.2"></circle>
+            <path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path>
+            <path d="M16 5.2a3.2 3.2 0 0 1 0 6.1"></path>
+            <path d="M17.4 14.2a5.5 5.5 0 0 1 3.1 4.8"></path>
+          </svg>
+          <span>联系人</span>
+        </button>
+        <button class="android-tab" type="button" role="tab" data-android-tab="settings" aria-selected="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 3.5v2.2M12 18.3v2.2M4.9 7.7l1.9 1.1M17.2 15.2l1.9 1.1M4.9 16.3l1.9-1.1M17.2 8.8l1.9-1.1"></path>
+          </svg>
+          <span>设置</span>
+        </button>
+      </nav>
+
+      <div id="androidExportViewer" class="android-export-viewer hidden" role="dialog" aria-modal="true" aria-label="查看导出长图" aria-hidden="true">
+        <header class="android-export-viewer-bar">
+          <button id="androidExportViewerClose" class="android-icon-button" type="button" aria-label="关闭大图">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+              <path d="M6 6l12 12"></path>
+              <path d="M18 6 6 18"></path>
+            </svg>
+          </button>
+          <div class="android-export-viewer-actions">
+            <button id="androidExportViewerZoomOut" class="android-icon-button" type="button" aria-label="缩小">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" focusable="false" aria-hidden="true">
+                <path d="M6 12h12"></path>
+              </svg>
+            </button>
+            <button id="androidExportViewerReset" class="android-icon-button" type="button" aria-label="重置缩放">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">
+                <path d="M4 9V4h5"></path>
+                <path d="M20 9V4h-5"></path>
+                <path d="M4 15v5h5"></path>
+                <path d="M20 15v5h-5"></path>
+              </svg>
+            </button>
+            <button id="androidExportViewerZoomIn" class="android-icon-button" type="button" aria-label="放大">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" focusable="false" aria-hidden="true">
+                <path d="M12 6v12"></path>
+                <path d="M6 12h12"></path>
+              </svg>
+            </button>
+          </div>
+        </header>
+        <div id="androidExportViewerStage" class="android-export-viewer-stage">
+          <div class="android-export-viewer-canvas">
+            <img id="androidExportViewerImage" alt="导出长图" draggable="false" />
+          </div>
+          <p id="androidExportViewerStatus" class="android-export-viewer-status hidden"></p>
+        </div>
+      </div>
+    </div>
+
     <div id="assetModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="assetModalTitle">
       <div class="modal-panel">
         <header class="modal-header">
           <div>
-            <p class="eyebrow">Asset Library</p>
             <h2 id="assetModalTitle">选择素材</h2>
           </div>
           <button id="closeAssetModal" class="icon-button" type="button" aria-label="关闭">×</button>
@@ -244,6 +761,8 @@
           <button id="assetNextPage" type="button">下一页</button>
         </div>
         <p id="assetModalStatus" class="modal-status"></p>
+        <!-- 安卓表情弹窗底部分组栏（爱心收藏 + 表情目录）；桌面端保持隐藏。 -->
+        <div id="assetStickerBar" class="asset-sticker-bar hidden" role="tablist" aria-label="表情分组"></div>
       </div>
     </div>
 
@@ -301,6 +820,13 @@
     </div>
 
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+    <script src="/src/dev/logger.js" defer></script>
+    <script src="/src/platform/index.js" defer></script>
+    <script src="/src/platform/web.js" defer></script>
+    <script src="/src/platform/static.js" defer></script>
+    <script src="/src/platform/android.js" defer></script>
+    <script src="/src/png-stream.js" defer></script>
+    <script src="/src/shell/index.js" defer></script>
     <script src="/src/app.js" defer></script>
   </body>
 </html>

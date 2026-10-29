@@ -1,0 +1,12 @@
+{
+  "appId": "io.github.dayddream.mimirtalk",
+  "appName": "弥弥尔通讯",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": true
+  }
+}

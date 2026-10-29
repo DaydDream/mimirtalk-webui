@@ -1,6 +1,5 @@
 {
   "version": 1,
-  "note": "内置群组成员映射与用户改名覆盖。member_ids 使用 chat_contacts.json 中 hero 角色的整数 id；group_names 保存内置群的用户自定义名称；deleted_group_ids 记录通过群聊管理删除的内置群。WebUI 的联系人列表、发言人下拉、群头像拼图和 PNG 导出会自动读取这里。",
   "groups": {
     "9001": [
       1084,

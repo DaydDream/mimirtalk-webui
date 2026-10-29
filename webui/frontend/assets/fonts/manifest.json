@@ -1,16 +1,193 @@
 [
   {
-    "asset": "fonts/sourcehansans.ys",
-    "font_name": "SourceHanSans",
-    "output": "mimirtalk_webui/frontend/assets/fonts/source-han-sans.ttf",
-    "bytes": 1847644,
-    "role": "正文与界面"
+    "font_name": "Noto Sans SC",
+    "role": "正文与界面",
+    "css_alias": "MomoTalk Sans",
+    "output": "webui/frontend/assets/fonts/noto-sans-sc-variable.ttf",
+    "bytes": 17772300,
+    "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da",
+    "variable": true,
+    "weight": [
+      100,
+      900
+    ],
+    "subset": false,
+    "names": {
+      "0": [
+        "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+      ],
+      "1": [
+        "Noto Sans SC Thin"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "4": [
+        "Noto Sans SC Thin"
+      ],
+      "5": [
+        "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+      ],
+      "6": [
+        "NotoSansSC-Thin"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+      ],
+      "14": [
+        "http://scripts.sil.org/OFL"
+      ],
+      "16": [
+        "Noto Sans SC"
+      ],
+      "17": [
+        "Thin"
+      ]
+    },
+    "processing": "unchanged complete official variable font",
+    "source": {
+      "repository": "https://github.com/google/fonts",
+      "commit": "a85815a42757630ce188fdad368c2dfc444d4773",
+      "path": "docs/font-sources/google-fonts/a85815a42757630ce188fdad368c2dfc444d4773/notosanssc/NotoSansSC[wght].ttf",
+      "url": "https://raw.githubusercontent.com/google/fonts/a85815a42757630ce188fdad368c2dfc444d4773/ofl/notosanssc/NotoSansSC%5Bwght%5D.ttf",
+      "file": "NotoSansSC[wght].ttf",
+      "bytes": 17772300,
+      "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da",
+      "names": {
+        "0": [
+          "(c) 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'."
+        ],
+        "1": [
+          "Noto Sans SC Thin"
+        ],
+        "2": [
+          "Regular"
+        ],
+        "4": [
+          "Noto Sans SC Thin"
+        ],
+        "5": [
+          "Version 2.004-H2;hotconv 1.0.118;makeotfexe 2.5.65603"
+        ],
+        "6": [
+          "NotoSansSC-Thin"
+        ],
+        "13": [
+          "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+        ],
+        "14": [
+          "http://scripts.sil.org/OFL"
+        ],
+        "16": [
+          "Noto Sans SC"
+        ],
+        "17": [
+          "Thin"
+        ]
+      }
+    },
+    "license": {
+      "name": "SIL Open Font License 1.1",
+      "file": "NotoSansSC-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/a85815a42757630ce188fdad368c2dfc444d4773/ofl/notosanssc/OFL.txt",
+      "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9",
+      "reserved_names": [
+        "Source"
+      ],
+      "modified_family_uses_reserved_name": false
+    },
+    "generator": "webui/tools/build_fonts.py",
+    "fonttools_version": "4.67.0"
   },
   {
-    "asset": "C:\\Windows\\Fonts\\NotoSerifSC-VF.ttf",
     "font_name": "Noto Serif SC",
-    "output": "mimirtalk_webui/frontend/assets/fonts/noto-serif-sc-vf.ttf",
-    "bytes": 25129160,
-    "role": "名字字体；替代缺字的游戏 serif 子集"
+    "role": "说话人名字",
+    "css_alias": "MomoTalk Serif",
+    "output": "webui/frontend/assets/fonts/noto-serif-sc-bold.ttf",
+    "bytes": 14853636,
+    "sha256": "9069ce8cdc29a148658dd61d5b0b43d3f8f3f11013d9031bb3686027dfb264e0",
+    "variable": false,
+    "weight": 700,
+    "subset": false,
+    "names": {
+      "0": [
+        "(c) 2017-2024 Adobe (http://www.adobe.com/)."
+      ],
+      "1": [
+        "Noto Serif SC"
+      ],
+      "2": [
+        "Bold"
+      ],
+      "4": [
+        "Noto Serif SC Bold"
+      ],
+      "5": [
+        "Version 2.003-H1;hotconv 1.1.1;makeotfexe 2.6.0"
+      ],
+      "6": [
+        "NotoSerifSC-Bold"
+      ],
+      "13": [
+        "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ],
+      "16": [],
+      "17": []
+    },
+    "processing": "full static wght=700; updateFontNames=True; recalcTimestamp=False; no subset",
+    "source": {
+      "repository": "https://github.com/google/fonts",
+      "commit": "8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5",
+      "path": "docs/font-sources/google-fonts/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/notoserifsc/NotoSerifSC[wght].ttf",
+      "url": "https://raw.githubusercontent.com/google/fonts/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/notoserifsc/NotoSerifSC%5Bwght%5D.ttf",
+      "file": "NotoSerifSC[wght].ttf",
+      "bytes": 25125512,
+      "sha256": "050080d9255a86808f2945bffac582b31ef32bc36411ce29563b4961670c66f9",
+      "names": {
+        "0": [
+          "(c) 2017-2024 Adobe (http://www.adobe.com/)."
+        ],
+        "1": [
+          "Noto Serif SC ExtraLight"
+        ],
+        "2": [
+          "Regular"
+        ],
+        "4": [
+          "Noto Serif SC ExtraLight"
+        ],
+        "5": [
+          "Version 2.003-H1;hotconv 1.1.1;makeotfexe 2.6.0"
+        ],
+        "6": [
+          "NotoSerifSC-ExtraLight"
+        ],
+        "13": [
+          "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org"
+        ],
+        "14": [
+          "https://openfontlicense.org"
+        ],
+        "16": [
+          "Noto Serif SC"
+        ],
+        "17": [
+          "ExtraLight"
+        ]
+      }
+    },
+    "license": {
+      "name": "SIL Open Font License 1.1",
+      "file": "NotoSerifSC-OFL.txt",
+      "url": "https://raw.githubusercontent.com/google/fonts/8b0a1d0f5983c89bc2b93f1b5fb55f9e252744b5/ofl/notoserifsc/OFL.txt",
+      "sha256": "5e0da210fb04058a8c0087985d2d456b931c2579811a49655721d3cf0c36b6d6",
+      "reserved_names": [],
+      "modified_family_uses_reserved_name": false
+    },
+    "generator": "webui/tools/build_fonts.py",
+    "fonttools_version": "4.67.0"
   }
 ]

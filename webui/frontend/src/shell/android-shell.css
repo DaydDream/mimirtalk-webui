@@ -1,0 +1,3770 @@
+/*
+ * 安卓三页签外壳样式（B1.5）。
+ *
+ * 只作用于 #androidShell 内部与 html[data-shell="android"] 下的结构差异，
+ * 桌面三栏外壳的样式（styles.css）保持原样，互不影响（约束 §3.1 第 7 条）。
+ * 竖屏手机形态：主设计宽 390px，点击区不小于 44px，不依赖 hover / 右键 / 拖拽。
+ *
+ * 结构（自上而下）：
+ *   appbar（标题 / 返回 / 会话编辑入口）
+ *   display-bar（全局个人显示设置：管理员头像、聊天气泡、夜间日间、总搜索、更新信息）
+ *   views（会话 / 联系人 / 设置 / 会话详情）
+ *     - 会话详情的编辑面板收进右侧抽屉，从右边缘向左滑（或点把手）拉出；
+ *     - 设置页是功能入口列表，项目目录在子页。
+ *   tabbar（底部三页签）
+ *
+ * 个人显示设置条只在会话 / 联系人两个分页出现；设置页与会话详情不显示。
+ */
+
+.android-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  /* 用纵向弹性布局而非固定行网格：会话详情会隐藏显示条与页签，
+     弹性布局能自动把剩余高度全部让给 views，不会塌成 0 高。 */
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.android-shell.hidden {
+  display: none;
+}
+
+/* 安卓外壳以 z-index 40 盖在桌面三栏之上。外壳内触发的桌面弹窗（群成员管理）
+   与 toast 默认层级（20 / 30）低于外壳，会被外壳拦截点击，这里统一抬到外壳之上。 */
+html[data-shell="android"] .modal {
+  z-index: 60;
+}
+
+/* 占位 / 状态提示统一在屏幕正中央显示（B3-A2 行 10）。 */
+html[data-shell="android"] .toast {
+  z-index: 70;
+  top: 50%;
+  right: 50%;
+  bottom: auto;
+  max-width: min(86%, 320px);
+  text-align: center;
+  transform: translate(50%, -50%);
+}
+
+/* ---------- 顶栏 ---------- */
+
+.android-appbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 52px;
+  padding: 6px 12px;
+  padding-top: calc(6px + env(safe-area-inset-top));
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-appbar-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-icon-button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+}
+
+.android-icon-button:active {
+  background: var(--panel-soft);
+}
+
+.android-icon-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- 全局个人显示设置条（图 2 横置） ---------- */
+
+.android-display-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 7px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-display-slot {
+  /* 头像 .avatar 是绝对定位，槽位必须自身定位，否则会相对 fixed 外壳铺满整屏。 */
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+#androidDisplayBubbleSlot {
+  width: 48px;
+}
+
+/* 桌面预览侧栏里的两个业务按钮搬进本槽位后，去掉绝对定位与预览容器尺寸。 */
+.android-display-slot .rail-profile,
+.android-display-slot .rail-bubble {
+  position: static;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  transform: none;
+}
+
+.android-display-slot .rail-profile {
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--android-surface-strong);
+}
+
+.android-display-slot .rail-profile .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+}
+
+.android-display-slot .rail-profile:focus-visible,
+.android-display-slot .rail-bubble:focus-visible {
+  outline: 2px solid rgba(53, 95, 218, 0.72);
+  outline-offset: 2px;
+}
+
+.android-display-slot .rail-bubble {
+  border-radius: 8px;
+  background: var(--panel-soft);
+}
+
+.android-display-slot .rail-bubble img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.android-display-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.android-display-action {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+}
+
+.android-display-action:active {
+  background: var(--panel-soft);
+}
+
+.android-display-action svg {
+  width: 21px;
+  height: 21px;
+}
+
+.android-display-action[aria-pressed="true"] {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.android-theme-icon-moon {
+  display: none;
+}
+
+html[data-theme="dark"] .android-theme-icon-sun {
+  display: none;
+}
+
+html[data-theme="dark"] .android-theme-icon-moon {
+  display: block;
+}
+
+/* 个人显示设置条只挂在会话 / 联系人分页；设置页与会话详情不显示。 */
+.android-shell[data-android-view="settings"] .android-display-bar,
+.android-shell[data-android-view="conversation"] .android-display-bar {
+  display: none;
+}
+
+/* 底部三页签只在会话列表 / 联系人 / 设置三个主页面出现；所有功能呼出页
+   （会话详情、角色信息、群组管理、成员选择、设置子页）统一由外壳维护的
+   data-android-main-view 收口，后续新增呼出页只消费该标记，不再逐页加规则。 */
+.android-shell[data-android-main-view="false"] .android-tabbar {
+  display: none;
+}
+
+/* ---------- 分页容器 ---------- */
+
+.android-views {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.android-view {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+}
+
+.android-view.hidden {
+  display: none !important;
+}
+
+.android-host {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* ---------- 会话分页：会话卡列表（图 1） ---------- */
+
+.android-shell #androidConversationsHost {
+  padding: 10px 0 18px;
+}
+
+/*
+ * 会话卡列表原本长在预览电话里，尺寸依赖电话容器的 cq 单位；搬到整屏后按手机
+ * 宽度用 px 重排，保留同一套游戏卡片素材（边框九宫格 + 名字下划线）。
+ */
+.android-shell #contactList {
+  width: 100%;
+  scroll-snap-type: none;
+}
+
+.android-shell .side-entry {
+  height: 100px;
+  min-height: 100px;
+  contain-intrinsic-size: auto 100px;
+}
+
+.android-shell .side-entry::before {
+  top: 4%;
+  left: 1.6%;
+  width: 96.8%;
+  height: 92%;
+  border-image-width: 22px 22px 22px 32px;
+}
+
+.android-shell .side-entry.active {
+  transform: translateX(2px);
+}
+
+.android-shell .side-entry:focus-visible {
+  outline: 2px solid rgba(72, 107, 206, 0.7);
+  outline-offset: -2px;
+}
+
+.android-shell .side-entry-text strong {
+  font-size: 17px;
+}
+
+.android-shell .side-entry-text small {
+  font-size: 13px;
+}
+
+.android-shell .side-entry-avatar .avatar {
+  font-size: 15px;
+}
+
+.android-shell .side-entry-action .side-entry-avatar .avatar {
+  font-size: 30px;
+}
+
+/* 移出会话：视觉圆点在 26px，命中区按触屏要求放大到 44px。 */
+.android-shell .side-entry-remove {
+  top: 2px;
+  right: 3px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  min-width: 0;
+  aspect-ratio: auto;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--android-muted);
+  font-size: 17px;
+  line-height: 1;
+  opacity: 1;
+}
+
+/* ---------- 联系人分页：子目录分组列表（图 3） ---------- */
+
+.android-contacts-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.android-contacts-body #editorContactSearch {
+  flex: 0 0 auto;
+  min-height: 44px;
+}
+
+.android-contacts-body #editorContactFilters {
+  flex: 0 0 auto;
+}
+
+.android-contacts-body .editor-contact-filter {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.android-contacts-body .editor-contact-list {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.android-contacts-body .editor-contact-card {
+  grid-template-columns: 40px minmax(0, 1fr);
+  min-height: 56px;
+  padding: 8px 10px;
+}
+
+.android-contacts-body .editor-contact-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.android-contacts-body .editor-contact-name {
+  font-size: 15px;
+}
+
+.android-contacts-body .editor-contact-badge,
+.android-contacts-body .editor-contact-meta {
+  font-size: 12px;
+}
+
+.contact-directory + .contact-directory {
+  margin-top: 14px;
+}
+
+.contact-directory-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 2px 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.contact-directory-count {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.contact-directory-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- 会话详情页（预览 / 编辑） ---------- */
+
+.android-view-conversation {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.android-view-conversation .android-host {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+}
+
+.android-shell main.workspace {
+  grid-template-columns: minmax(0, 1fr);
+  height: 100%;
+}
+
+/*
+ * 会话卡列表已搬去「会话」分页、管理员头像与气泡入口已搬去顶部显示条，
+ * 预览电话里只留聊天区并铺满整块画布，避免竖屏下出现空列。
+ */
+.android-shell #androidViewConversation .momotalk-rail,
+.android-shell #androidViewConversation .momotalk-side {
+  display: none;
+}
+
+.android-shell #androidViewConversation .momotalk-chat {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * styles.css 的移动端断点（max-width: 900px）会把预览列改成自适应高度并关掉
+ * 容器查询，导致安卓外壳里预览区塌陷、缩放失准；这里按外壳层级覆盖回来，
+ * 让预览与编辑都严格占满 appbar 与底栏之间的剩余高度。
+ */
+.android-shell #androidViewConversation .preview-column {
+  grid-template-rows: minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  /* 行 21：去掉预览列内边距，让聊天背景与输入条左右贴边、上下铺满。 */
+  padding: 0;
+  overflow: hidden;
+}
+
+/*
+ * 桌面预览工具条（项目标题 + 群聊管理 / 添加消息）是编辑器语义：标题已由 appbar
+ * 呈现，加消息、群聊管理分别由聊天输入条与会话/设置入口承担，手机端整条隐藏，
+ * 让会话详情只剩聊天界面本身。
+ */
+.android-shell #androidViewConversation .preview-toolbar {
+  display: none;
+}
+
+/*
+ * 右边缘左滑打开编辑抽屉依赖连续的 pointer 流；默认 touch-action 会让浏览器把
+ * 横向拖动当成滚动并发出 pointercancel，外壳就收不到后续 pointermove。会话视图
+ * 及其滚动子节点限定为 pan-y：竖向照常滚动，横向手势交回外壳处理。
+ * 抽屉内部必须连带整棵子树一起限定：命中目标常落在编辑面板这类 overflow:auto 的
+ * 滚动容器上，它自身的 touch-action 为 auto 时浏览器会接管横向拖动，抽屉收不到
+ * 完整的 pointer 流，右滑关闭就永远达不到阈值。
+ */
+.android-shell #androidViewConversation,
+.android-shell #androidViewConversation .chat-scroll,
+.android-shell #androidViewConversation .momotalk-composer,
+.android-shell .android-drawer,
+.android-shell .android-drawer * {
+  touch-action: pan-y;
+}
+
+.android-shell #androidViewConversation .phone-stage {
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  container-type: size;
+}
+
+.android-shell #androidViewConversation .phone-stack {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  min-height: 0;
+  aspect-ratio: auto;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  margin: 0 auto;
+}
+
+.android-shell #androidViewConversation .phone-preview {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  max-height: 100%;
+}
+
+/*
+ * 手机端把游戏素材按竖屏重新排量：桌面预览的 cq 单位在 390px 宽容器里会把字号
+ * 压到 7~8px，这里把聊天相关的文字 / 控件尺寸改回 px，素材（九宫格气泡、聊天
+ * 背景）保持不变，只做必要的裁剪与内边距收缩。
+ */
+.android-shell #androidViewConversation .chat-header {
+  top: 2%;
+  height: 8%;
+}
+
+.android-shell #androidViewConversation .contact-name {
+  max-width: min(86%, 320px);
+  font-size: 17px;
+}
+
+.android-shell #androidViewConversation .chat-scroll {
+  --message-avatar-size: 32px;
+  top: 11%;
+  right: 3%;
+  bottom: var(--android-composer-height, 116px);
+  left: 3%;
+  gap: 12px;
+  padding: 14px 4px 28px;
+}
+
+.android-shell #androidViewConversation .bubble {
+  padding: 10px 12px 8px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.android-shell #androidViewConversation .message-speaker {
+  font-size: 12px;
+}
+
+.android-shell #androidViewConversation .message-stack {
+  gap: 4px;
+}
+
+.android-shell #androidViewConversation .momotalk-composer {
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  grid-template-columns: minmax(64px, 76px) minmax(0, 1fr) 44px 44px 44px;
+  gap: 6px;
+  min-height: 60px;
+  padding: 6px 8px;
+  border-radius: 10px;
+}
+
+.android-shell #androidViewConversation .momotalk-composer textarea {
+  min-height: 44px;
+  max-height: 96px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.android-shell #androidViewConversation .composer-save-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+/* ---------- 分段控件（预览 / 编辑、使用模式） ---------- */
+
+.android-segmented {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  margin: 10px 12px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-soft);
+}
+
+.android-segmented button {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.android-segmented button[aria-selected="true"] {
+  background: var(--android-surface);
+  color: var(--brand);
+  box-shadow: 0 1px 4px rgba(26, 36, 52, 0.12);
+}
+
+/* ---------- 会话编辑抽屉（右边缘向左滑） ---------- */
+
+/* 右边缘的滑动起始带：只覆盖中段，避免挡住输入条最右侧的按钮。 */
+.android-drawer-edge {
+  position: absolute;
+  z-index: 3;
+  top: 16%;
+  right: 0;
+  width: 22px;
+  height: 52%;
+  background: transparent;
+}
+
+.android-drawer-handle {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  right: 0;
+  display: flex;
+  width: 44px;
+  height: 96px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translateY(-50%);
+}
+
+.android-drawer-handle::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 64px;
+  border-radius: 6px 0 0 6px;
+  background: var(--brand);
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(22, 32, 52, 0.2);
+  transition: transform 0.12s ease;
+}
+
+.android-drawer-handle:active::before {
+  transform: scaleY(0.94);
+}
+
+.android-view-conversation[data-drawer="open"] .android-drawer-handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.android-drawer-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: rgba(22, 30, 41, 0.34);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+}
+
+.android-drawer-scrim[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.22s ease, visibility 0s;
+}
+
+.android-drawer {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 6;
+  display: flex;
+  width: min(88%, 380px);
+  flex-direction: column;
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: -16px 0 34px rgba(26, 36, 52, 0.2);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition: transform 0.24s ease, visibility 0s linear 0.24s;
+}
+
+.android-drawer[data-open="true"] {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.24s ease, visibility 0s;
+}
+
+.android-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 52px;
+  padding: 6px 8px 6px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-drawer-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.android-drawer-host {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 抽屉里承载桌面编辑列：去掉侧栏边框，面板标题不重复。 */
+.android-shell .android-drawer-host .editor-column {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-left: 0;
+}
+
+.android-shell .android-drawer-host .editor-header {
+  display: none;
+}
+
+.android-shell .android-drawer-host .editor-tabpanel {
+  overflow-y: auto;
+}
+
+/* ---------- 设置页 ---------- */
+
+/* 设置页：功能入口列表（卡片分组），项目目录在子页。 */
+
+.android-view-settings {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.android-settings-list {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px 12px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.android-settings-list.hidden {
+  display: none;
+}
+
+.android-settings-group {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+.android-settings-group-title {
+  margin: 0;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-soft);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.android-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  text-align: left;
+}
+
+.android-settings-group > .android-settings-row + .android-settings-row {
+  border-top: 1px solid var(--line);
+}
+
+.android-settings-row:active {
+  background: var(--panel-soft);
+}
+
+.android-settings-row-static {
+  cursor: default;
+}
+
+.android-settings-row-static:active {
+  background: transparent;
+}
+
+.android-settings-row-static .android-segmented {
+  flex: 0 0 auto;
+  margin: 0 0 0 auto;
+}
+
+.android-settings-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  color: var(--muted);
+}
+
+.android-settings-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.android-settings-row-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-settings-chevron {
+  display: grid;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: var(--muted);
+}
+
+.android-settings-chevron svg {
+  width: 18px;
+  height: 18px;
+}
+
+.android-settings-row-value {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* 项目目录子页：返回条 + 项目列表与保存按钮。 */
+
+.android-settings-page {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.android-settings-page.hidden {
+  display: none;
+}
+
+.android-subpage-bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  min-height: 52px;
+  padding: 4px 8px;
+  padding-top: calc(4px + env(safe-area-inset-top));
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-subpage-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 子页顶栏右侧文字动作（清空等），对齐应用栏动作的触控尺寸与用色。 */
+.android-subpage-action {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brand);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.android-subpage-action:active {
+  background: var(--android-surface-alt);
+}
+
+/* 设置子页自带返回条（返回 + 标题 + 子页动作），此时隐藏全局应用栏，避免出现
+   两条带返回键和相同标题的顶栏；设置首页仍用应用栏。 */
+.android-shell[data-android-view="settings"][data-android-main-view="false"] .android-appbar {
+  display: none;
+}
+
+/* 项目管理：桌面左侧栏整块搬进设置分组后按卡片排版，不保留侧栏自身的边框。 */
+.android-project-host {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.android-project-host .sidebar {
+  height: auto;
+  min-height: 0;
+  border-right: 0;
+  background: transparent;
+}
+
+.android-project-host .sidebar-header {
+  /* 子页返回条已经表达身份；侧栏重复的标题块与“项目管理”图标按钮一并隐藏。 */
+  display: none;
+}
+
+.android-project-host .sidebar-section {
+  flex: 0 0 auto;
+  padding: 0 12px;
+  overflow: visible;
+}
+
+.android-project-host .section-label-row {
+  padding: 12px 2px 6px;
+}
+
+/* 已确认项目本身自动保存，安卓端不再显示“保存项目”功能键。 */
+.android-project-host .sidebar-footer {
+  display: none;
+}
+
+/* 项目列表按安卓行样式排布：整行点击、行间分隔线、行内删除入口。 */
+.android-project-host .project-list {
+  margin-top: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+.android-project-host .project-item {
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.android-project-host .project-item + .project-item {
+  border-top: 1px solid var(--line);
+}
+
+.android-project-host .project-item:hover,
+.android-project-host .project-item.active {
+  border-color: transparent;
+  background: var(--panel-soft);
+}
+
+.android-project-host .project-item.active {
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.android-project-host .project-create-item {
+  border-style: none;
+}
+
+.android-project-host .project-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.android-project-host .project-delete-button {
+  border-radius: 22px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.android-project-host .project-delete-button.armed {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+
+/* 导出长图总览：按日期分组的固定比例缩略图网格（B3B-REQ-016）。 */
+
+.android-shell #androidSettingsExportPage .android-settings-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.android-export-overview {
+  padding: 2px 14px 24px;
+}
+
+.android-export-day + .android-export-day {
+  margin-top: 20px;
+}
+
+.android-export-day-title {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.android-export-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.android-export-thumb {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: var(--android-surface-alt);
+  color: var(--muted);
+}
+
+.android-export-thumb:active {
+  opacity: 0.86;
+}
+
+.android-export-thumb:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.android-export-thumb img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.android-export-thumb-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  color: var(--muted);
+}
+
+.android-export-thumb-placeholder svg {
+  width: 26px;
+  height: 26px;
+}
+
+.android-export-thumb[data-export-state="loaded"] .android-export-thumb-placeholder {
+  display: none;
+}
+
+.android-export-thumb[data-export-state="loading"] .android-export-thumb-placeholder svg {
+  opacity: 0.42;
+}
+
+.android-export-thumb-label {
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.android-export-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 34px 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.android-export-empty strong {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.android-export-retry {
+  min-width: 96px;
+  min-height: 40px;
+  margin-top: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--android-surface);
+  color: var(--brand);
+  font-size: 14px;
+}
+
+/* 全屏大图查看层：固定黑色底，图片可缩放 / 平移。 */
+
+.android-export-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: #0b0c0f;
+  color: #fff;
+}
+
+.android-export-viewer-bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 4px 10px;
+  padding-top: calc(4px + env(safe-area-inset-top));
+  background: rgba(11, 12, 15, 0.94);
+}
+
+.android-export-viewer-bar .android-icon-button {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.android-export-viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.android-export-viewer-stage {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.android-export-viewer-canvas {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.android-export-viewer-canvas img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform;
+}
+
+.android-export-viewer-stage[data-state="loading"] img,
+.android-export-viewer-stage[data-state="error"] img {
+  visibility: hidden;
+}
+
+.android-export-viewer-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 24px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ---------- 底部三页签导航 ---------- */
+
+.android-tabbar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  padding: 6px 4px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.android-tab svg {
+  width: 22px;
+  height: 22px;
+}
+
+.android-tab[aria-selected="true"] {
+  color: var(--brand);
+}
+
+/* ==========================================================================
+ * B1.5R 视觉精修（对齐 android开发/视觉稿/b15-ui-refine-visual.html）。
+ * 只覆盖安卓外壳；桌面三栏样式不受影响；素材统一走 /assets 绝对路径。
+ * ========================================================================== */
+
+/* ---------- 1. 顶栏合并一行 ---------- */
+
+/* 会话 / 联系人：隐藏应用栏，只留显示条一行（管理员 + 气泡 + 右侧动作）。 */
+.android-shell[data-android-view="conversations"] .android-appbar,
+.android-shell[data-android-view="contacts"] .android-appbar,
+.android-shell[data-android-view="search"] .android-appbar {
+  display: none;
+}
+
+/* 显示条只在会话 / 联系人出现；信息页与设置页用应用栏。 */
+.android-shell[data-android-view="settings"] .android-display-bar,
+.android-shell[data-android-view="conversation"] .android-display-bar,
+.android-shell[data-android-view="search"] .android-display-bar,
+.android-shell[data-android-view="group-info"] .android-display-bar,
+.android-shell[data-android-view="character-info"] .android-display-bar {
+  display: none;
+}
+
+/* 顶栏合并后，显示条承接系统状态栏安全区。 */
+.android-display-bar {
+  min-height: 56px;
+  padding: 0 12px;
+  padding-top: env(safe-area-inset-top);
+  gap: 10px;
+}
+
+.android-display-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-appbar-heading {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.android-appbar-subtitle {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-appbar-subtitle.hidden {
+  display: none;
+}
+
+.android-appbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.android-shell[data-android-view="settings"] .android-appbar-heading,
+.android-shell[data-android-view="group-info"] .android-appbar-heading,
+.android-shell[data-android-view="character-info"] .android-appbar-heading {
+  text-align: center;
+}
+
+.android-shell[data-android-view="settings"] .android-appbar-actions,
+.android-shell[data-android-view="group-info"] .android-appbar-actions,
+.android-shell[data-android-view="character-info"] .android-appbar-actions {
+  min-width: 44px;
+  justify-content: flex-end;
+}
+
+/* 会话详情右下角导出按钮搬进应用栏后按图标按钮显示。 */
+.android-appbar-actions .composer-save-button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  font-size: 20px;
+}
+
+/* T08-D：系统消息入口使用更小的图形，但保留 44×44 触控区。 */
+.android-shell #androidAddSystemMessageButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- 2. 会话列表：去卡片化 + 白底铺满 + hairline 分隔 ---------- */
+
+.android-shell #androidConversationsHost {
+  display: block;
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.android-shell .android-search-wrap {
+  flex: 0 0 auto;
+  padding: 10px 14px 8px;
+  background: var(--android-surface);
+}
+
+.android-shell #androidViewConversations {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.android-shell .android-searchbox {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--android-surface-alt);
+  color: var(--muted);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.android-shell .android-searchbox svg {
+  flex: 0 0 19px;
+  width: 19px;
+  height: 19px;
+}
+
+.android-shell .android-searchbox span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- 全局搜索页（B3B-REQ-012） ---------- */
+
+.android-view-search {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--android-surface);
+}
+
+.android-search-bar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-search-field {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--android-surface-alt);
+  color: var(--muted);
+}
+
+.android-search-field > svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.android-search-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+}
+
+.android-search-field:focus-within {
+  border-color: var(--brand);
+  box-shadow: none;
+}
+
+.android-search-field input:focus {
+  box-shadow: none;
+}
+
+.android-search-field input::placeholder {
+  color: var(--muted);
+}
+
+.android-search-field input::-webkit-search-cancel-button,
+.android-search-field input::-webkit-search-decoration {
+  display: none;
+}
+
+.android-search-clear {
+  display: grid;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--panel-soft);
+  color: var(--muted);
+}
+
+.android-search-clear.hidden {
+  display: none;
+}
+
+.android-search-clear svg {
+  width: 16px;
+  height: 16px;
+}
+
+.android-search-cancel {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 4px 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.android-search-results {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 24px;
+  overscroll-behavior: contain;
+}
+
+.android-search-group + .android-search-group {
+  border-top: 8px solid var(--android-surface-alt);
+}
+
+.android-search-group-title {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 0 16px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.android-search-group-count {
+  font-weight: 500;
+}
+
+.android-search-row {
+  display: flex;
+  width: 100%;
+  min-height: 62px;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+}
+
+.android-search-row:active {
+  background: var(--panel-soft);
+}
+
+.android-search-avatar {
+  position: relative;
+  display: grid;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--android-surface-strong);
+}
+
+.android-search-avatar .avatar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+}
+
+.android-search-avatar .group-avatar-mosaic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.android-search-copy {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.android-search-name {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-search-meta {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-search-snippet {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.android-search-badge {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  margin-top: 3px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.android-search-more {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+  color: var(--brand);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+}
+
+.android-search-more:active {
+  background: var(--panel-soft);
+}
+
+.android-search-empty {
+  margin: 0;
+  padding: 48px 28px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.android-search-results mark {
+  padding: 0 1px;
+  border-radius: 2px;
+  background: rgba(255, 194, 26, 0.38);
+  color: inherit;
+}
+
+html[data-theme="dark"] .android-search-results mark {
+  background: rgba(255, 196, 64, 0.26);
+}
+
+.android-shell .chat-row.search-message-hit .bubble,
+.android-shell .chat-row.search-message-hit .sticker-frame,
+.android-shell .chat-row.search-message-hit .chat-image,
+.android-shell .chat-row.search-message-hit .system-line {
+  box-shadow: 0 0 0 2px var(--brand);
+  transition: box-shadow 180ms ease;
+}
+
+.android-shell #contactList {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.android-shell .side-entry,
+.android-shell .side-entry.active,
+.android-shell .side-entry:hover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: auto;
+  min-height: 78px;
+  aspect-ratio: auto;
+  margin: 0;
+  padding: 9px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--android-surface);
+  box-shadow: none;
+  transform: none;
+  contain: none;
+  content-visibility: visible;
+  contain-intrinsic-size: none;
+}
+
+.android-shell .side-entry::before,
+.android-shell .side-entry::after {
+  display: none;
+}
+
+.android-shell .side-entry:hover,
+.android-shell .side-entry:active {
+  background: var(--android-surface-soft);
+}
+
+.android-shell .side-entry.active {
+  background: var(--android-brand-soft);
+}
+
+.android-shell .side-entry-avatar,
+.android-shell .side-entry-avatar.avatar-frame {
+  position: relative;
+  inset: auto;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.android-shell .side-entry-avatar .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.android-shell .side-entry-avatar > .group-avatar-mosaic {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.android-shell .side-entry-text {
+  position: static;
+  inset: auto;
+  display: block;
+  flex: 1 1 auto;
+  width: auto;
+  height: auto;
+  min-width: 0;
+}
+
+.android-shell .side-entry-text::before {
+  display: none;
+}
+
+.android-shell .side-entry-text strong,
+.android-shell .side-entry-text small {
+  position: static;
+  display: block;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.android-shell .side-entry-text strong {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.android-shell .side-entry-text small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.android-shell .side-entry-aside {
+  position: relative;
+  display: flex;
+  flex: 0 0 54px;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: stretch;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 2px 0;
+}
+
+.android-shell .side-entry-time {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-shell .side-entry-remove {
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
+}
+
+.android-shell .side-entry-aside .side-entry-remove {
+  position: static;
+  top: auto;
+  right: auto;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  aspect-ratio: 1 / 1;
+  align-self: flex-end;
+  transform: none;
+  background: transparent;
+}
+
+.android-shell .side-entry-avatar .avatar {
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.android-shell .side-entry-avatar .group-avatar-mosaic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- 3. 联系人分页：搜索 + 分段控件 + 可折叠分组 ---------- */
+
+.android-shell .android-view[data-android-view="contacts"] {
+  background: var(--android-surface);
+}
+
+.android-shell .android-contacts-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.android-shell .android-contacts-body #editorContactSearch {
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 44px;
+  margin: 10px 14px 8px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--android-surface-alt);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.android-shell .android-contacts-body #editorContactFilters {
+  display: none;
+}
+
+.android-shell .android-contacts-body .editor-contact-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--android-surface);
+}
+
+.android-shell .contact-directory-list {
+  display: block;
+  gap: 0;
+}
+
+.android-contact-seg {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 4px 16px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.android-contact-seg-item {
+  position: relative;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0 11px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.android-contact-seg-item[aria-selected="true"] {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.android-contact-seg-item[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 30px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--brand);
+  transform: translateX(-50%);
+}
+
+.android-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.android-group-tri {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 6px solid var(--muted);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  transition: transform 0.15s ease;
+}
+
+.android-group-toggle[aria-expanded="false"] .android-group-tri {
+  transform: rotate(-90deg);
+}
+
+.android-group-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-group-count {
+  flex: 0 0 auto;
+  color: var(--muted-2, var(--muted));
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.contact-sec-label {
+  padding: 12px 16px 6px;
+  background: var(--android-surface);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.android-contact-row,
+.android-add-group-chat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 9px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+.android-contact-row:active,
+.android-add-group-chat:active {
+  background: var(--android-surface-soft);
+}
+
+.android-contact-row[data-tap-pending="true"] {
+  background: var(--android-surface-soft);
+}
+
+.android-contact-avatar {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--android-surface-strong);
+}
+
+.android-contact-avatar .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  font-size: 15px;
+}
+
+.android-contact-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.android-contact-name {
+  display: block;
+  overflow: hidden;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-contact-meta {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.android-contact-chev {
+  flex: 0 0 auto;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: var(--muted-2, var(--muted));
+}
+
+.android-contact-chev svg {
+  width: 18px;
+  height: 18px;
+}
+
+.android-plus-tile {
+  display: grid;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.android-plus-tile svg {
+  width: 22px;
+  height: 22px;
+}
+
+.android-add-group-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 15px;
+}
+
+.contact-directory + .contact-directory {
+  margin-top: 0;
+}
+
+.contact-directory-list.hidden {
+  display: none;
+}
+
+/* ---------- 4. 设置页：去卡片 + 灰底间隔带 ---------- */
+
+.android-shell .android-settings-list {
+  gap: 0;
+  padding: 0 0 24px;
+  background: var(--android-surface);
+}
+
+.android-shell .android-settings-band {
+  height: 9px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.android-shell .android-settings-group {
+  border: 0;
+  border-radius: 0;
+  background: var(--android-surface);
+}
+
+.android-shell .android-settings-group-title {
+  padding: 9px 16px 7px;
+  border-bottom: 0;
+  background: var(--android-surface);
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.android-shell .android-settings-row,
+.android-shell .android-settings-group > .android-settings-row + .android-settings-row {
+  min-height: 56px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.android-shell .android-settings-group > .android-settings-row:last-child {
+  border-bottom: 0;
+}
+
+/* ---------- 5. 会话详情：聊天背景 + 九宫格气泡 + 两行输入区 ---------- */
+
+.android-shell #androidViewConversation .chat-header {
+  display: none;
+}
+
+.android-shell #androidViewConversation .chat-scroll {
+  /*
+   * T08-A：按 QQ 参考图实测，头像直径约为屏宽的 10%（108 / 1080），
+   * 头像与气泡间距约为头像的 0.194 倍（21 / 108）。360～440px 下头像落在 36～44px。
+   */
+  --message-avatar-size: clamp(36px, 10vw, 44px);
+  --message-gap: calc(var(--message-avatar-size) * 0.194);
+  /*
+   * 每条消息只有一个头像，可用宽度按“消息区 - 头像 - 间距”计算；若沿用桌面的双头像
+   * 对称预留，360px 下图片只剩约 150px，无法达到 T07 的可见尺寸要求。
+   */
+  --message-lane-width: calc(100% - var(--message-avatar-size) - var(--message-gap));
+  top: 0;
+  right: 0;
+  bottom: var(--android-composer-height, 116px);
+  left: 0;
+  width: auto;
+  height: auto;
+  gap: 12px;
+  padding: 12px 12px 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.24)),
+    url("/assets/bg_momotalk04.png") center / cover no-repeat;
+}
+
+.android-shell #androidViewConversation .chat-scroll::after {
+  display: none;
+}
+
+.android-shell #androidViewConversation .message-stack,
+.android-shell #androidViewConversation .message-stack.long-text-stack {
+  width: auto;
+  max-width: none;
+  gap: 4px;
+}
+
+.android-shell #androidViewConversation .message-speaker {
+  padding-left: 8px;
+  font-size: 12px;
+}
+
+.android-shell #androidViewConversation .bubble {
+  max-width: 100%;
+  min-width: 46px;
+  /* 单行气泡高度对齐头像直径，与参考图“头像≈气泡高”一致。 */
+  min-height: var(--message-avatar-size);
+  padding: 9px 12px 8px;
+  color: #6b6b6b;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/*
+ * 参考图长气泡约占消息可用宽度的 8 成；上限放在消息栈上，短消息仍由内容撑开，
+ * 长消息在 360px / 390px 下按同一比例换行。
+ */
+.android-shell #androidViewConversation .text-row .message-stack,
+.android-shell #androidViewConversation .message-stack.long-text-stack {
+  width: auto;
+  max-width: calc(var(--message-lane-width) * 0.84);
+}
+
+.android-shell #androidViewConversation .system-row {
+  padding-block: 2px;
+  margin-block: 4px;
+}
+
+.android-shell #androidViewConversation .system-line {
+  max-width: 88%;
+  color: #5f6b7b;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/*
+ * T09-A：安卓预览只允许管理员右侧文本消息消费当前主题。桌面样式仍会把
+ * 左侧管理员气泡设为主题，因此这里要显式恢复默认素材、切片、文字色和间距。
+ */
+.android-shell #androidViewConversation .chat-row.admin-message.left .bubble::before {
+  border-image-source: var(--momotalk-default-bubble-left);
+  border-image-slice: var(--momotalk-default-bubble-slice) fill;
+  border-image-width: var(--momotalk-default-bubble-edge);
+}
+
+.android-shell #androidViewConversation .chat-row.bubble-square.admin-message.left .bubble::before {
+  border-image-source: var(--momotalk-default-bubble-square-left);
+  border-image-slice: var(--momotalk-default-bubble-square-slice-left) fill;
+  border-image-width: var(--momotalk-default-bubble-square-edge-left);
+}
+
+.android-shell #androidViewConversation .chat-row.admin-message.right .bubble::before {
+  border-image-source: var(--momotalk-selected-bubble-right);
+  border-image-slice: var(--momotalk-selected-bubble-slice-right) fill;
+  border-image-width: var(--momotalk-selected-bubble-edge-right);
+}
+
+.android-shell #androidViewConversation .chat-row.bubble-square.admin-message.right .bubble::before {
+  border-image-source: var(--momotalk-selected-bubble-square-right);
+  border-image-slice: var(--momotalk-selected-bubble-square-slice-right) fill;
+  border-image-width: var(--momotalk-selected-bubble-square-edge-right);
+}
+
+.android-shell #androidViewConversation .chat-row.admin-message.left .bubble {
+  color: #6b6b6b;
+}
+
+.android-shell #androidViewConversation .chat-row.admin-message.right .bubble {
+  color: var(--momotalk-selected-text-right, #353535);
+}
+
+.android-shell #androidViewConversation .chat-row.bubble-square.admin-message.left .message-stack {
+  margin-left: var(--momotalk-default-bubble-square-inset-left, 0px);
+}
+
+.android-shell #androidViewConversation .chat-row.bubble-square.admin-message.right .message-stack {
+  margin-right: var(--momotalk-selected-bubble-square-inset-right, 0px);
+}
+
+.android-shell #androidViewConversation .chat-row.bubble-tail.admin-message.left .bubble {
+  padding-left: calc(2cqw + var(--momotalk-default-bubble-square-inset-left, 0px));
+  padding-right: calc(2cqw + var(--momotalk-default-bubble-square-inner-inset-left, 0px));
+}
+
+.android-shell #androidViewConversation .chat-row.bubble-tail.admin-message.right .bubble {
+  padding-right: calc(2cqw + var(--momotalk-selected-bubble-square-inset-right, 0px));
+  padding-left: calc(2cqw + var(--momotalk-selected-bubble-square-inner-inset-right, 0px));
+}
+
+/*
+ * 行 22：桌面 `.message-avatar` 宽高写死 6.6667cqw，安卓外壳下会被容器查询压到约一半。
+ * T08 按参考图收回 32px，并让单头像与群组拼图都铺满圆角外框。
+ */
+.android-shell #androidViewConversation .message-avatar {
+  flex: 0 0 var(--message-avatar-size);
+  width: var(--message-avatar-size);
+  height: var(--message-avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.android-shell #androidViewConversation .message-avatar .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.android-shell #androidViewConversation .message-avatar > .group-avatar-mosaic {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.android-shell #androidViewConversation .message-avatar span {
+  font-size: 15px;
+}
+
+/* T08-A：表情外框约为头像的 2 倍，预览与导出共用这一视觉比例。 */
+.android-shell #androidViewConversation .sticker-frame {
+  width: calc(var(--message-avatar-size) * 2);
+  max-width: calc(var(--message-avatar-size) * 2);
+  height: calc(var(--message-avatar-size) * 2);
+  aspect-ratio: 1 / 1;
+}
+
+.android-shell #androidViewConversation .sticker-row .message-stack {
+  max-width: calc(var(--message-avatar-size) * 2);
+}
+
+.android-shell #androidViewConversation .chat-row.image-row {
+  align-items: flex-start;
+}
+
+.android-shell #androidViewConversation .chat-image {
+  width: auto;
+  height: auto;
+  max-width: min(clamp(180px, 58vw, 215px), 100%);
+  max-height: min(40vh, 320px);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: contain;
+}
+
+.android-shell #androidViewConversation .momotalk-composer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "speaker input send"
+    "tools tools tools";
+  gap: 8px;
+  align-items: center;
+  min-height: 0;
+  padding: 9px 10px calc(10px + env(safe-area-inset-bottom));
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--android-surface);
+  box-shadow: none;
+  filter: none;
+  overflow: visible;
+}
+
+.android-shell #androidViewConversation .momotalk-composer::before {
+  display: none;
+}
+
+.android-shell #androidViewConversation .composer-speaker {
+  display: none;
+}
+
+.android-shell #androidViewConversation #speakerPicker {
+  display: none;
+}
+
+.android-shell #androidViewConversation .android-speaker-button {
+  display: flex;
+  grid-area: speaker;
+  width: auto;
+  max-width: 92px;
+  min-width: 44px;
+  height: 44px;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px 0 10px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--android-surface-alt);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.android-shell #androidViewConversation .android-speaker-button[aria-expanded="true"] {
+  box-shadow: 0 0 0 2px rgba(53, 95, 218, 0.24) inset;
+}
+
+.android-shell #androidViewConversation .android-speaker-button span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-shell #androidViewConversation .android-speaker-button svg {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--muted);
+}
+
+.android-shell .android-speaker-panel {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 10px;
+  z-index: 9;
+  width: min(280px, calc(100vw - 20px));
+  max-height: min(320px, 48vh);
+  padding: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--android-surface);
+  box-shadow: 0 8px 24px rgba(23, 32, 48, 0.18);
+}
+
+.android-speaker-option {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+}
+
+.android-speaker-option[aria-selected="true"] {
+  background: var(--android-brand-soft);
+  color: var(--brand);
+}
+
+.android-speaker-option-avatar {
+  display: grid;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--android-surface-strong);
+  color: var(--android-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.android-speaker-option-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-speaker-option-check {
+  flex: 0 0 16px;
+  min-height: 16px;
+  color: var(--brand);
+  text-align: center;
+}
+
+.android-shell #androidViewConversation #directMessageInput {
+  grid-area: input;
+  width: auto;
+  min-width: 0;
+  min-height: 44px;
+  max-height: 96px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--android-surface-alt);
+  box-shadow: none;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.android-shell #androidViewConversation #directMessageInput:focus {
+  box-shadow: 0 0 0 2px rgba(53, 95, 218, 0.24) inset;
+}
+
+.android-shell #androidViewConversation #chatSendButton {
+  grid-area: send;
+  display: grid;
+  min-width: 64px;
+  height: 44px;
+  place-items: center;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.android-shell #androidViewConversation .composer-tools {
+  grid-area: tools;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 6px 8px 0;
+}
+
+.android-shell #androidViewConversation #chatImageButton,
+.android-shell #androidViewConversation #chatStickerButton {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--android-muted);
+  font-size: 20px;
+}
+
+/* ---------- 6 / 7. 群组管理页 / 角色信息页 ---------- */
+
+.android-view-profile {
+  background: var(--android-surface);
+}
+
+.android-profile-host {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--android-surface);
+}
+
+.android-profile-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--android-surface);
+}
+
+.android-group-avatar {
+  flex: 0 0 auto;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--android-surface-strong);
+}
+
+.android-group-avatar .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  font-size: 22px;
+}
+
+.android-profile-head-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.android-profile-name {
+  display: block;
+  overflow: hidden;
+  font-size: 19px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-profile-gid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.android-tag {
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.android-profile-block {
+  background: var(--android-surface);
+}
+
+.android-profile-blockhead {
+  padding: 12px 16px 8px;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.android-profile-blocktitle {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.android-profile-blocktitle .cnt {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.android-group-members {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px 8px;
+  padding: 4px 16px 14px;
+}
+
+.android-group-members .m {
+  text-align: center;
+}
+
+/* 「邀请 / 移除」由槽位改为可点按钮后，去掉浏览器默认按钮外观，保持与成员格一致。 */
+.android-group-members button.m {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.android-group-members button.m:active .slot {
+  background: var(--android-surface-strong);
+}
+
+.android-group-members .m .av,
+.android-group-members .m .slot {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--android-surface-strong);
+}
+
+.android-group-members .m .slot {
+  background: var(--android-surface-alt);
+  color: var(--muted);
+}
+
+.android-group-members .m .av .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+.android-group-members .m .slot svg {
+  width: 22px;
+  height: 22px;
+}
+
+.android-group-members .m .nm {
+  margin-top: 5px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.android-profile-block .frow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+  color: var(--ink);
+  font-size: 15.5px;
+  text-align: left;
+}
+
+.android-profile-block .frow:last-child {
+  border-bottom: 0;
+}
+
+.android-profile-block .frow .grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.android-profile-block .frow .val {
+  flex: 0 1 auto;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.android-profile-block .frow .chev {
+  flex: 0 0 auto;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: var(--muted);
+}
+
+.android-profile-block .frow .chev svg {
+  width: 18px;
+  height: 18px;
+}
+
+.android-profile-block .frow .blue {
+  color: var(--brand);
+}
+
+.android-profile-block .frow .danger {
+  color: var(--danger);
+}
+
+.android-profile-block .frow.is-disabled {
+  opacity: 0.42;
+}
+
+.android-profile-block .frow.is-disabled .grow {
+  color: var(--muted);
+}
+
+.android-profile-block .frow.col {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  padding: 12px 16px;
+}
+
+.android-profile-block .frow.col .grow {
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.android-profile-block .frow.col .bio {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.android-profile-block .switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 44px; /* 触摸命中区放大到 44px，视觉轨道由 ::before 承担 */
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.android-profile-block .switch::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--android-surface-strong);
+  transform: translateY(-50%);
+  transition: background 0.15s ease;
+}
+
+.android-profile-block .switch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--android-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  transform: translateY(-50%);
+  transition: left 0.15s ease;
+}
+
+.android-profile-block .switch[aria-checked="true"]::before {
+  background: var(--brand);
+}
+
+.android-profile-block .switch[aria-checked="true"]::after {
+  left: auto;
+  right: 2px;
+}
+
+/* 资料行改为按钮（群名称 / AI 信息管理 / 删除 / 解散）后去掉默认按钮字体与光标。 */
+.android-profile-block button.frow {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.android-profile-block .frow.armed {
+  background: var(--android-danger-soft);
+}
+
+.android-profile-block .frow.armed .grow {
+  font-weight: 600;
+}
+
+.android-profile-block .frow .rename-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--android-surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.android-profile-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 16px 18px;
+  background: var(--android-surface);
+}
+
+.android-profile-avatar {
+  width: 88px;
+  height: 88px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--android-surface-strong);
+}
+
+.android-profile-avatar .avatar {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  font-size: 30px;
+}
+
+.android-profile-hero .android-profile-name {
+  font-size: 20px;
+}
+
+.android-profile-subtitle {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.android-profile-actions {
+  display: flex;
+  padding: 0 16px 16px;
+  background: var(--android-surface);
+}
+
+.android-profile-hero .android-profile-actions {
+  display: contents;
+}
+
+.android-profile-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--brand);
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.android-profile-action:active {
+  filter: brightness(0.92);
+}
+
+.android-profile-action svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* ==========================================================================
+ * 8. 全屏成员选择页（B1.6 §3.1）：邀请 / 新建 / 移除共用
+ * ========================================================================== */
+
+/* 全面屏页面覆盖内容区：选择页期间收起应用栏与显示条（页签由统一的主视图规则收起）。 */
+.android-shell[data-android-view="group-picker"] .android-appbar,
+.android-shell[data-android-view="group-picker"] .android-display-bar {
+  display: none;
+}
+
+.android-view-picker {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--android-surface);
+}
+
+.android-picker-host {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--android-surface);
+}
+
+/* 顶栏：左「取消」+ 中间标题（右留等宽占位让标题居中）。 */
+.picker-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 8px;
+  padding-top: env(safe-area-inset-top);
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.picker-cancel {
+  flex: 0 0 auto;
+  min-width: 60px;
+  height: 44px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font-size: 16px;
+  text-align: left;
+}
+
+.picker-cancel:active {
+  opacity: 0.6;
+}
+
+.picker-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker-bar-spacer {
+  flex: 0 0 auto;
+  min-width: 60px;
+}
+
+.picker-search {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.picker-search-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--android-surface-alt);
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.picker-search-input:focus {
+  outline: 2px solid rgba(53, 95, 218, 0.5);
+  outline-offset: 1px;
+}
+
+.picker-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--android-surface);
+}
+
+/* 「默认分组」行：分组名 + 计数 + 展开箭头（§3.1）。 */
+.picker-group-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 46px;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-surface);
+  color: var(--ink);
+  text-align: left;
+}
+
+.picker-tri {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid var(--android-muted);
+  transition: transform 0.15s ease;
+}
+
+.picker-group-row[aria-expanded="false"] .picker-tri {
+  transform: rotate(-90deg);
+}
+
+.picker-group-name {
+  flex: 1 1 auto;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.picker-group-count {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.picker-member-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.picker-member-list.hidden {
+  display: none;
+}
+
+/* 竖排成员行：复用桌面成员卡的选择控件（.group-member-card / .group-member-check，
+   口径 §4.1），在全面屏里铺成白底行 + hairline 分隔，不再是方格卡片。 */
+.android-picker-host .picker-member {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 24px;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--android-surface);
+  box-shadow: none;
+}
+
+.android-picker-host .picker-member.active {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--android-brand-soft);
+  box-shadow: none;
+}
+
+.android-picker-host .picker-member.is-locked {
+  background: var(--android-brand-soft);
+}
+
+.android-picker-host .picker-member .group-member-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.android-picker-host .picker-member .group-member-name {
+  font-size: 15px;
+}
+
+.android-picker-host .picker-member .group-member-check {
+  width: 22px;
+  height: 22px;
+}
+
+/* 底部固定确认条：已选计数 + 主按钮。 */
+.picker-foot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: var(--android-surface);
+}
+
+.picker-selected {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.picker-primary {
+  flex: 1 1 auto;
+  height: 46px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.picker-primary:disabled {
+  background: var(--android-line-strong);
+  cursor: not-allowed;
+}
+
+/* ========== B3-A：触控适配（点击区 ≥44px / 软键盘避让） ==========
+ *
+ * 安卓外壳复用了桌面外壳的业务控件（会话编辑抽屉、素材弹窗、项目目录），这些控件的
+ * 点击区按鼠标设计（24~38px）。下面只在外壳作用域内放大到 44px，桌面外壳（未挂
+ * .android-shell）保持原样，桌面布局与交互不回退（约束 §3.1，验收 B3-A2 / B3-A6）。
+ */
+
+/* 会话编辑抽屉内复用的编辑器表单：输入框 / 下拉统一 44px 点击高度。 */
+.android-shell .android-drawer-host input,
+.android-shell .android-drawer-host select,
+.android-shell .android-drawer-host textarea {
+  min-height: 44px;
+}
+
+/* 编辑面板页签（项目 / 联系人）桌面仅 30px 高，触摸放大到 44px。 */
+.android-shell .android-drawer-host .editor-tab {
+  min-height: 44px;
+  padding: 0 14px;
+}
+
+/* 消息列表的上移 / 下移 / 删除：桌面 24px 见方，触摸放大到 44px 并同步栅格列宽。 */
+.android-shell .message-list-actions {
+  grid-template-columns: repeat(3, 44px);
+}
+
+.android-shell .message-list-actions button {
+  width: 44px;
+  height: 44px;
+}
+
+/* 素材（头像 / 背景 / 气泡 / 表情）弹窗挂在 body 层级、不在外壳容器内，
+   用 html[data-shell] 兜住；关闭按钮桌面 34px，触摸放大到 44px。 */
+html[data-shell="android"] #assetModal .icon-button {
+  width: 44px;
+  height: 44px;
+}
+
+/* 表情弹窗（行 24 / 25）：安卓外壳改为底部分组栏 + 上方贴纸网格。
+   弹窗面板切成纵向弹性布局，避免桌面网格行规则把中段网格裁掉。
+   这组规则只服务仍然走全屏弹窗的路径（给单条消息换贴纸）；输入条的表情按钮改走
+   下面的内联面板，由 [data-sticker-inline="true"] 互斥。 */
+html[data-shell="android"] #assetModal[data-asset-category="sticker"]:not([data-sticker-inline="true"]) .modal-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  height: min(660px, 80vh);
+}
+
+html[data-shell="android"] #assetModal[data-asset-category="sticker"]:not([data-sticker-inline="true"]) .asset-grid {
+  flex: 1 1 auto;
+  gap: 8px;
+  padding: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+}
+
+html[data-shell="android"] #assetModal[data-asset-category="sticker"]:not([data-sticker-inline="true"]) .asset-card.sticker-card {
+  display: block;
+  aspect-ratio: 1 / 1;
+  padding: 5px;
+}
+
+html[data-shell="android"] #assetModal[data-asset-category="sticker"]:not([data-sticker-inline="true"]) .asset-card.sticker-card img {
+  width: 100%;
+  height: 100%;
+}
+
+html[data-shell="android"] #assetModal[data-asset-category="sticker"]:not([data-sticker-inline="true"]) .asset-card.sticker-back-card {
+  display: grid;
+  align-self: stretch;
+  aspect-ratio: auto;
+  place-items: center;
+  padding: 4px;
+  font-size: 11px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* 内联表情面板（用户 2026-10-16 反馈：不该是一个呼出页面）：
+   点输入条的表情按钮后，素材弹窗整块挪进会话页的 #androidStickerPanel，面板贴会话页
+   底部铺满宽度，输入条与聊天滚动区整体上移，聊天列表保持可见；不再有遮罩和标题栏。 */
+.android-shell #androidViewConversation {
+  /* 面板高度：视口高度的一半略少，最高 380px；输入条与聊天区共用该变量。 */
+  --android-sticker-panel-height: min(48vh, 380px);
+}
+
+.android-shell #androidViewConversation .android-sticker-panel {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  height: var(--android-sticker-panel-height);
+  background: var(--android-surface);
+  border-top: 1px solid var(--line);
+}
+
+/* 搬进宿主的素材弹窗本体：去掉遮罩、居中与圆角，铺满宿主。 */
+html[data-shell="android"] .android-sticker-panel #assetModal {
+  position: static;
+  inset: auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+}
+
+html[data-shell="android"] .android-sticker-panel #assetModal .modal-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 内联面板没有遮罩也没有关闭按钮：收起靠再点一次表情按钮或点回输入框。 */
+html[data-shell="android"] .android-sticker-panel #assetModal .modal-header {
+  display: none;
+}
+
+/* 内联网格撑满面板：基础样式是 flex:0 0 auto，面板里会留出空白。 */
+html[data-shell="android"] .android-sticker-panel #assetModal .asset-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+html[data-shell="android"] .android-sticker-panel #assetModal .modal-status {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 12px 6px;
+  font-size: 12px;
+}
+
+/* 面板展开时输入条上移到面板之上，聊天滚动区再往上让出输入条的高度。 */
+.android-shell #androidViewConversation[data-sticker-panel="open"] .momotalk-composer {
+  bottom: var(--android-sticker-panel-height);
+}
+
+.android-shell #androidViewConversation[data-sticker-panel="open"] .chat-scroll {
+  bottom: calc(var(--android-composer-height, 116px) + var(--android-sticker-panel-height));
+}
+
+/* "+" 添加入口：贴纸网格左上角的方块（行 25 参考图）。 */
+.sticker-add-card {
+  display: grid;
+  place-items: center;
+  background: #f2f4f8;
+  color: #8a94a6;
+}
+
+.sticker-add-icon {
+  display: grid;
+  width: 56%;
+  height: 56%;
+  place-items: center;
+}
+
+.sticker-add-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 已加入收藏的目录项：右下角对勾标记。 */
+.sticker-add-item {
+  position: relative;
+}
+
+.sticker-add-item.added {
+  border-color: #e6465b;
+  box-shadow: 0 0 0 2px rgba(230, 70, 91, 0.18);
+}
+
+.sticker-add-check {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e6465b;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* "所有表情目录"：一排固定 8 个，不换列宽、不横向溢出。 */
+.sticker-directory {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 6px;
+  align-content: start;
+}
+
+.sticker-directory-item {
+  display: grid;
+  aspect-ratio: 1 / 1;
+  min-width: 0;
+  padding: 2px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.sticker-directory-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.sticker-directory-placeholder {
+  color: #8a94a6;
+  font-size: 18px;
+}
+
+/* 窄屏（≤480px）下固定 8 列要凑够 44px 点击区：把弹窗与网格留白收到最小，
+   360px 视口正好是 (360 - 8) / 8 = 44px。桌面与宽屏仍走上面的常规留白。 */
+@media (max-width: 480px) {
+  html[data-shell="android"] #assetModal[data-asset-category="sticker"] {
+    padding: 0;
+  }
+
+  html[data-shell="android"] #assetModal[data-asset-category="sticker"] .modal-panel {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  html[data-shell="android"] #assetModal[data-asset-category="sticker"] .asset-grid {
+    padding: 4px;
+  }
+
+  html[data-shell="android"] #assetModal[data-asset-category="sticker"] .sticker-directory {
+    gap: 0;
+  }
+
+  /* 内联面板同样把留白收到最小：360px 视口下 8 列目录单格正好 44px。 */
+  html[data-shell="android"] .android-sticker-panel #assetModal .asset-grid {
+    padding: 4px;
+  }
+
+  html[data-shell="android"] .android-sticker-panel #assetModal .modal-status {
+    padding: 0 6px 4px;
+  }
+
+  html[data-shell="android"] .android-sticker-panel #assetModal .sticker-directory {
+    gap: 0;
+  }
+}
+
+/* 底部栏：第一项固定为爱心收藏分组，随后是各表情目录；选中态描边框。 */
+.asset-sticker-bar {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  background: #2b2f36;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.asset-sticker-bar.hidden {
+  display: none;
+}
+
+.asset-sticker-bar-item {
+  display: grid;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  place-items: center;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.asset-sticker-bar-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.asset-sticker-bar-item.active {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.asset-sticker-bar-heart {
+  display: block;
+  width: 26px;
+  height: 26px;
+  color: #e6465b;
+}
+
+.asset-sticker-bar-heart svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.asset-sticker-bar-placeholder {
+  color: #c7ccd4;
+  font-size: 20px;
+}
+
+/* 设置 · 项目目录里每条项目的删除按钮：桌面 26px，触摸放大到 44px。 */
+.android-shell .project-delete-button {
+  width: auto;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+}
+
+/* 设置 · 项目目录侧栏头部的项目管理按钮：桌面 34px，触摸放大到 44px。 */
+.android-project-host .icon-button {
+  width: 44px;
+  height: 44px;
+}
+
+/* ---------- 软键盘视口适配（B3-A-T3） ----------
+ *
+ * 软键盘弹出时 visualViewport 变矮，shell/index.js 把可视高度写进 --android-vv-height，
+ * 外壳高度跟随可视高度，底部固定输入条随之上移，输入内容与发送按钮不被键盘遮挡。
+ * 未取到可视高度时回退到满屏，行为与旧版一致。 */
+html[data-shell="android"] .android-shell {
+  height: var(--android-vv-height, 100%);
+  bottom: auto;
+}
+
+/* ==========================================================================
+ * 9. 主题变量收口（B3-A2 行 10）
+ *
+ * 安卓外壳的颜色统一走 --android-* 语义变量，深色模式只覆盖变量，不在各处写第二套
+ * 规则；同时覆写 styles.css 的基础 token，让搬进外壳的业务节点（项目侧栏、素材弹窗、
+ * 编辑抽屉）一起变深，避免只改外壳背景、弹窗仍亮。深色取中性灰阶，不使用单色系配色。
+ * ========================================================================== */
+
+html[data-shell="android"] {
+  --android-surface: #ffffff;
+  --android-surface-soft: #f7f8fa;
+  --android-surface-alt: #f1f3f7;
+  --android-surface-strong: #e4e9f1;
+  --android-brand-soft: #e7edff;
+  --android-danger-soft: #fff5f5;
+  --android-muted: #687382;
+  --android-line-strong: #bcc5d0;
+  --android-toast-bg: rgba(255, 255, 255, 0.94);
+}
+
+html[data-shell="android"][data-theme="dark"] {
+  color-scheme: dark;
+
+  /* 基础 token：桌面三栏与外壳内业务节点共用。 */
+  --bg: #141619;
+  --panel: #1e2126;
+  --panel-soft: #262a30;
+  --line: #343841;
+  --line-strong: #474d57;
+  --ink: #e8eaee;
+  --muted: #9aa1ab;
+  --brand: #7c9bff;
+  --brand-soft: #232c42;
+  --danger: #ff8a91;
+  --ok: #4cc38a;
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+
+  /* 外壳专用 token：同步切到深色，避免与基础 token 脱节。 */
+  --android-surface: #1e2126;
+  --android-surface-soft: #262a30;
+  --android-surface-alt: #2c3138;
+  --android-surface-strong: #343a43;
+  --android-brand-soft: #232c42;
+  --android-danger-soft: #3a2427;
+  --android-muted: #9aa1ab;
+  --android-line-strong: #474d57;
+  --android-toast-bg: rgba(38, 42, 48, 0.95);
+}
+
+/* ==========================================================================
+ * 10. 安卓深色可读性（B3B-REQ-004 / REQ-010）
+ *
+ * 这里只覆盖安卓外壳作用域。共享表单与弹窗的固定浅色表面在深色主题下改为
+ * 深色语义层，避免浅色文字落在白底上；桌面 WebUI 与安卓浅色主题保持原样。
+ * ========================================================================== */
+
+html[data-shell="android"][data-theme="dark"] .modal-panel,
+html[data-shell="android"][data-theme="dark"] .group-modal-panel {
+  background: var(--panel);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .modal-header {
+  background: var(--panel);
+}
+
+html[data-shell="android"][data-theme="dark"] .modal-toolbar,
+html[data-shell="android"][data-theme="dark"] .asset-pagination {
+  background: var(--panel-soft);
+}
+
+html[data-shell="android"][data-theme="dark"] .modal-panel .icon-button,
+html[data-shell="android"][data-theme="dark"] .modal-panel .secondary-button {
+  border-color: var(--line-strong);
+  background: var(--android-surface-alt);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .modal-panel .icon-button:hover,
+html[data-shell="android"][data-theme="dark"] .modal-panel .secondary-button:hover {
+  background: var(--android-surface-strong);
+}
+
+/* 素材弹窗：面板、工具区、卡片与状态行统一使用深色层级。 */
+/* T08-B：去掉卡片 hover / active 的外扩阴影垫层，只保留边框与选中底色。 */
+html[data-shell="android"] #assetModal .asset-card:hover,
+html[data-shell="android"] #assetModal .asset-card.active {
+  box-shadow: none;
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-card {
+  border-color: var(--line-strong);
+  background: var(--android-surface-soft);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-card:hover {
+  border-color: var(--brand);
+  background: var(--android-surface-soft);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-card.active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: none;
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-card img {
+  background: var(--android-surface-alt);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-card-placeholder,
+html[data-shell="android"][data-theme="dark"] #assetModal .sticker-add-card {
+  background: var(--android-surface-alt);
+  color: var(--muted);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-card span,
+html[data-shell="android"][data-theme="dark"] #assetModal .sticker-back-card {
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .sticker-back-card,
+html[data-shell="android"][data-theme="dark"] #assetModal .sticker-directory-item {
+  background: var(--android-surface-alt);
+  border-color: var(--line-strong);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .sticker-directory-placeholder,
+html[data-shell="android"][data-theme="dark"] #assetModal .modal-status {
+  color: var(--muted);
+}
+
+html[data-shell="android"][data-theme="dark"] #assetModal .asset-pagination button {
+  border-color: var(--line-strong);
+  background: var(--android-surface-alt);
+  color: var(--ink);
+}
+
+/* 表单控件：输入值、占位文字、下拉选项与焦点态。 */
+html[data-shell="android"][data-theme="dark"] input,
+html[data-shell="android"][data-theme="dark"] textarea,
+html[data-shell="android"][data-theme="dark"] select {
+  border-color: var(--line-strong);
+  background: var(--android-surface-alt);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] input::placeholder,
+html[data-shell="android"][data-theme="dark"] textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+html[data-shell="android"][data-theme="dark"] select option {
+  background: var(--android-surface);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] input:focus,
+html[data-shell="android"][data-theme="dark"] textarea:focus,
+html[data-shell="android"][data-theme="dark"] select:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(124, 155, 255, 0.2);
+}
+
+/* T08-B：总搜索框只保留自身边框，深色主题不得再叠加全局焦点垫层。 */
+html[data-shell="android"][data-theme="dark"] .android-search-field input:focus {
+  box-shadow: none;
+}
+
+html[data-shell="android"][data-theme="dark"] input:disabled,
+html[data-shell="android"][data-theme="dark"] textarea:disabled,
+html[data-shell="android"][data-theme="dark"] select:disabled {
+  background: var(--android-surface-soft);
+  color: var(--muted);
+  opacity: 0.72;
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-tab {
+  color: var(--muted);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-tab:hover {
+  background: var(--android-surface-soft);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-tab[aria-selected="true"] {
+  border-color: #45598f;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-filter,
+html[data-shell="android"][data-theme="dark"] .editor-contact-pagination button {
+  border-color: var(--line-strong);
+  background: var(--android-surface-alt);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-filter:hover,
+html[data-shell="android"][data-theme="dark"] .editor-contact-card:hover {
+  background: var(--android-surface-strong);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-filter[aria-pressed="true"] {
+  border-color: #45598f;
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-card {
+  border-color: var(--line);
+  background: var(--android-surface-soft);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-avatar,
+html[data-shell="android"][data-theme="dark"] .group-member-avatar {
+  background: var(--android-surface-strong);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-badge {
+  background: var(--android-surface-strong);
+  color: var(--muted);
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-badge[data-tone="group"] {
+  background: #26324d;
+  color: #b9c8f5;
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-contact-badge[data-tone="custom"] {
+  background: #233b2d;
+  color: #a8dfbd;
+}
+
+html[data-shell="android"][data-theme="dark"] .editor-section label > span,
+html[data-shell="android"][data-theme="dark"] .message-editor label > span,
+html[data-shell="android"][data-theme="dark"] .asset-picker-row > span,
+html[data-shell="android"][data-theme="dark"] .group-form-section label {
+  color: var(--ink);
+}
+
+/* 选中消息与上移 / 下移 / 删除按钮。 */
+html[data-shell="android"][data-theme="dark"] .message-list-item.active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+html[data-shell="android"][data-theme="dark"] .message-index {
+  background: var(--android-surface-strong);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .message-list-actions button {
+  border-color: var(--line-strong);
+  background: var(--android-surface-alt);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .message-list-actions button:hover:not(:disabled) {
+  border-color: var(--brand);
+  background: var(--android-surface-strong);
+}
+
+/* 群组弹窗沿用同一套深色表面。 */
+html[data-shell="android"][data-theme="dark"] .group-preview-copy strong {
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .group-member-card {
+  border-color: var(--line);
+  background: var(--android-surface-soft);
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .group-member-card:hover {
+  border-color: var(--brand);
+  background: var(--android-surface-strong);
+}
+
+html[data-shell="android"][data-theme="dark"] .group-member-card.active {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: 0 0 0 2px rgba(124, 155, 255, 0.24);
+}
+
+html[data-shell="android"][data-theme="dark"] .group-member-pagination button {
+  border-color: var(--line-strong);
+  background: var(--android-surface-alt);
+  color: var(--ink);
+}
+
+/* 会话预览：保留气泡素材，仅压暗聊天背景，并让发言者与系统提示保持可读。 */
+html[data-shell="android"][data-theme="dark"] .android-shell #androidViewConversation .chat-scroll {
+  background:
+    linear-gradient(180deg, rgba(14, 16, 20, 0.42), rgba(14, 16, 20, 0.5)),
+    url("/assets/bg_momotalk04.png") center / cover no-repeat;
+}
+
+html[data-shell="android"][data-theme="dark"] .android-shell #androidViewConversation .message-speaker,
+html[data-shell="android"][data-theme="dark"] .android-shell #androidViewConversation .system-line {
+  color: #e2e6ec;
+}
+
+/*
+ * 会话卡在深色下仍是浅色主题的深灰文字，铺到 #1e2126 上对比度不足。
+ * 标题跟随 --ink，摘要与时间提升到中性亮灰；普通态与选中态共用。
+ */
+html[data-shell="android"][data-theme="dark"] .android-shell .side-entry {
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .android-shell .side-entry-text strong,
+html[data-shell="android"][data-theme="dark"] .android-shell .side-entry-action .side-entry-text strong {
+  color: var(--ink);
+}
+
+html[data-shell="android"][data-theme="dark"] .android-shell .side-entry-text small,
+html[data-shell="android"][data-theme="dark"] .android-shell .side-entry-time {
+  color: #b8bfc8;
+}
+
+html[data-shell="android"][data-theme="dark"] .android-shell .side-entry-remove {
+  background: rgba(232, 234, 238, 0.14);
+  color: var(--ink);
+}
